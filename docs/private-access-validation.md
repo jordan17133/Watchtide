@@ -1,6 +1,6 @@
 # Tailscale Enrollment, Policy and Local Validation
 
-**Date:** October 3, 2026
+**Date:** October 3, 2026; rechecked October 4, 2026.
 
 **Status:** partial validation; private-access milestone remains open.
 
@@ -47,6 +47,45 @@ Windows-to-VM socket connection probes used fresh connections and a four-second 
 | Wazuh API, TCP 55000 | Unreachable | Unreachable | Initial local API reachability issue resolved for this source; other-source/off-LAN proof pending |
 
 The next scheduled SQL load, run 323, started at 21:57 EDT on October 3 and finished successfully at 21:58. Read-only SQL checks confirmed 72 alerts fetched, 49 new alerts inserted, 42 of those from the Sysmon channel, and 10 vulnerability findings snapshotted. Sysmon, the Windows Wazuh service and Tailscale remained Running. This proves loader/collection continuity more directly than a task exit code alone; it is not a tagged controlled-event trace or a Power BI refresh test. The Wazuh manager's current agent Active status was not independently queried.
+
+## October 4 Recheck
+
+The authenticated admin console still contains exactly one device-scoped grant
+for the Windows admin host to reach the SOC VM on TCP 22/443, an empty `ssh`
+section, and the same four policy tests. No policy changes were made. Fresh
+IPv4/IPv6 socket probes reproduced every result in the post-change table above.
+The Windows Tailscale client and its Linux peer were online; Sysmon, WazuhSvc,
+and Tailscale were Running. These remain local checks, not proof from another
+network or an unprivileged device.
+
+Certificate-verified TLS handshakes to dashboard TCP 443 found two outstanding
+trust issues: system trust could not build the issuer chain, and the existing
+Wazuh CA rejected the certificate's identity for both the tailnet IP and the
+MagicDNS hostname. No certificate check was bypassed, no login credentials
+were sent, and no certificates or trust stores were changed. Port reachability
+is not trusted HTTPS or authenticated dashboard access.
+
+Choose and validate the dashboard's private hostname/certificate and trust
+distribution before remote login. A private CA avoids publishing certificate
+names but requires securely distributing trust to approved clients. Tailscale
+can provision publicly trusted HTTPS certificates; its [HTTPS documentation](https://tailscale.com/docs/how-to/set-up-https-certificates)
+explains that those certificate hostnames enter public Certificate Transparency
+logs. That tradeoff needs review before enabling it; neither route was applied.
+
+A subsequent read-only SQL check initially timed out, then succeeded on retry.
+Windows had less than 1 GB free memory, and SQL Server logged event 17890 about
+its process memory being paged out. Scheduled run 392 eventually succeeded:
+195 alerts fetched, 117 inserted, and over eight minutes elapsed. Memory
+pressure is a plausible contributor, not a proven sole cause. Free host memory
+and recheck later load durations before expanding the lab. See the [reliability
+follow-up](reliability-validation.md#subsequent-runtime-follow-up).
+
+Power BI Desktop is installed, but a refresh was not attempted while the host
+was under memory pressure. Current VM-console recovery/checkpoint availability
+could not be independently verified with this session's permissions. No
+firewall, service, scheduled task, or Hyper-V settings were changed. The current
+policy does not authorize a newly enrolled phone or laptop: enroll a test
+client first, verify default denial, then separately review any minimal grant.
 
 ## Remaining checks
 

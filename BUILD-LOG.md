@@ -2,7 +2,7 @@
 
 A running record of how the Watchtide home SOC lab was built, what broke, and how it was fixed. The step-by-step plan lives in [SentinelGrid-Build-Runbook.md](SentinelGrid-Build-Runbook.md). Alert investigations live in [triage/](triage/).
 
-## Status at a glance (2026-10-03)
+## Status at a glance (2026-10-04)
 
 | Runbook stage | Status |
 |---|---|
@@ -45,6 +45,12 @@ Windows host                         |
 - The VM is reached by hostname (`soc-vm.mshome.net`) instead of IP, because Hyper-V's Default Switch hands out a new IP on every VM reboot.
 
 ## Timeline
+
+### 2026-10-04: VPN recheck and runtime follow-up
+- Reran all 23 publication tests, 15 loader/case tests and three mocked recovery paths successfully. Read the saved Tailscale policy and its four tests without editing; local IPv4/IPv6 port probes reproduce the approved management-only results.
+- Verified TLS handshakes identified an untrusted issuer chain in system trust and certificate-name mismatches for tailnet IP/MagicDNS access with the existing Wazuh CA. No warning bypass, credential submission, certificate issuance or trust-store change was made. Trusted dashboard access remains open; public certificate-name disclosure needs review before choosing a certificate route.
+- A read-only SQL connection initially timed out, then succeeded. Run 392 imported 117 new alerts but took over eight minutes. Low host memory and SQL paging event 17890 warrant a performance recheck after releasing nonessential workloads; no service restart or memory setting changes were made.
+- Corrected two runbook summaries that still described the pre-restriction VPN state. Power BI refresh, current VM-console/checkpoint recovery, authenticated logins, off-network and unprivileged-device tests remain unverified. See [VPN results](docs/private-access-validation.md) and [runtime evidence](docs/reliability-validation.md#subsequent-runtime-follow-up).
 
 ### 2026-10-04: Reliability fixes after workspace review
 - Removed historical rule verdicts from individual alerts; the exporter and publication validator keep alerts untriaged until event-specific evidence can be linked. Rule and ATT&CK views now label historical context; existing case verdicts remain intact.

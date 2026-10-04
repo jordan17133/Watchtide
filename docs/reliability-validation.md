@@ -47,6 +47,25 @@ deduplication continuity, not a live demonstration of late-event recovery. The
 synthetic late-event regression passes; a controlled live trace and Power BI
 refresh remain pending. The public snapshot was not refreshed from these rows.
 
+## Subsequent Runtime Follow-Up
+
+The repeat offline checks passed: 23 publication tests, 15 loader/case tests,
+and three mocked PowerShell recovery paths. A later live read-only SQL
+connection initially timed out, then succeeded on retry. Scheduled run 392
+started at 15:12:44 EDT and finished at 15:20:52: 195 alerts fetched, 117
+inserted, and about eight minutes elapsed, versus two seconds for the earlier
+incremental run. Its eventual success does not establish acceptable ongoing
+performance.
+
+The Windows host had less than 1 GB free physical memory; SQL Server logged
+event 17890 stating that significant process memory had been paged out. This
+supports investigating host memory pressure, not attributing the slowdown to
+the VPN or claiming a proven root cause. No services were restarted, unrelated
+applications closed, or memory/VM settings changed. Release nonessential host
+workloads, recheck SQL response and subsequent scheduled runtimes, and only
+then attempt Power BI refresh or add endpoints. No controlled event trace or
+new public snapshot was produced by this follow-up.
+
 ## Operating Changes
 
 The scheduled loader uses this repository's source. Its next invocation can

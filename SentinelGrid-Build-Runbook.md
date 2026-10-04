@@ -17,7 +17,7 @@ What actually happened during the build, including every failure and fix, is rec
 | 7. SQL Server warehouse (moved ahead of Stage 6) | Done 2026-09-30; case log added 2026-10-01 (`warehouse/cases.py`) |
 | 8. Power BI report | Done 2026-10-01 (five pages including Cases, kept as a Power BI Project in Git) |
 | Detection validation | In progress: controlled SSH password-guessing test detected and written up |
-| 4c. Tailscale private remote access | Both devices enrolled 2026-10-03; initial local TCP checks recorded; API restriction review and remaining validation pending ([results](docs/private-access-validation.md)) |
+| 4c. Tailscale private remote access | Devices enrolled; narrow TCP 22/443 policy saved and rechecked 2026-10-04; local API/indexer probes fail; trusted HTTPS, authenticated/off-LAN and recovery tests pending ([results](docs/private-access-validation.md)) |
 | 6. Watchtide API | Planned |
 | 5. Suricata network telemetry | Planned |
 
@@ -33,7 +33,7 @@ What actually happened during the build, including every failure and fix, is rec
 | Monitored endpoint | `jordan-pc` (Windows 11, Sysmon64 + Wazuh agent) |
 | Rollback point | Hyper-V checkpoint `sentinelgrid-pre-attack-2026-10-01` (the earlier `wazuh-clean` was merged when the disk grew) |
 | Pre-VPN firewall exceptions | 22, 443, 1514-1515 from private ranges (10/8, 172.16/12, 192.168/16); Tailscale path checked separately below |
-| Tailscale path, checked 2026-10-03 | Admin host reaches TCP 22/443/55000; TCP 9200 unreachable. TCP 55000 restriction review pending; see [validation report](docs/private-access-validation.md). |
+| Tailscale path, rechecked 2026-10-04 | IPv4 admin path reaches TCP 22/443; direct 1514/1515/9200/55000 probes fail. IPv6 SSH works; dashboard remains unreachable. Trusted HTTPS and off-network proof pending; see [validation report](docs/private-access-validation.md). |
 
 ## Target architecture
 

@@ -46,6 +46,11 @@ Windows host                         |
 
 ## Timeline
 
+### 2026-10-04: Read-only firewall rule review
+- User-provided UFW output reported an active incoming-deny firewall with SSH/dashboard/agent allowances from broad private IPv4 ranges. These existing ranges accommodate Hyper-V Default Switch changes; no rules were narrowed or added.
+- The reported IPv4/IPv6 INPUT policies are DROP, but Tailscale chains run before UFW and accept traffic on the Tailscale interface. Documented the separate role of the restricted tailnet policy, rather than treating UFW as an additional service restriction for that accepted traffic.
+- Recorded configuration observations without private device addresses or raw terminal output. Full filter-rule review, public reachability, trusted HTTPS and recovery checks remain open; the private-access milestone is still in progress. See [firewall review](docs/private-access-validation.md#user-reported-firewall-rule-review).
+
 ### 2026-10-04: Phone enrollment and first off-LAN denial observation
 - Verified an enrolled iPhone in the tailnet admin console and reread the unchanged Windows-to-VM TCP 22/443 policy. No phone permissions were added; a fresh Windows probe still reached dashboard TCP 443.
 - The user reported a private dashboard timeout and explicitly confirmed Wi-Fi was off, Tailscale remained Connected, and public websites loaded over cellular. Recorded this as one user-performed IPv4 HTTPS denial observation, not full service-matrix, authenticated access or public-exposure proof.

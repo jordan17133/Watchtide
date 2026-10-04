@@ -126,6 +126,38 @@ not authorization; the restricted loader path remains unchanged. Raw device
 inventory and terminal output are not included in this public report. The
 broader goal and execution order are in the [network coverage plan](network-coverage-plan.md).
 
+## User-Reported Firewall Rule Review
+
+On October 4, the user's Ubuntu session reported UFW active, low-level logging,
+incoming deny and outgoing allow defaults. Its displayed service exceptions
+allow SSH, dashboard and agent traffic from the three broad private IPv4
+address ranges. These are network-range permissions, not individual-device
+permissions. The build log records why they were added: Hyper-V's Default
+Switch previously changed address ranges and interrupted access. No allowance
+for API TCP 55000 or indexer TCP 9200 appeared in the UFW summary.
+
+The supplied IPv4 and IPv6 `INPUT` chains both have a `DROP` policy, with
+`ts-input` evaluated before the corresponding UFW chains. Both `ts-input`
+chains accept traffic on `tailscale0`, the VM's own tailnet address on loopback,
+and UDP 41641. The IPv4 chain also contains a non-Tailscale CGNAT-source drop
+and a narrower return exception; the displayed UDP acceptance precedes them.
+The `nft` table inventory listed filter, NAT and mangle tables for both families.
+Table names alone do not establish every rule or the active firewall backend.
+
+For traffic accepted in these `ts-input` chains, later UFW input rules are not
+an additional service restriction. Tailscale's internal access-policy filtering
+is a separate control, so the approved device-scoped TCP 22/443 grant remains
+important. This is consistent with the documented [netfilter integration](https://tailscale.com/docs/reference/netfilter-modes)
+and [internal packet filtering](https://tailscale.com/docs/features/firewall-mode).
+The UDP allowance supports Tailscale transport; it does not itself grant access
+to Wazuh services.
+
+This is a review of user-supplied configuration output, not an independently
+collected full firewall audit, an exact backup or an all-source reachability
+test. Full filter-rule contents, public reachability and recovery validation
+remain open. No rule, listener, policy or routing configuration was changed.
+Private device addresses and raw output are omitted from this report.
+
 ## Remaining checks
 
 - [x] Enroll Windows admin host and Ubuntu SOC VM.
@@ -135,6 +167,7 @@ broader goal and execution order are in the [network coverage plan](network-cove
 - [x] Verify a post-change scheduled SQL load and newly imported Sysmon alerts.
 - [x] Enroll an iPhone test client and record its user-performed IPv4 HTTPS denial over cellular with a working public-web control.
 - [x] Identify the IPv6 dashboard listener gap from user-provided VM output; the dashboard currently listens only on IPv4.
+- [x] Review user-provided UFW summary and IPv4/IPv6 INPUT and Tailscale chains; document Tailscale-before-UFW ordering without claiming a complete firewall audit.
 - [ ] Verify a fresh firewall baseline/checkpoint and VM-console recovery before VM/firewall changes.
 - [ ] Verify SSH login and dashboard login with a trusted HTTPS identity.
 - [ ] Test approved admin access from another network and the remaining denied services/address families from an unprivileged device.

@@ -17,7 +17,7 @@ What actually happened during the build, including every failure and fix, is rec
 | 7. SQL Server warehouse (moved ahead of Stage 6) | Done 2026-09-30; case log added 2026-10-01 (`warehouse/cases.py`) |
 | 8. Power BI report | Done 2026-10-01 (five pages including Cases, kept as a Power BI Project in Git) |
 | Detection validation | In progress: controlled SSH password-guessing test detected and written up |
-| 4c. Tailscale private remote access | Devices enrolled; narrow TCP 22/443 policy saved and rechecked 2026-10-04; local API/indexer probes fail; trusted HTTPS, authenticated/off-LAN and recovery tests pending ([results](docs/private-access-validation.md)) |
+| 4c. Tailscale private remote access | Admin/VM/test phone enrolled; narrow Windows TCP 22/443 grant unchanged; local checks and reported phone HTTPS denial over cellular recorded; trusted/authenticated access, approved off-LAN and recovery tests pending ([results](docs/private-access-validation.md)) |
 | 6. Watchtide API | Planned |
 | 5. Suricata network telemetry | Planned |
 
@@ -33,7 +33,7 @@ What actually happened during the build, including every failure and fix, is rec
 | Monitored endpoint | `jordan-pc` (Windows 11, Sysmon64 + Wazuh agent) |
 | Rollback point | Hyper-V checkpoint `sentinelgrid-pre-attack-2026-10-01` (the earlier `wazuh-clean` was merged when the disk grew) |
 | Pre-VPN firewall exceptions | 22, 443, 1514-1515 from private ranges (10/8, 172.16/12, 192.168/16); Tailscale path checked separately below |
-| Tailscale path, rechecked 2026-10-04 | IPv4 admin path reaches TCP 22/443; direct 1514/1515/9200/55000 probes fail. IPv6 SSH works; dashboard remains unreachable. Trusted HTTPS and off-network proof pending; see [validation report](docs/private-access-validation.md). |
+| Tailscale path, rechecked 2026-10-04 | IPv4 admin path reaches TCP 22/443; direct 1514/1515/9200/55000 probes fail. Phone HTTPS denial over cellular reported. IPv6 SSH works; dashboard has no IPv6 listener. Trusted/authenticated and approved off-network access pending; see [validation report](docs/private-access-validation.md). |
 
 ## Target architecture
 
@@ -349,7 +349,7 @@ No Critical vulnerability findings remain unexplained, and the Configuration Ass
 
 ## Stage 4c: Add private remote access with Tailscale
 
-**Status:** Windows admin host and Ubuntu VM enrolled and online. The policy was reviewed and restricted to the selected admin device reaching the VM on TCP 22/443; four policy tests were accepted on save. Local IPv4 SSH/dashboard checks pass, direct API/indexer probes fail, and the post-change scheduled SQL load imported new Sysmon alerts. IPv6 SSH works; dashboard TCP 443 was unreachable before and after the change. Authenticated access, off-LAN/unprivileged-device tests and Power BI refresh remain pending. See [docs/private-access-validation.md](docs/private-access-validation.md) for evidence and limits, and [docs/private-access-plan.md](docs/private-access-plan.md) for the remaining gates and rollback.
+**Status:** Windows admin host, Ubuntu VM and test phone enrolled. The policy still permits only the selected Windows device to reach the VM on TCP 22/443; four policy tests were accepted on save. Local IPv4 management/data-port checks and post-change ingestion passed. A user-confirmed phone HTTPS timeout over cellular records the first off-LAN denial observation, not full service-matrix proof. User-provided listener output explains the IPv6 dashboard gap. Trusted authenticated access, approved off-LAN access, firewall/recovery review, remaining denied paths and reporting health remain open. See [docs/private-access-validation.md](docs/private-access-validation.md) for evidence and limits, and [docs/private-access-plan.md](docs/private-access-plan.md) for the remaining gates and rollback.
 
 ### Steps
 
@@ -367,6 +367,12 @@ Approved remote SSH/dashboard access succeeds; unauthorized tailnet access and d
 ## Stage 5: Add Suricata network telemetry
 
 Do this only after Stage 4 works reliably.
+
+The [network coverage plan](docs/network-coverage-plan.md) now prioritizes this
+pilot after current access/health checks. First verify the router/switch/Hyper-V
+capture path and available resources; a sensor in the NAT VM does not by itself
+prove whole-home visibility. Browsing-privacy routing is a separate planned
+control, not an effect of installing Suricata.
 
 ### Documentation
 

@@ -10,17 +10,17 @@ Watchtide is a working security operations lab: a Windows endpoint instrumented 
 
 ## What is coming next
 
-Updated October 3, 2026. The pipeline and investigations below are built; these next milestones have their own validation gates.
+Updated October 4, 2026. The pipeline and investigations below are built; these next milestones have their own validation gates.
 
 | Priority | Work | Status | Evidence to publish |
 |---|---|---|---|
-| Current | **Private remote access with Tailscale** | Both devices enrolled; narrow policy applied; local IPv4 port checks and post-change SQL load passed; authenticated/off-LAN validation pending | [Policy and local test results](docs/private-access-validation.md), then authenticated admin access, denied unprivileged-device access, and Power BI refresh |
-| Next | **One remote Wazuh endpoint** | Planned after private access is validated | A benign event traced from a separate network through Wazuh, SQL and Power BI |
-| Following | **More detection validation** | Planned: Atomic Red Team on a separate test VM | Five or more techniques tested, with cases documenting detections and gaps |
+| Current | **Private remote access with Tailscale** | Admin host, VM and test phone enrolled; narrow policy applied; local checks and a reported phone HTTPS denial over cellular recorded; trusted/authenticated and approved off-LAN access pending | [Policy and access test results](docs/private-access-validation.md), then authenticated admin access, remaining denied-service checks, and Power BI refresh |
+| Next | **Suricata network-visibility pilot** | Planned after current access/health checks and capture-point review | A benign network event traced from the observed segment through Suricata, Wazuh and reporting |
+| Following | **Whole-network coverage and browsing privacy** | Planned; router/gateway capabilities and routing design not yet reviewed | Per-segment coverage, DNS/IPv4/IPv6 routing checks, privacy limits and protected log retention documented |
 
 The [private-access plan](docs/private-access-plan.md) explains the VPN decision, remaining steps and completion tests. The full [roadmap](ROADMAP.md) also covers phishing analysis, Splunk practice, a short demo video and Suricata. Employers can review the public console and documentation without joining the private lab.
 
-**Next VPN step:** verify authenticated SSH/dashboard access and HTTPS trust, investigate the existing IPv6 dashboard reachability gap, then test from a separate approved off-LAN client and an unprivileged device. The current policy has been reviewed and restricted: local IPv4 SSH/dashboard checks pass, direct API/indexer access fails, and the restricted loader still imports new alerts. Device enrollment is complete; the overall private-access security milestone remains in progress.
+**Current step:** finish Stage 4c private-access validation: review the VM firewall/recovery baseline and resolve trusted HTTPS. The enrolled phone has no SOC grant; the user confirmed a private dashboard timeout over cellular while normal websites loaded. VM listener output explains the IPv6 dashboard gap: the dashboard listens only on IPv4. Authenticated and approved off-LAN access, remaining denied-service checks, revocation and reporting refresh remain open. Permanent phone dashboard access is not required. The [network coverage plan](docs/network-coverage-plan.md) separates current SOC access, future Suricata visibility and future browsing-privacy routing; none of these is a promise of complete privacy.
 
 **Reliability update (October 4):** workspace-review fixes have offline regression coverage for loader failures, late-alert reconciliation, scoped case start dates, publication parsing and agent restart recovery. Individual alerts no longer inherit a historical rule verdict. The first scheduled full reconciliation succeeded in 30 seconds with 96 new alerts. A subsequent incremental run succeeded but took over eight minutes; a SQL timeout and recorded host memory pressure require follow-up before expanding the lab. Controlled late-event validation and Power BI refresh remain pending. See [validation and limits](docs/reliability-validation.md).
 

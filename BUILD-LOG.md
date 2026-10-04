@@ -46,6 +46,12 @@ Windows host                         |
 
 ## Timeline
 
+### 2026-10-04: Phone enrollment and first off-LAN denial observation
+- Verified an enrolled iPhone in the tailnet admin console and reread the unchanged Windows-to-VM TCP 22/443 policy. No phone permissions were added; a fresh Windows probe still reached dashboard TCP 443.
+- The user reported a private dashboard timeout and explicitly confirmed Wi-Fi was off, Tailscale remained Connected, and public websites loaded over cellular. Recorded this as one user-performed IPv4 HTTPS denial observation, not full service-matrix, authenticated access or public-exposure proof.
+- User-provided Ubuntu output showed all four SOC/Tailscale services active, the dashboard listening only on IPv4, the indexer on loopback, and SSH/API listeners on both families. The SSH route/trust and firewall enforcement remain unverified. No service, firewall, certificate or restricted-loader changes were made. See [access validation](docs/private-access-validation.md#phone-enrollment-and-off-lan-denial).
+- Clarified the next execution order around whole-network SOC coverage: finish current access/health gates, verify the capture point, build a Suricata pilot, then expand measured coverage and separately evaluate whole-network browsing privacy. The phone remains a denied test client; no permanent phone grant, privacy provider, exit node, router or sensor deployment was added. See the [coverage plan](docs/network-coverage-plan.md).
+
 ### 2026-10-04: VPN recheck and runtime follow-up
 - Reran all 23 publication tests, 15 loader/case tests and three mocked recovery paths successfully. Read the saved Tailscale policy and its four tests without editing; local IPv4/IPv6 port probes reproduce the approved management-only results.
 - Verified TLS handshakes identified an untrusted issuer chain in system trust and certificate-name mismatches for tailnet IP/MagicDNS access with the existing Wazuh CA. No warning bypass, credential submission, certificate issuance or trust-store change was made. Trusted dashboard access remains open; public certificate-name disclosure needs review before choosing a certificate route.
@@ -272,9 +278,11 @@ Windows host                         |
 - [x] Verify Tailscale enrollment on the admin device and Ubuntu VM; record initial local TCP connectivity ([results](docs/private-access-validation.md)).
 - [x] Save/review the exact tailnet policy privately; apply approved device-scoped TCP 22/443 access and verify local TCP 55000 denial.
 - [x] Verify accepted policy tests, local IPv4 management/data-port results and a successful post-change SQL load with new Sysmon alerts ([results](docs/private-access-validation.md)).
+- [x] Enroll an iPhone test client and record its reported private HTTPS timeout over cellular with a working public-web control.
+- [x] Identify the IPv6 dashboard gap: user-provided listener output shows no IPv6 dashboard listener.
 - [ ] Verify the fresh firewall baseline/checkpoint and VM-console recovery before changing VM/firewall settings.
-- [ ] Verify authenticated SSH/dashboard access and HTTPS trust; diagnose the existing IPv6 dashboard gap.
-- [ ] Test separate off-LAN and unprivileged-device access, direct public access and device revocation.
+- [ ] Verify authenticated SSH/dashboard access and HTTPS trust; record the intended supported address families.
+- [ ] Test approved off-LAN access and the remaining denied-service paths, direct public access and device revocation.
 - [ ] Confirm manager-side agent Active status, a controlled event trace and Power BI refresh ([plan](docs/private-access-plan.md)).
 - [ ] Enroll one remote endpoint and publish a benign event trace through Wazuh, SQL and Power BI.
 

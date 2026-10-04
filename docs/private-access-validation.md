@@ -1,10 +1,10 @@
-# Tailscale Enrollment, Policy and Local Validation
+# Tailscale Enrollment, Policy and Access Validation
 
 **Date:** October 3, 2026; rechecked October 4, 2026.
 
 **Status:** partial validation; private-access milestone remains open.
 
-## Scope and method
+## Initial scope and method
 
 The Ubuntu client's status output listed both the Linux SOC VM and Windows admin host in the tailnet. A separate check with the Windows client's `status --json` confirmed the client is Running, the Windows device is online, and the SOC peer is online.
 
@@ -87,6 +87,45 @@ firewall, service, scheduled task, or Hyper-V settings were changed. The current
 policy does not authorize a newly enrolled phone or laptop: enroll a test
 client first, verify default denial, then separately review any minimal grant.
 
+## Phone Enrollment and Off-LAN Denial
+
+An iPhone was enrolled on October 4 and verified in the authenticated admin
+console under the same tailnet account. The active policy was reread: it still
+contains only the Windows-to-VM TCP 22/443 grant. No phone grant, firewall rule,
+certificate, or service configuration was changed. A fresh Windows socket
+probe confirmed the VM was online and dashboard TCP 443 remained reachable
+from the permitted admin host; this is not an authenticated HTTPS check.
+
+The user tested the VM's tailnet IPv4 HTTPS address in Safari on the phone.
+After an initially inconclusive white screen, Safari reported a connection
+timeout. The user explicitly confirmed Wi-Fi was off, Tailscale remained
+Connected, and normal websites loaded over cellular. This is a user-performed
+off-LAN denial observation for one phone and one IPv4 service, consistent with
+the unchanged device-scoped policy. No certificate warning was bypassed and
+no Wazuh credentials were submitted. It does not establish denial of every
+port/address family, identify the packet-drop mechanism, or prove approved
+off-LAN access, authenticated dashboard use, revocation, or public exposure.
+
+Separately, the user's Ubuntu SSH session reported `active` for
+`wazuh-manager`, `wazuh-indexer`, `wazuh-dashboard`, and `tailscaled`. The
+session's connection route and SSH host-key trust were not independently
+verified. Its read-only `ss` output showed:
+
+| Service | Reported listener binding | Interpretation |
+|---|---|---|
+| OpenSSH, TCP 22 | All IPv4 and IPv6 interfaces | Listener available on both families; access controls still required |
+| Dashboard, TCP 443 | All IPv4 interfaces; no IPv6 listener | Explains the observed IPv6 dashboard gap; IPv6 support was not enabled |
+| Indexer, TCP 9200 | IPv4-mapped loopback | Network-interface listener remains restricted to the VM itself |
+| Wazuh API, TCP 55000 | All IPv4 and IPv6 interfaces | Broad listener is not proof of public reachability; host firewall review remains necessary |
+
+Next: review the current VM firewall and recovery baseline and resolve trusted
+HTTPS identity. The phone remains a denied test client; permanent phone
+dashboard access is not required for the whole-network SOC goal. Any temporary
+permission for an approved off-LAN test needs separate review. Enrollment is
+not authorization; the restricted loader path remains unchanged. Raw device
+inventory and terminal output are not included in this public report. The
+broader goal and execution order are in the [network coverage plan](network-coverage-plan.md).
+
 ## Remaining checks
 
 - [x] Enroll Windows admin host and Ubuntu SOC VM.
@@ -94,10 +133,11 @@ client first, verify default denial, then separately review any minimal grant.
 - [x] Review the actual tailnet policy and enrolled devices; save its exact original outside Git.
 - [x] Apply the approved narrow policy with four accepted policy tests, preserve the restricted loader path, and retest local permitted and excluded ports.
 - [x] Verify a post-change scheduled SQL load and newly imported Sysmon alerts.
+- [x] Enroll an iPhone test client and record its user-performed IPv4 HTTPS denial over cellular with a working public-web control.
+- [x] Identify the IPv6 dashboard listener gap from user-provided VM output; the dashboard currently listens only on IPv4.
 - [ ] Verify a fresh firewall baseline/checkpoint and VM-console recovery before VM/firewall changes.
-- [ ] Investigate the existing IPv6 dashboard reachability gap; the policy allows TCP 443 but the service probe fails.
 - [ ] Verify SSH login and dashboard login with a trusted HTTPS identity.
-- [ ] Test allowed admin access from another network and denied access from an unprivileged device.
+- [ ] Test approved admin access from another network and the remaining denied services/address families from an unprivileged device.
 - [ ] Check direct public access, device revocation, new-event flow into SQL and Power BI refresh.
 
 The remaining gates and recovery procedure are in [private-access-plan.md](private-access-plan.md). A tailnet policy change was applied and tested locally; no firewall or service configuration change was made. The overall private-access security milestone remains in progress. Private addresses, account/device inventory and unredacted screenshots are excluded from public publication.

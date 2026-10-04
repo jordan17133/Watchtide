@@ -4,7 +4,7 @@
 
 **Updated:** October 3, 2026
 
-**Status:** Windows admin host and Ubuntu VM enrolled and online. The actual policy was reviewed and restricted to the selected Windows admin device reaching the VM on TCP 22/443. Four policy tests were accepted on save; local IPv4 SSH/dashboard checks pass and direct API/indexer checks fail. The post-change scheduled SQL load imported new Sysmon alerts. Authenticated access, off-LAN/unprivileged-device tests, public-access/revocation checks and Power BI refresh remain pending. IPv6 dashboard reachability needs investigation. See [private-access-validation.md](private-access-validation.md).
+**Status:** Windows admin host, Ubuntu VM and test phone enrolled. The policy still permits only the selected Windows admin device to reach the VM on TCP 22/443. Four policy tests were accepted on save; local IPv4 management/data-port checks and post-change ingestion passed. A user-confirmed phone HTTPS timeout over cellular is the first off-LAN denial observation, not full service-matrix proof. User-provided listener output explains the IPv6 dashboard gap. Trusted authenticated access, approved off-LAN access, firewall/recovery review, remaining denied paths, public-access/revocation checks and reporting health remain open. See [private-access-validation.md](private-access-validation.md).
 
 ## Decision and purpose
 
@@ -58,7 +58,7 @@ Four saved policy tests assert four allowed and sixteen denied same-address-fami
 
 The local loader still targets the Hyper-V private-network hostname, not a tailnet address. Its no-shell, loopback-only forwarding configuration was not edited. No operating-system firewall, service listener, subnet route, exit node, device tag or Wazuh configuration was changed. The post-change scheduled load succeeded and inserted 49 alerts, including 42 Sysmon alerts.
 
-Next, verify authenticated OpenSSH/dashboard access and HTTPS identity. Investigate dashboard TCP 443 over tailnet IPv6, which failed both before and after the change even though the saved policy permits it. Then test a separate approved off-LAN client and an unprivileged device; newly enrolled devices, including an iPhone, need a separately reviewed explicit grant for SOC access.
+Next, review the current firewall/recovery baseline and verify authenticated OpenSSH/dashboard access and HTTPS identity. User-provided VM output shows the dashboard listens only on IPv4, explaining the IPv6 reachability gap; record the supported family rather than assuming policy permission creates a listener. The enrolled phone remains a denied test client. Its reported HTTPS timeout over cellular covers one negative IPv4 test; approved off-LAN access and other denied paths remain open. Any temporary test-client grant requires separate review. Permanent phone dashboard access is not required for the [whole-network coverage goal](network-coverage-plan.md).
 
 For future changes, review existing `grants` and legacy `acls`, including broad permissions that reach the SOC VM. Check the source and destination selectors, groups, `tagOwners`, any Tailscale SSH rules, and other tailnet access that must be preserved. [Grants are additive](https://tailscale.com/docs/reference/syntax/grants): a narrow grant does not override a broader permission, and grants can coexist with legacy ACLs. Restricting direct TCP 55000 access requires reviewing every rule that could still allow that connection.
 
@@ -85,16 +85,19 @@ For every test, record the date, source role, destination/service, expected resu
 | Admin device and Ubuntu VM enrolled | Ubuntu status output and Windows client status confirm both devices; private inventory reviewed | Verified 2026-10-03 |
 | Current Access controls policy reviewed | Existing permissions and required access reviewed; exact original saved privately before an approved change | Verified 2026-10-03; narrow replacement saved with four policy tests; fresh firewall baseline/checkpoint and VM-console recovery still to verify |
 | Approved admin access off-LAN | Successful SSH login and dashboard login with verified HTTPS identity | Pending |
-| Unprivileged tailnet device denied | TCP 22/443 connection attempts fail from a device without admin permission | Pending |
+| Unprivileged tailnet device denied | TCP 22/443 connection attempts fail from a device without admin permission | Partial: user-confirmed phone IPv4 HTTPS timeout over cellular with public-web control on October 4; other denied paths/address families pending |
 | No direct public service access | External checks for TCP 22/443/1514/1515/9200/55000 fail; forwarding/publishing reviewed; IPv4/IPv6 scope recorded | Pending |
 | Internal data services remain restricted | Direct TCP 9200/55000 access fails from remote test devices; loader tunnel still works | Local IPv4/IPv6 probes fail and post-change loader succeeds; separate remote/unprivileged-source proof pending |
-| Existing collection/reporting stays healthy | Local agent Active, successful scheduled load, new event in SQL, Power BI refresh | Partial: services Running; post-change run 323 succeeded with 49 new alerts, 42 from Sysmon; agent Active status, controlled event trace and Power BI refresh pending |
+| Existing collection/reporting stays healthy | Local agent Active, successful scheduled load, new event in SQL, Power BI refresh | Partial: services Running; post-change ingestion and first reconciliation succeeded; later SQL timeout/paging and slow-run evidence need follow-up; agent Active status, controlled event trace and Power BI refresh pending |
 | Device revocation works | Remove a disposable test device and confirm it loses private service access | Pending |
 | Public documentation is sanitized | Access matrix and test outcomes published without credentials or private inventory | Sanitized enrollment/policy/local-test report maintained; remaining validation evidence not yet collected |
 
 Keep this status honest: installing a client is a setup step; passing these tests is the evidence for the control.
 
-## Next exercise: remote collection
+## Later exercise: remote collection
+
+This remains a portfolio exercise, not a prerequisite for the [next Suricata
+pilot and whole-network coverage work](network-coverage-plan.md).
 
 - [ ] Enroll one authorized test endpoint on a separate network with TCP 1515 allowed only for enrollment.
 - [ ] Remove its enrollment permission, retain TCP 1514, and confirm ingestion continues.

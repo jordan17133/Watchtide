@@ -17,11 +17,31 @@ What is built, what comes next, and why. Each chapter ends the same way: build i
 - [x] Five Power BI dashboards kept as code in Git
 - [x] Public read-only SOC console on a scrubbed snapshot ([console](https://jordan17133.github.io/Watchtide/))
 
-## Next, in order
+## Current Execution Order
+
+The immediate goal is a SOC covering the home network, with a separate
+whole-network browsing-privacy design. Private SOC access, network detection,
+and internet egress privacy are different controls; phone enrollment does not
+complete any of them. See the [network coverage plan](docs/network-coverage-plan.md).
+
+1. Finish the current Stage 4c access validation and recheck loader/reporting health.
+2. Map the router, switches, Wi-Fi and Hyper-V paths; select and verify a traffic capture point and available sensor resources.
+3. Build a Stage 5 Suricata pilot and trace a harmless network event into Wazuh and reporting.
+4. Expand measured coverage across approved devices/segments and review whole-network privacy routing, DNS, IPv6 and failure behavior. Protect the resulting private logs.
+
+No Suricata sensor or whole-network privacy-egress change has been deployed.
+Permanent phone dashboard access is not required; the phone currently serves
+as a denied off-LAN test client. Other portfolio chapters remain planned work,
+not prerequisites that must all precede the network pilot.
 
 **Reliability checkpoint (October 4, 2026):** the six workspace-review findings have implementation fixes and offline regression checks. The first scheduled reconciliation succeeded in 30 seconds with 96 new alerts. A later incremental run succeeded but took over eight minutes; SQL timeout and host paging evidence make runtime/memory follow-up the next prerequisite. A controlled late-event trace and Power BI refresh remain pending before expanding collection. The public console keeps individual alerts untriaged and historical rule reviews separate. See [validation and limits](docs/reliability-validation.md). This does not close the private-access security gates below.
 
-**Current focus (October 3, 2026):** the Windows admin host and Ubuntu VM are enrolled in Tailscale. The actual policy was reviewed, its default allow-all grant replaced with device-scoped TCP 22/443 access, and four policy tests accepted on save. [Local before/after results](docs/private-access-validation.md) confirm IPv4 SSH/dashboard reachability, API/indexer unreachability and a successful post-change SQL load with new Sysmon alerts. Next: authenticated SSH/dashboard access and HTTPS trust, the existing IPv6 dashboard gap, then separate off-LAN and unprivileged-device tests. Public-access/revocation checks, a controlled event trace and Power BI refresh remain pending. The [private-access plan](docs/private-access-plan.md) records the remaining gates. Later chapters are planned work, with no promised delivery dates.
+**Current focus (October 4, 2026):** the Windows admin host, Ubuntu VM and an iPhone test client are enrolled in Tailscale. The reviewed policy still grants only Windows-to-VM TCP 22/443, with four accepted policy tests. [Access results](docs/private-access-validation.md) include local management/data-port checks, post-change SQL ingestion, and a user-confirmed phone HTTPS timeout over cellular with normal websites loading. The phone has no SOC grant. VM listener output explains the IPv6 dashboard gap; trusted HTTPS, current firewall/recovery review and approved off-LAN access remain next. Remaining denied-service tests, public-access/revocation checks, a controlled event trace and Power BI refresh are still open. The [private-access plan](docs/private-access-plan.md) records the remaining gates. Later chapters are planned work, with no promised delivery dates.
+
+## Portfolio Chapters
+
+This catalogue includes longer-term portfolio work; its row numbers are not
+runbook stages or a requirement to delay the network pilot.
 
 | # | Chapter | Why it matters | Done when |
 |---|---|---|---|

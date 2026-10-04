@@ -349,13 +349,13 @@ No Critical vulnerability findings remain unexplained, and the Configuration Ass
 
 ## Stage 4c: Add private remote access with Tailscale
 
-**Status:** Windows admin host and Ubuntu VM enrolled and online. Initial local tailnet TCP probes are in [docs/private-access-validation.md](docs/private-access-validation.md); TCP 55000 is reachable and needs restriction review. Authenticated access and allowed/denied off-LAN tests remain pending. The detailed procedure, access matrix, evidence checklist and rollback are in [docs/private-access-plan.md](docs/private-access-plan.md).
+**Status:** Windows admin host and Ubuntu VM enrolled and online. The policy was reviewed and restricted to the selected admin device reaching the VM on TCP 22/443; four policy tests were accepted on save. Local IPv4 SSH/dashboard checks pass, direct API/indexer probes fail, and the post-change scheduled SQL load imported new Sysmon alerts. IPv6 SSH works; dashboard TCP 443 was unreachable before and after the change. Authenticated access, off-LAN/unprivileged-device tests and Power BI refresh remain pending. See [docs/private-access-validation.md](docs/private-access-validation.md) for evidence and limits, and [docs/private-access-plan.md](docs/private-access-plan.md) for the remaining gates and rollback.
 
 ### Steps
 
 1. Save the current firewall and tailnet policy privately, record loader/agent health, and take a Hyper-V checkpoint with VM-console access available.
 2. Connect both the admin device and Ubuntu VM to Tailscale. Installing it on the Hyper-V host alone does not enroll the guest. Confirm the correct dashboard HTTPS hostname and certificate before relying on remote access.
-3. Review the current Access controls policy before changing it; it has not yet been supplied for review. Identify broad grants and legacy ACLs that reach SOC services, preserve required access, and keep the saved baseline and VM console available for recovery.
+3. Review the current Access controls policy before changing it. Identify broad grants and legacy ACLs that reach SOC services, preserve required access, and keep the saved baseline and VM console available for recovery. The first review and approved policy change were completed on October 3, 2026; repeat this review before adding devices or services.
 4. Apply the reviewed narrow permissions for approved admin devices to SSH/dashboard and, later, monitored endpoints to agent ingestion. Keep enrollment temporary, the indexer on loopback and the existing restricted loader key. Verify the effective firewall and tailnet policy together; adding a narrow grant does not override a broad permission.
 5. Test from a separate approved device off the home network, an unprivileged tailnet test device, and a device without Tailscale while the Hyper-V host and Ubuntu VM remain running. Recheck the local Wazuh agent and the next scheduled SQL load before tightening existing local exceptions.
 6. Publish a sanitized test report and update completion boxes only after the tests pass. Then enroll one remote endpoint and trace a harmless collected event through Wazuh, SQL and Power BI.

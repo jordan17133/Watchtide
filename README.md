@@ -14,13 +14,13 @@ Updated October 3, 2026. The pipeline and investigations below are built; these 
 
 | Priority | Work | Status | Evidence to publish |
 |---|---|---|---|
-| Current | **Private remote access with Tailscale** | Both devices enrolled; initial connectivity checked; least-privilege and off-LAN validation pending | [Initial test results](docs/private-access-validation.md), then authenticated admin access, denied unauthorized access, and pipeline health before/after |
+| Current | **Private remote access with Tailscale** | Both devices enrolled; narrow policy applied; local IPv4 port checks and post-change SQL load passed; authenticated/off-LAN validation pending | [Policy and local test results](docs/private-access-validation.md), then authenticated admin access, denied unprivileged-device access, and Power BI refresh |
 | Next | **One remote Wazuh endpoint** | Planned after private access is validated | A benign event traced from a separate network through Wazuh, SQL and Power BI |
 | Following | **More detection validation** | Planned: Atomic Red Team on a separate test VM | Five or more techniques tested, with cases documenting detections and gaps |
 
 The [private-access plan](docs/private-access-plan.md) explains the VPN decision, remaining steps and completion tests. The full [roadmap](ROADMAP.md) also covers phishing analysis, Splunk practice, a short demo video and Suricata. Employers can review the public console and documentation without joining the private lab.
 
-**Next VPN step:** review the current Tailscale Access controls policy before changing permissions. Then restrict administration to approved devices, remove unnecessary direct API access, preserve the restricted loader tunnel, and test both allowed and denied connections. Device enrollment is complete; the overall private-access security milestone remains in progress.
+**Next VPN step:** verify authenticated SSH/dashboard access and HTTPS trust, investigate the existing IPv6 dashboard reachability gap, then test from a separate approved off-LAN client and an unprivileged device. The current policy has been reviewed and restricted: local IPv4 SSH/dashboard checks pass, direct API/indexer access fails, and the restricted loader still imports new alerts. Device enrollment is complete; the overall private-access security milestone remains in progress.
 
 ![SOC Overview page in Power BI](docs/screenshots/powerbi-soc-overview.jpg)
 
@@ -63,8 +63,8 @@ Windows host                         |
 | [SentinelGrid-Build-Runbook.md](SentinelGrid-Build-Runbook.md) | Stage-by-stage build guide with completion gates, revised with every lesson from the real build |
 | [BUILD-LOG.md](BUILD-LOG.md) | What actually happened: timeline, seven problems hit and how each was solved, open items |
 | [ROADMAP.md](ROADMAP.md) | Upcoming work, its purpose and the evidence required to call each milestone done |
-| [docs/private-access-plan.md](docs/private-access-plan.md) | Tailscale design decision, intended access rules, validation checklist and rollback plan; implementation verification pending |
-| [docs/private-access-validation.md](docs/private-access-validation.md) | Verified device enrollment and initial TCP results, including an API restriction issue still awaiting policy review |
+| [docs/private-access-plan.md](docs/private-access-plan.md) | Tailscale design decision, deployed management scope, remaining validation gates and rollback plan |
+| [docs/private-access-validation.md](docs/private-access-validation.md) | Enrollment, reviewed policy, before/after TCP results and post-change SQL loader evidence; remaining limits explicit |
 | [triage/](triage/) | Alert investigation reports |
 | [wazuh/rules/sentinelgrid_tuning.xml](wazuh/rules/sentinelgrid_tuning.xml) | Custom Wazuh rules deployed to the manager |
 | [warehouse/](warehouse/) | Idempotent SQL Server schema, reporting views and the script that applies them; `cases.py` opens, assigns and closes cases with a full history |
@@ -91,14 +91,14 @@ Windows host                         |
 
 | Control | Implementation |
 |---|---|
-| Network exposure | Baseline: VM on Hyper-V's NAT Default Switch, no port forwarding; `ufw` denies inbound by default with private-range exceptions for 22, 443 and 1514-1515. The indexer (9200) stays on loopback. Initial Tailscale checks found TCP 55000 reachable from the admin host; API access restrictions are awaiting policy review ([results](docs/private-access-validation.md)). |
+| Network exposure | Baseline: VM on Hyper-V's NAT Default Switch, no port forwarding; `ufw` denies inbound by default with private-range exceptions for 22, 443 and 1514-1515. The indexer (9200) stays on loopback. Tailscale now permits only the selected Windows admin device to reach the VM on TCP 22/443; local IPv4 checks pass and direct TCP 9200/55000 checks fail. Off-LAN/public-access proof remains pending ([results](docs/private-access-validation.md)). |
 | Credentials | Installer-generated admin password rotated. A dedicated read-only indexer account for the loader. Secrets live in a git-ignored `.env` and a private backup outside the repo. |
 | Loader access | SSH key limited in `authorized_keys` to `permitopen="127.0.0.1:9200"` with `command="/bin/false"`. Verified that it cannot run commands. |
 | Transport | TLS verified against the Wazuh root CA, with hostname checking on. Only Python's strict-mode flag is relaxed, because the installer's CA lacks a keyUsage extension; a wrong-hostname test is still rejected. |
 | Recovery | Hyper-V checkpoints at known-good points. |
 | Data hygiene | The Power BI file, which embeds alert data, is kept out of Git. |
 
-**In progress: Tailscale private remote access.** The Windows admin host and Ubuntu VM are enrolled and online. Initial local tailnet probes reached SSH/dashboard ports and could not reach the indexer, but also reached the Wazuh API port; restriction review is the next step. The [validation report](docs/private-access-validation.md) records those observations and their limits. The [plan](docs/private-access-plan.md) requires authenticated access, denied connections and off-LAN tests before this becomes a completed control. A future live console/API will be private; GitHub Pages will continue to serve the sanitized snapshot.
+**In progress: Tailscale private remote access.** The Windows admin host and Ubuntu VM are enrolled and online. The default allow-all grant was replaced with device-scoped TCP 22/443 permissions, and four policy tests were accepted on save. Local IPv4 SSH/dashboard reachability and API/indexer unreachability are verified; the next scheduled SQL load succeeded with new Sysmon alerts. IPv6 SSH works, but dashboard TCP 443 was unreachable both before and after the change. The [validation report](docs/private-access-validation.md) records the evidence and limits. Authenticated logins, off-LAN and unprivileged-device tests, public-access/revocation checks and Power BI refresh remain open. A future live console/API will be private; GitHub Pages will continue to serve the sanitized snapshot.
 
 ## Results
 

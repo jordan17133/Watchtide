@@ -1,4 +1,4 @@
-# Tailscale Enrollment and Initial Connectivity Checks
+# Tailscale Enrollment, Policy and Local Validation
 
 **Date:** October 3, 2026
 
@@ -10,7 +10,7 @@ The Ubuntu client's status output listed both the Linux SOC VM and Windows admin
 
 From the Windows admin host, TCP connection probes targeted the VM's Tailscale address using PowerShell `Test-NetConnection`. The detailed follow-up on TCP 55000 confirmed the connection used the Tailscale interface. Both machines were on the home network; this was not an off-LAN test. Actual addresses, account names and device inventory are omitted from this public report.
 
-## Observed results
+## Initial connectivity results
 
 | Check | Expected for this milestone | Observed | Interpretation |
 |---|---|---|---|
@@ -23,20 +23,42 @@ From the Windows admin host, TCP connection probes targeted the VM's Tailscale a
 
 These probes do not establish authenticated application access or prove that all other sources are denied. The unsuccessful indexer probe establishes unreachability from this source at this time, not the exact listener or firewall configuration.
 
-## Finding and next action
+## Policy review and applied change
 
 Adding the VPN created a path on which TCP 55000 is reachable from the Windows admin host. This is a private-network TCP observation, not evidence of public-internet exposure or unauthorized API use. API authentication was not tested.
 
-Review the existing tailnet policy before changing it. Apply narrowly selected SSH/dashboard permissions, preserve the restricted loader path, and exclude direct API/indexer access from devices that do not need it. Verify the operating-system firewall and service listeners where required, then repeat the port tests. Tailscale permissions are configured through [grants](https://tailscale.com/docs/features/access-control/grants); joining the tailnet alone is not proof of least privilege.
+The actual current policy was read from the authenticated admin console before editing. It had a default allow-all grant, a default self-device Tailscale SSH rule and no active legacy ACLs or tests. The device inventory contained only the Windows admin host and Ubuntu VM. The exact original and replacement policies are retained outside Git.
 
-The current Access controls policy has not yet been supplied for review. No replacement policy has been selected or applied. Inspect both grants and legacy ACLs for broader permissions before preparing a change; retain a private baseline and a working VM-console recovery path. The [policy review plan](private-access-plan.md#next-action-review-the-current-policy) records this next step.
+After explicit approval, the default grant was replaced with one device-scoped [grant](https://tailscale.com/docs/features/access-control/grants) for Windows-to-VM `tcp:22` and `tcp:443`, using explicit IPv4/IPv6 host aliases. No API, indexer, ingestion/enrollment, wildcard or user-wide grant remains. The `ssh` section is empty: ordinary OpenSSH remains the intended SSH service; Tailscale SSH was not enabled. The existing loader target resolves to the Hyper-V private network, so its restricted tunnel was not migrated or edited. Operating-system firewalls, service listeners and Wazuh configuration were unchanged.
+
+The first save was rejected because its test cases mixed IPv4 sources with IPv6 destinations. The original policy remained active. Tests were corrected to stay within each address family, without changing the approved permissions. The corrected save was accepted, and the server's persisted Tests view confirmed all four cases: four allowed and sixteen denied TCP assertions. These assertions validate policy intent, not application authentication or physical off-LAN behavior. The user-scoped Preview Rules view did not display the device-address-based draft; it was not used as proof of access.
+
+## Post-change results
+
+Windows-to-VM socket connection probes used fresh connections and a four-second timeout. These are local tailnet checks, not off-LAN tests.
+
+| Service | Tailnet IPv4 | Tailnet IPv6 | Interpretation |
+|---|---|---|---|
+| OpenSSH, TCP 22 | Reachable | Reachable | Network permission retained; authenticated login pending |
+| Dashboard, TCP 443 | Reachable | Unreachable | IPv4 permission retained; IPv6 failed before and after the change despite policy allowance; listener/firewall diagnosis and HTTPS/login checks pending |
+| Agent events, TCP 1514 | Unreachable | Unreachable | No remote-ingestion grant for this milestone; existing local agent path unchanged |
+| Enrollment, TCP 1515 | Unreachable | Unreachable | No enrollment grant for this milestone |
+| Indexer, TCP 9200 | Unreachable | Unreachable | No direct tailnet access from this admin device |
+| Wazuh API, TCP 55000 | Unreachable | Unreachable | Initial local API reachability issue resolved for this source; other-source/off-LAN proof pending |
+
+The next scheduled SQL load, run 323, started at 21:57 EDT on October 3 and finished successfully at 21:58. Read-only SQL checks confirmed 72 alerts fetched, 49 new alerts inserted, 42 of those from the Sysmon channel, and 10 vulnerability findings snapshotted. Sysmon, the Windows Wazuh service and Tailscale remained Running. This proves loader/collection continuity more directly than a task exit code alone; it is not a tagged controlled-event trace or a Power BI refresh test. The Wazuh manager's current agent Active status was not independently queried.
+
+## Remaining checks
 
 - [x] Enroll Windows admin host and Ubuntu SOC VM.
 - [x] Record initial local TCP reachability and the open API restriction issue.
-- [ ] Save and review the existing tailnet policy, required access and recovery baseline.
-- [ ] Apply the reviewed narrow permissions, preserve the restricted loader tunnel, and retest TCP 55000 and allowed/denied services.
+- [x] Review the actual tailnet policy and enrolled devices; save its exact original outside Git.
+- [x] Apply the approved narrow policy with four accepted policy tests, preserve the restricted loader path, and retest local permitted and excluded ports.
+- [x] Verify a post-change scheduled SQL load and newly imported Sysmon alerts.
+- [ ] Verify a fresh firewall baseline/checkpoint and VM-console recovery before VM/firewall changes.
+- [ ] Investigate the existing IPv6 dashboard reachability gap; the policy allows TCP 443 but the service probe fails.
 - [ ] Verify SSH login and dashboard login with a trusted HTTPS identity.
 - [ ] Test allowed admin access from another network and denied access from an unprivileged device.
 - [ ] Check direct public access, device revocation, new-event flow into SQL and Power BI refresh.
 
-The remaining gates and recovery procedure are in [private-access-plan.md](private-access-plan.md). This update changes documentation only; it does not apply policy or firewall changes.
+The remaining gates and recovery procedure are in [private-access-plan.md](private-access-plan.md). A tailnet policy change was applied and tested locally; no firewall or service configuration change was made. The overall private-access security milestone remains in progress. Private addresses, account/device inventory and unredacted screenshots are excluded from public publication.

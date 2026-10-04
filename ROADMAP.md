@@ -19,7 +19,7 @@ What is built, what comes next, and why. Each chapter ends the same way: build i
 
 ## Next, in order
 
-**Current focus (October 3, 2026):** the Windows admin host and Ubuntu VM are enrolled in Tailscale. [Initial local connection tests](docs/private-access-validation.md) confirmed SSH/dashboard port reachability and identified TCP 55000 as needing restriction review. The next action is to review the current Access controls policy before changing it. Authenticated access, least-privilege enforcement, off-LAN testing and full pipeline checks are pending. The [private-access plan](docs/private-access-plan.md) records the remaining gates. Later chapters are planned work, with no promised delivery dates.
+**Current focus (October 3, 2026):** the Windows admin host and Ubuntu VM are enrolled in Tailscale. The actual policy was reviewed, its default allow-all grant replaced with device-scoped TCP 22/443 access, and four policy tests accepted on save. [Local before/after results](docs/private-access-validation.md) confirm IPv4 SSH/dashboard reachability, API/indexer unreachability and a successful post-change SQL load with new Sysmon alerts. Next: authenticated SSH/dashboard access and HTTPS trust, the existing IPv6 dashboard gap, then separate off-LAN and unprivileged-device tests. Public-access/revocation checks, a controlled event trace and Power BI refresh remain pending. The [private-access plan](docs/private-access-plan.md) records the remaining gates. Later chapters are planned work, with no promised delivery dates.
 
 | # | Chapter | Why it matters | Done when |
 |---|---|---|---|

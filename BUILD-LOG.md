@@ -17,7 +17,7 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
 | 7. SQL Server reporting storage | Done: loader every 15 minutes; case log with history (`warehouse/cases.py`) meets the incident gate |
 | 8. Power BI report | Done: five pages (including Cases) built as a Power BI Project (definitions in Git, data cache ignored), ATT&CK catalog loaded |
 | Detection validation | In progress: controlled SSH password-guessing test detected end to end; every Critical alert since tuning explained |
-| 4c. Tailscale private remote access | Devices enrolled; local TCP probes complete; API restriction review, authenticated/off-LAN tests and full pipeline checks pending |
+| 4c. Tailscale private remote access | Devices enrolled; reviewed narrow policy saved; local IPv4 management/data-port checks and post-change SQL ingestion verified; authenticated/off-LAN and Power BI tests pending |
 
 ## What is running
 
@@ -159,6 +159,15 @@ Windows host                         |
 - Extended the private publisher's inventory redaction and rejection checks. Current public documentation uses a neutral local hostname and SSH account placeholder; literal tailnet addresses are rejected. This changes the current public copy, not previously published Git history.
 - This update is documentation and publication work only. No tailnet policy, operating-system firewall or Wazuh service configuration was changed.
 
+### 2026-10-03 (continued): Reviewed Tailscale restrictions and post-change ingestion
+
+- Read the actual policy in the authenticated admin console before changing it. It contained a default all-device/all-port grant and default self-device Tailscale SSH authorization; only the Windows admin host and Ubuntu VM were enrolled. Saved the exact original outside Git.
+- After explicit approval, replaced the broad grant with selected Windows-device-to-VM TCP 22/443 permissions using IPv4/IPv6 host aliases, and removed the unused default Tailscale SSH authorization rule. No tags, exit node, subnet route, OS firewall, listener, loader target or Wazuh settings were changed.
+- The first save was rejected for mixed IPv4/IPv6 test destinations. Corrected the tests to the source's address family without changing the grant. Tailscale accepted the replacement and persisted four tests covering four allowed and sixteen denied TCP connections.
+- Post-change local probes: IPv4 TCP 22/443 reachable; TCP 1514/1515/9200/55000 unreachable. IPv6 TCP 22 reachable and 1514/1515/9200/55000 unreachable. IPv6 dashboard TCP 443 failed both before and after the change; the policy permits it, so diagnose the service/listener path separately before claiming IPv6 dashboard access.
+- The existing loader still uses the Hyper-V private-network hostname and restricted no-shell tunnel. The next scheduled run (323, 21:57-21:58 EDT) succeeded: 72 alerts fetched, 49 inserted, including 42 Sysmon alerts, and 10 vulnerability findings snapshotted. Sysmon, the Wazuh Windows service and Tailscale remained Running.
+- Updated the README, roadmap, runbook, plan and [validation report](docs/private-access-validation.md) with sanitized results. Enrollment remains complete; the overall private-access security milestone remains in progress. Authenticated logins/HTTPS trust, separate off-LAN and unprivileged-device tests, public-access/revocation checks, a controlled event trace and Power BI refresh remain pending. Exact policies and review screenshots stay outside Git.
+
 ## Problems hit and how they were solved
 
 ### 1. Wazuh install failed: "No space left on device"
@@ -238,9 +247,12 @@ Windows host                         |
 
 ### Private remote access
 - [x] Verify Tailscale enrollment on the admin device and Ubuntu VM; record initial local TCP connectivity ([results](docs/private-access-validation.md)).
-- [ ] Save the current policy/firewall baseline and rollback details privately; review grants and restrict unnecessary TCP 55000 access.
-- [ ] Apply least-privilege grants and test allowed and denied SSH/dashboard access, including an off-LAN test and a public-access check.
-- [ ] Confirm the existing local agent and scheduled SQL loader still work; publish a sanitized results report ([plan](docs/private-access-plan.md)).
+- [x] Save/review the exact tailnet policy privately; apply approved device-scoped TCP 22/443 access and verify local TCP 55000 denial.
+- [x] Verify accepted policy tests, local IPv4 management/data-port results and a successful post-change SQL load with new Sysmon alerts ([results](docs/private-access-validation.md)).
+- [ ] Verify the fresh firewall baseline/checkpoint and VM-console recovery before changing VM/firewall settings.
+- [ ] Verify authenticated SSH/dashboard access and HTTPS trust; diagnose the existing IPv6 dashboard gap.
+- [ ] Test separate off-LAN and unprivileged-device access, direct public access and device revocation.
+- [ ] Confirm manager-side agent Active status, a controlled event trace and Power BI refresh ([plan](docs/private-access-plan.md)).
 - [ ] Enroll one remote endpoint and publish a benign event trace through Wazuh, SQL and Power BI.
 
 ### Detection work

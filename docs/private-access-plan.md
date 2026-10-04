@@ -4,7 +4,7 @@
 
 **Updated:** October 3, 2026
 
-**Status:** Windows admin host and Ubuntu VM enrolled and online. Initial TCP checks over the local Tailscale path are recorded in [private-access-validation.md](private-access-validation.md). Least-privilege enforcement, authenticated access, off-LAN tests and full pipeline checks remain pending; TCP 55000 is reachable from the admin host and needs restriction review.
+**Status:** Windows admin host and Ubuntu VM enrolled and online. The actual policy was reviewed and restricted to the selected Windows admin device reaching the VM on TCP 22/443. Four policy tests were accepted on save; local IPv4 SSH/dashboard checks pass and direct API/indexer checks fail. The post-change scheduled SQL load imported new Sysmon alerts. Authenticated access, off-LAN/unprivileged-device tests, public-access/revocation checks and Power BI refresh remain pending. IPv6 dashboard reachability needs investigation. See [private-access-validation.md](private-access-validation.md).
 
 ## Decision and purpose
 
@@ -32,7 +32,7 @@ An exit node and subnet router are deferred. The first exercise only needs devic
 
 ## Intended access matrix
 
-These are proposed permissions, not a record of deployed rules. Verify configured service ports before applying them; Wazuh defaults are listed in its [architecture documentation](https://documentation.wazuh.com/current/getting-started/architecture.html).
+This is the target access matrix. Device-scoped administration on TCP 22/443 was deployed on October 3, 2026; remote endpoint ingestion/enrollment remains planned, not permitted by the current tailnet grant. Other rows describe existing local paths and remaining validation requirements. Verify configured service ports before changes; Wazuh defaults are listed in its [architecture documentation](https://documentation.wazuh.com/current/getting-started/architecture.html).
 
 | Source | Destination | Intended access | Restriction |
 |---|---|---|---|
@@ -48,11 +48,19 @@ Use [Tailscale grants](https://tailscale.com/docs/features/access-control/grants
 
 Tailscale policy and the operating-system firewall control different paths. Review their effective behavior together; do not infer tailnet restrictions solely from `ufw status`. Preserve only the local agent/loader exceptions the lab needs. The [Ubuntu firewall guide](https://tailscale.com/docs/how-to/secure-ubuntu-server-with-ufw) describes restricting non-Tailscale access and testing from outside the private network.
 
-## Next action: review the current policy
+## Policy review and next action
 
-The current Access controls policy has not yet been supplied for review. Enrollment is complete, but no policy or firewall change is recorded. Save the actual policy privately before preparing any replacement; public documentation should contain only sanitized roles, selectors and test outcomes.
+The actual Access controls policy was reviewed on October 3, 2026 before an approved replacement was saved. The original policy contained one allow-all grant and the default self-device Tailscale SSH rule, with no active legacy ACLs, groups, tag owners, posture conditions or policy tests. Only the Windows admin host and Ubuntu VM were enrolled. The exact original policy and replacement are stored outside Git; public documentation contains only sanitized roles and results.
 
-Review existing `grants` and legacy `acls`, including broad permissions that reach the SOC VM. Check the source and destination selectors, groups, `tagOwners`, any Tailscale SSH rules, and other tailnet access that must be preserved. [Grants are additive](https://tailscale.com/docs/reference/syntax/grants): a narrow grant does not override a broader permission, and grants can coexist with legacy ACLs. Restricting direct TCP 55000 access requires reviewing every rule that could still allow that connection.
+The deployed replacement uses explicit host aliases for both devices' tailnet IPv4 and IPv6 addresses. One grant permits the selected Windows device to reach the VM on `tcp:22` and `tcp:443`; no user-wide, wildcard, ingestion/enrollment, indexer or API grant was added. The `ssh` section is empty, removing the default Tailscale SSH authorization rule without enabling or changing ordinary OpenSSH. An OpenSSH banner was observed before the change; authenticated shell access remains untested.
+
+Four saved policy tests assert four allowed and sixteen denied same-address-family TCP connections: approved administration, blocked direct ingestion/enrollment/indexer/API access, and blocked new VM-to-Windows SSH/HTTPS/SQL/RDP connections. The first save was rejected because its tests paired IPv4 sources with IPv6 destinations; correcting the tests left the approved grant unchanged. Tailscale accepted the corrected policy and the persisted Tests page lists all four cases. Policy tests are not substitutes for actual connection, authentication or off-LAN tests.
+
+The local loader still targets the Hyper-V private-network hostname, not a tailnet address. Its no-shell, loopback-only forwarding configuration was not edited. No operating-system firewall, service listener, subnet route, exit node, device tag or Wazuh configuration was changed. The post-change scheduled load succeeded and inserted 49 alerts, including 42 Sysmon alerts.
+
+Next, verify authenticated OpenSSH/dashboard access and HTTPS identity. Investigate dashboard TCP 443 over tailnet IPv6, which failed both before and after the change even though the saved policy permits it. Then test a separate approved off-LAN client and an unprivileged device; newly enrolled devices, including an iPhone, need a separately reviewed explicit grant for SOC access.
+
+For future changes, review existing `grants` and legacy `acls`, including broad permissions that reach the SOC VM. Check the source and destination selectors, groups, `tagOwners`, any Tailscale SSH rules, and other tailnet access that must be preserved. [Grants are additive](https://tailscale.com/docs/reference/syntax/grants): a narrow grant does not override a broader permission, and grants can coexist with legacy ACLs. Restricting direct TCP 55000 access requires reviewing every rule that could still allow that connection.
 
 Prepare the reviewed change around the access matrix above: approved administration on TCP 22/443, the existing restricted loader tunnel, and the existing local agent connection. Keep dashboard-to-API and dashboard-to-indexer access working inside the VM. Remote ingestion and temporary enrollment permissions belong to the later endpoint exercise. Record proposed permissions separately from deployed permissions, and apply them only after the current policy and recovery path have been reviewed.
 
@@ -75,14 +83,14 @@ For every test, record the date, source role, destination/service, expected resu
 | Gate | Required evidence | Status |
 |---|---|---|
 | Admin device and Ubuntu VM enrolled | Ubuntu status output and Windows client status confirm both devices; private inventory reviewed | Verified 2026-10-03 |
-| Current Access controls policy reviewed | Existing permissions, required access and recovery baseline reviewed privately before a change | Pending: current policy not yet supplied |
+| Current Access controls policy reviewed | Existing permissions and required access reviewed; exact original saved privately before an approved change | Verified 2026-10-03; narrow replacement saved with four policy tests; fresh firewall baseline/checkpoint and VM-console recovery still to verify |
 | Approved admin access off-LAN | Successful SSH login and dashboard login with verified HTTPS identity | Pending |
 | Unprivileged tailnet device denied | TCP 22/443 connection attempts fail from a device without admin permission | Pending |
 | No direct public service access | External checks for TCP 22/443/1514/1515/9200/55000 fail; forwarding/publishing reviewed; IPv4/IPv6 scope recorded | Pending |
-| Internal data services remain restricted | Direct TCP 9200/55000 access fails from remote test devices; loader tunnel still works | Open: local tailnet probe cannot reach 9200 but can reach 55000; policy review and retest required |
-| Existing collection/reporting stays healthy | Local agent Active, successful scheduled load, new event in SQL, Power BI refresh | Pending |
+| Internal data services remain restricted | Direct TCP 9200/55000 access fails from remote test devices; loader tunnel still works | Local IPv4/IPv6 probes fail and post-change loader succeeds; separate remote/unprivileged-source proof pending |
+| Existing collection/reporting stays healthy | Local agent Active, successful scheduled load, new event in SQL, Power BI refresh | Partial: services Running; post-change run 323 succeeded with 49 new alerts, 42 from Sysmon; agent Active status, controlled event trace and Power BI refresh pending |
 | Device revocation works | Remove a disposable test device and confirm it loses private service access | Pending |
-| Public documentation is sanitized | Access matrix and test outcomes published without credentials or private inventory | Pending |
+| Public documentation is sanitized | Access matrix and test outcomes published without credentials or private inventory | Sanitized enrollment/policy/local-test report maintained; remaining validation evidence not yet collected |
 
 Keep this status honest: installing a client is a setup step; passing these tests is the evidence for the control.
 
@@ -103,8 +111,8 @@ Power BI Desktop still uses the existing local SQL connection. If cloud refresh 
 
 ## Recovery and publication
 
-If access fails, use the Hyper-V console to restore the saved policy/firewall exceptions. Recheck the local agent and loader before retrying. Keep the checkpoint as a recovery option for VM changes; it does not restore tailnet policy or Windows/SQL state. Revoke a lost or disposable device promptly.
+If access fails, use the Tailscale admin console to recover the tailnet policy and the Hyper-V console to recover Ubuntu listener/firewall settings. The admin console is reached independently of the device-to-device grant. The original tailnet policy is stored privately; restoring its broad permissions is a temporary recovery decision, not the desired final state. Recheck the local agent and loader before retrying. No new firewall backup or checkpoint was created during the policy-only change; verify those prerequisites before VM/firewall work. A checkpoint does not restore tailnet policy or Windows/SQL state. Revoke a lost or disposable device promptly.
 
 Publish the design, test outcomes, sanitized policy examples and reporting screenshots. Keep credentials, auth keys, private keys, real device inventory, raw logs and private backups outside the public repo. If a published credential is discovered, revoke or rotate it; deleting the current file alone does not remove Git history. Use Watchtide's existing sanitized publishing process and review screenshots separately.
 
-Until the gates pass, portfolio wording is: "The Windows admin host and Ubuntu SOC VM are enrolled in Tailscale. Initial connectivity checks are documented; least-privilege policy and end-to-end validation are in progress." After validation, replace that sentence with measured results and link the test report.
+Until the gates pass, portfolio wording is: "The Windows admin host and Ubuntu SOC VM are enrolled in Tailscale. Device-scoped management permissions, local port tests and post-change SQL ingestion are verified; authenticated/off-LAN and end-to-end reporting validation remain in progress." After validation, replace that sentence with measured results and link the test report.

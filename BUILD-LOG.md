@@ -46,6 +46,13 @@ Windows host                         |
 
 ## Timeline
 
+### 2026-10-04: Complete supplied filter-table configuration review
+- Reviewed the user's full IPv4/IPv6 filter exports, whose headers identify the nf_tables backend. Existing private IPv4 TCP 22/443/1514/1515 exceptions match the UFW summary; there are no user-defined IPv6 TCP service allowances. No reachable rule permitting new non-Tailscale TCP API/indexer access was found outside the loopback and established/related exceptions.
+- Recorded Tailscale-before-UFW input and forwarding precedence. The default FORWARD DROP policy does not negate Tailscale's earlier forwarding accepts, and the presence of those rules does not establish enabled kernel routing, subnet advertising or exit-node use.
+- The transcript reports an authenticated local SSH session, not authenticated off-LAN tailnet access. Kept the raw transcript, login links and private inventory out of publication. Configuration review is complete; recovery/backups, trusted HTTPS and live exposure tests remain open. No runtime setting changed. See [full filter-table follow-up](docs/private-access-validation.md#full-filter-table-follow-up).
+- Fresh Windows TCP probes selected the local Hyper-V route for the existing local address and Tailscale for tailnet IPv4/IPv6. Local 22/443/1514 connected; 1515/9200/55000 did not. Tailnet results reproduce the earlier management-only table. The newly observed local enrollment-port gap needs listener/service diagnosis before enrollment; no service was enabled.
+- A user-provided screenshot shows an authenticated Ubuntu console through Hyper-V VMConnect. Recorded console availability separately from unverified checkpoint/backups and restore capability; the raw screenshot remains private. See [fresh probes and console evidence](docs/private-access-validation.md#fresh-local-probes-and-console-evidence).
+
 ### 2026-10-04: Read-only firewall rule review
 - User-provided UFW output reported an active incoming-deny firewall with SSH/dashboard/agent allowances from broad private IPv4 ranges. These existing ranges accommodate Hyper-V Default Switch changes; no rules were narrowed or added.
 - The reported IPv4/IPv6 INPUT policies are DROP, but Tailscale chains run before UFW and accept traffic on the Tailscale interface. Documented the separate role of the restricted tailnet policy, rather than treating UFW as an additional service restriction for that accepted traffic.
@@ -285,7 +292,9 @@ Windows host                         |
 - [x] Verify accepted policy tests, local IPv4 management/data-port results and a successful post-change SQL load with new Sysmon alerts ([results](docs/private-access-validation.md)).
 - [x] Enroll an iPhone test client and record its reported private HTTPS timeout over cellular with a working public-web control.
 - [x] Identify the IPv6 dashboard gap: user-provided listener output shows no IPv6 dashboard listener.
-- [ ] Verify the fresh firewall baseline/checkpoint and VM-console recovery before changing VM/firewall settings.
+- [x] Review supplied full IPv4/IPv6 filter tables and record user-provided authenticated Hyper-V console evidence.
+- [ ] Verify the current checkpoint and exact private configuration backups before changing VM/firewall settings; console access is not a tested restore.
+- [ ] Diagnose local enrollment TCP 1515 unreachability before new agent enrollment; do not open it automatically.
 - [ ] Verify authenticated SSH/dashboard access and HTTPS trust; record the intended supported address families.
 - [ ] Test approved off-LAN access and the remaining denied-service paths, direct public access and device revocation.
 - [ ] Confirm manager-side agent Active status, a controlled event trace and Power BI refresh ([plan](docs/private-access-plan.md)).

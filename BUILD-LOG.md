@@ -17,7 +17,7 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
 | 7. SQL Server reporting storage | Done: loader every 15 minutes; case log with history (`warehouse/cases.py`) meets the incident gate |
 | 8. Power BI report | Done: five pages (including Cases) built as a Power BI Project (definitions in Git, data cache ignored), ATT&CK catalog loaded |
 | Detection validation | In progress: controlled SSH password-guessing test detected end to end; every Critical alert since tuning explained |
-| 4c. Tailscale private remote access | Setup started; access policy, remote tests and pipeline checks pending |
+| 4c. Tailscale private remote access | Devices enrolled; local TCP probes complete; API restriction review, authenticated/off-LAN tests and full pipeline checks pending |
 
 ## What is running
 
@@ -144,6 +144,14 @@ Windows host                         |
 - Clarified the public/private boundary for the future live API: employers use the public sanitized snapshot; live administration and analyst actions stay private.
 - Pending evidence: off-LAN admin access, denied unprivileged access, no direct public management access, and healthy agent/loader operation. No VPN test result or runtime configuration change is claimed by this documentation update.
 
+### 2026-10-03 (continued): Tailscale enrollment and initial checks
+
+- Corrected the install URL: `https://tailscale.com` is the homepage; the Linux installer is `https://tailscale.com/install.sh`. The earlier shell syntax error came from passing the webpage to `sh`. SSH was still reachable afterward.
+- Windows admin host and Ubuntu VM enrolled successfully. Ubuntu's status output listed both devices; the Windows client independently confirmed its Running state and both devices online.
+- Local TCP tests over the Tailscale path: 22 and 443 reachable; 9200 unreachable; 55000 reachable. Repeated the 55000 check with interface details to confirm it used Tailscale. This leaves an API restriction issue open, not a completed least-privilege result.
+- The latest scheduled loader result was 0 (success). This is task-level continuity evidence, not a substitute for checking a new alert in SQL and a Power BI refresh.
+- Published a [sanitized initial validation report](docs/private-access-validation.md) without actual addresses or account/device inventory. No policy or firewall changes were applied; authenticated login, off-LAN access, denied-source tests and full pipeline verification remain pending.
+
 ## Problems hit and how they were solved
 
 ### 1. Wazuh install failed: "No space left on device"
@@ -222,7 +230,8 @@ Windows host                         |
 - [ ] Stage 6: choose a private API placement and read-only account; prefer local access or a restricted tunnel before adding any narrow API-host exception for 55000/9200.
 
 ### Private remote access
-- [ ] Verify Tailscale on the admin device and Ubuntu VM; save the baseline and rollback details privately.
+- [x] Verify Tailscale enrollment on the admin device and Ubuntu VM; record initial local TCP connectivity ([results](docs/private-access-validation.md)).
+- [ ] Save the current policy/firewall baseline and rollback details privately; review grants and restrict unnecessary TCP 55000 access.
 - [ ] Apply least-privilege grants and test allowed and denied SSH/dashboard access, including an off-LAN test and a public-access check.
 - [ ] Confirm the existing local agent and scheduled SQL loader still work; publish a sanitized results report ([plan](docs/private-access-plan.md)).
 - [ ] Enroll one remote endpoint and publish a benign event trace through Wazuh, SQL and Power BI.

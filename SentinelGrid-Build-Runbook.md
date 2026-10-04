@@ -17,7 +17,7 @@ What actually happened during the build, including every failure and fix, is rec
 | 7. SQL Server warehouse (moved ahead of Stage 6) | Done 2026-09-30; case log added 2026-10-01 (`warehouse/cases.py`) |
 | 8. Power BI report | Done 2026-10-01 (five pages including Cases, kept as a Power BI Project in Git) |
 | Detection validation | In progress: controlled SSH password-guessing test detected and written up |
-| 4c. Tailscale private remote access | Setup started 2026-10-03; policy, access tests and pipeline verification pending ([plan](docs/private-access-plan.md)) |
+| 4c. Tailscale private remote access | Both devices enrolled 2026-10-03; initial local TCP checks recorded; API restriction review and remaining validation pending ([results](docs/private-access-validation.md)) |
 | 6. Watchtide API | Planned |
 | 5. Suricata network telemetry | Planned |
 
@@ -32,7 +32,8 @@ What actually happened during the build, including every failure and fix, is rec
 | SSH | `ssh <ubuntu-user>@wazuh.mshome.net` |
 | Monitored endpoint | `jordan-pc` (Windows 11, Sysmon64 + Wazuh agent) |
 | Rollback point | Hyper-V checkpoint `sentinelgrid-pre-attack-2026-10-01` (the earlier `wazuh-clean` was merged when the disk grew) |
-| Open VM ports | 22, 443, 1514-1515 from private ranges only (10/8, 172.16/12, 192.168/16) |
+| Pre-VPN firewall exceptions | 22, 443, 1514-1515 from private ranges (10/8, 172.16/12, 192.168/16); Tailscale path checked separately below |
+| Tailscale path, checked 2026-10-03 | Admin host reaches TCP 22/443/55000; TCP 9200 unreachable. TCP 55000 restriction review pending; see [validation report](docs/private-access-validation.md). |
 
 ## Target architecture
 
@@ -348,7 +349,7 @@ No Critical vulnerability findings remain unexplained, and the Configuration Ass
 
 ## Stage 4c: Add private remote access with Tailscale
 
-**Status:** setup started; no verified VPN access-control result is recorded yet. The detailed procedure, access matrix, evidence checklist and rollback are in [docs/private-access-plan.md](docs/private-access-plan.md).
+**Status:** Windows admin host and Ubuntu VM enrolled and online. Initial local tailnet TCP probes are in [docs/private-access-validation.md](docs/private-access-validation.md); TCP 55000 is reachable and needs restriction review. Authenticated access and allowed/denied off-LAN tests remain pending. The detailed procedure, access matrix, evidence checklist and rollback are in [docs/private-access-plan.md](docs/private-access-plan.md).
 
 ### Steps
 

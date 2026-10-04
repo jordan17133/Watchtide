@@ -14,7 +14,7 @@ Updated October 3, 2026. The pipeline and investigations below are built; these 
 
 | Priority | Work | Status | Evidence to publish |
 |---|---|---|---|
-| Current | **Private remote access with Tailscale** | Setup started; access policy and reachability tests pending | Sanitized access matrix, successful admin access, denied unauthorized access, and pipeline health before/after |
+| Current | **Private remote access with Tailscale** | Both devices enrolled; initial connectivity checked; least-privilege and off-LAN validation pending | [Initial test results](docs/private-access-validation.md), then authenticated admin access, denied unauthorized access, and pipeline health before/after |
 | Next | **One remote Wazuh endpoint** | Planned after private access is validated | A benign event traced from a separate network through Wazuh, SQL and Power BI |
 | Following | **More detection validation** | Planned: Atomic Red Team on a separate test VM | Five or more techniques tested, with cases documenting detections and gaps |
 
@@ -62,6 +62,7 @@ Windows host                         |
 | [BUILD-LOG.md](BUILD-LOG.md) | What actually happened: timeline, seven problems hit and how each was solved, open items |
 | [ROADMAP.md](ROADMAP.md) | Upcoming work, its purpose and the evidence required to call each milestone done |
 | [docs/private-access-plan.md](docs/private-access-plan.md) | Tailscale design decision, intended access rules, validation checklist and rollback plan; implementation verification pending |
+| [docs/private-access-validation.md](docs/private-access-validation.md) | Verified device enrollment and initial TCP results, including an API restriction issue still awaiting policy review |
 | [triage/](triage/) | Alert investigation reports |
 | [wazuh/rules/sentinelgrid_tuning.xml](wazuh/rules/sentinelgrid_tuning.xml) | Custom Wazuh rules deployed to the manager |
 | [warehouse/](warehouse/) | Idempotent SQL Server schema, reporting views and the script that applies them; `cases.py` opens, assigns and closes cases with a full history |
@@ -88,14 +89,14 @@ Windows host                         |
 
 | Control | Implementation |
 |---|---|
-| Network exposure | VM on Hyper-V's NAT Default Switch, no port forwarding. `ufw` denies inbound by default and allows only 22, 443 and 1514-1515 from private address ranges. The indexer (9200) and API (55000) are not reachable from outside the VM. |
+| Network exposure | Baseline: VM on Hyper-V's NAT Default Switch, no port forwarding; `ufw` denies inbound by default with private-range exceptions for 22, 443 and 1514-1515. The indexer (9200) stays on loopback. Initial Tailscale checks found TCP 55000 reachable from the admin host; API access restrictions are awaiting policy review ([results](docs/private-access-validation.md)). |
 | Credentials | Installer-generated admin password rotated. A dedicated read-only indexer account for the loader. Secrets live in a git-ignored `.env` and a private backup outside the repo. |
 | Loader access | SSH key limited in `authorized_keys` to `permitopen="127.0.0.1:9200"` with `command="/bin/false"`. Verified that it cannot run commands. |
 | Transport | TLS verified against the Wazuh root CA, with hostname checking on. Only Python's strict-mode flag is relaxed, because the installer's CA lacks a keyUsage extension; a wrong-hostname test is still rejected. |
 | Recovery | Hyper-V checkpoints at known-good points. |
 | Data hygiene | The Power BI file, which embeds alert data, is kept out of Git. |
 
-**In progress: Tailscale private remote access.** The goal is to reach SSH and the Wazuh dashboard from approved admin devices while keeping the lab off the public internet. The current NAT and loader protections above remain the documented baseline. Tailscale installation alone does not establish least-privilege access; the [plan](docs/private-access-plan.md) requires both allowed and denied connection tests before this becomes a completed control. A future live console/API will be private; GitHub Pages will continue to serve the sanitized snapshot.
+**In progress: Tailscale private remote access.** The Windows admin host and Ubuntu VM are enrolled and online. Initial local tailnet probes reached SSH/dashboard ports and could not reach the indexer, but also reached the Wazuh API port; restriction review is the next step. The [validation report](docs/private-access-validation.md) records those observations and their limits. The [plan](docs/private-access-plan.md) requires authenticated access, denied connections and off-LAN tests before this becomes a completed control. A future live console/API will be private; GitHub Pages will continue to serve the sanitized snapshot.
 
 ## Results
 
@@ -142,7 +143,8 @@ The full plan, with why each chapter matters and when it counts as done, is in [
 - [x] Stage 4b: CIS benchmark baseline and hardening ([docs/cis-baseline.md](docs/cis-baseline.md))
 - [x] Stage 8: Power BI pages for posture, MITRE ATT&CK coverage and pipeline health
 - [x] Least-privilege reporting role, tested: reads `rpt` views, blocked from raw tables and from any change (SQL Server stays Windows-authentication only, so no SQL passwords exist)
-- [ ] Stage 4c: Tailscale private remote access, with least-privilege policy and allowed/denied access tests
+- [x] Stage 4c setup: Windows admin host and Ubuntu VM enrolled; initial local tailnet TCP checks recorded
+- [ ] Stage 4c validation: restrict unnecessary API access, verify least-privilege policy and run authenticated, allowed/denied and off-LAN tests
 - [ ] One remote endpoint: a benign event traced across networks into Wazuh, SQL and Power BI
 - [ ] Alert notifications for level 12 and above
 - [x] File Integrity Monitoring with who-did-it attribution on secrets, scheduled automation scripts and autostart locations

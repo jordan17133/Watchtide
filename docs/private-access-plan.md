@@ -4,7 +4,7 @@
 
 **Updated:** October 3, 2026
 
-**Status:** setup started; device enrollment, policy enforcement and connection tests are not yet verified. All implementation gates below remain open.
+**Status:** Windows admin host and Ubuntu VM enrolled and online. Initial TCP checks over the local Tailscale path are recorded in [private-access-validation.md](private-access-validation.md). Least-privilege enforcement, authenticated access, off-LAN tests and full pipeline checks remain pending; TCP 55000 is reachable from the admin host and needs restriction review.
 
 ## Decision and purpose
 
@@ -64,11 +64,11 @@ For every test, record the date, source role, destination/service, expected resu
 
 | Gate | Required evidence | Status |
 |---|---|---|
-| Admin device and Ubuntu VM enrolled | Correct devices verified in private inventory | Pending |
+| Admin device and Ubuntu VM enrolled | Ubuntu status output and Windows client status confirm both devices; private inventory reviewed | Verified 2026-10-03 |
 | Approved admin access off-LAN | Successful SSH login and dashboard login with verified HTTPS identity | Pending |
 | Unprivileged tailnet device denied | TCP 22/443 connection attempts fail from a device without admin permission | Pending |
 | No direct public service access | External checks for TCP 22/443/1514/1515/9200/55000 fail; forwarding/publishing reviewed; IPv4/IPv6 scope recorded | Pending |
-| Internal data services remain restricted | Direct TCP 9200/55000 access fails from remote test devices; loader tunnel still works | Pending |
+| Internal data services remain restricted | Direct TCP 9200/55000 access fails from remote test devices; loader tunnel still works | Open: local tailnet probe cannot reach 9200 but can reach 55000; policy review and retest required |
 | Existing collection/reporting stays healthy | Local agent Active, successful scheduled load, new event in SQL, Power BI refresh | Pending |
 | Device revocation works | Remove a disposable test device and confirm it loses private service access | Pending |
 | Public documentation is sanitized | Access matrix and test outcomes published without credentials or private inventory | Pending |
@@ -96,4 +96,4 @@ If access fails, use the Hyper-V console to restore the saved policy/firewall ex
 
 Publish the design, test outcomes, sanitized policy examples and reporting screenshots. Keep credentials, auth keys, private keys, real device inventory, raw logs and private backups outside the public repo. If a published credential is discovered, revoke or rotate it; deleting the current file alone does not remove Git history. Use Watchtide's existing sanitized publishing process and review screenshots separately.
 
-Until the gates pass, portfolio wording is: "Tailscale private remote access is in progress, with least-privilege policy and end-to-end validation planned." After validation, replace that sentence with measured results and link the test report.
+Until the gates pass, portfolio wording is: "The Windows admin host and Ubuntu SOC VM are enrolled in Tailscale. Initial connectivity checks are documented; least-privilege policy and end-to-end validation are in progress." After validation, replace that sentence with measured results and link the test report.

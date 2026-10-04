@@ -19,7 +19,7 @@ What is built, what comes next, and why. Each chapter ends the same way: build i
 
 ## Next, in order
 
-**Current focus (October 3, 2026):** Tailscale setup has started. The access policy, remote connection tests and pipeline regression checks are pending. The [private-access plan](docs/private-access-plan.md) records the design and unchecked completion gates; installation is not yet a verified security result. Later chapters are planned work, with no promised delivery dates.
+**Current focus (October 3, 2026):** the Windows admin host and Ubuntu VM are enrolled in Tailscale. [Initial local connection tests](docs/private-access-validation.md) confirmed SSH/dashboard port reachability and identified TCP 55000 as needing restriction review. Authenticated access, least-privilege enforcement, off-LAN testing and full pipeline checks are pending. The [private-access plan](docs/private-access-plan.md) records the remaining gates. Later chapters are planned work, with no promised delivery dates.
 
 | # | Chapter | Why it matters | Done when |
 |---|---|---|---|

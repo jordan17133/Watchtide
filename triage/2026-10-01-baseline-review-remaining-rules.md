@@ -40,8 +40,8 @@ How the evidence was gathered: Sysmon process alerts were grouped by parent and 
 | 91815 PowerShell process discovery | 25 | Claude Code's script preamble (20), `Get-Process PBIDesktop` (4), `Get-AppxPackage *PowerBI*` (1) | Benign: build tooling |
 | 92200 Script file created in Temp | 96 | `ChatGPT.exe` (45), Python 3.14 (23) | Benign: desktop apps and build scripts |
 | 92307 New service in the registry | 57 | `services.exe` (57): service installs during SQL Server, Sysmon and app updates | Benign: software installs |
-| 5501 / 5715 PAM session opened / SSH login success | 200 / 155 | `j0dane` on the Wazuh server: the analyst's SSH sessions and the loader's tunnel | Benign: admin and loader |
-| 5402 sudo to root | 41 | `j0dane`: administration of the Wazuh server | Benign: admin |
+| 5501 / 5715 PAM session opened / SSH login success | 200 / 155 | `<ubuntu-user>` on the Wazuh server: the analyst's SSH sessions and the loader's tunnel | Benign: admin and loader |
+| 5402 sudo to root | 41 | `<ubuntu-user>`: administration of the Wazuh server | Benign: admin |
 | 67028 Special privileges at logon | 31 | `DWM-1` (10), `MSSQLSERVER` (6) and other Windows and service logons | Benign: normal logons |
 | 506 Wazuh agent stopped | 9 | Planned agent restarts during FIM and CIS work (the audit policy had to be changed with the agent stopped) | Benign: planned |
 | 92036 `net.exe` started by cmd | 2 | `net stop Wazuh` and `net start Wazuh` at 06:17 and 06:20 UTC | Benign: planned |

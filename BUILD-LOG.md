@@ -28,7 +28,7 @@ Windows 11 host (jordan-pc)
                                                    | TCP 1514/1515
 Hyper-V VM "SentinelGrid-Wazuh" (Default Switch)   v
   Ubuntu Server 24.04.5, 4 vCPU, 8 GB RAM, 150 GB disk
-  Wazuh manager -> Filebeat -> Wazuh indexer -> Wazuh dashboard (https://wazuh.mshome.net)
+  Wazuh manager -> Filebeat -> Wazuh indexer -> Wazuh dashboard (https://soc-vm.mshome.net)
                                      ^ 127.0.0.1:9200 only
                                      | SSH tunnel (restricted key)
 Windows host                         |
@@ -42,7 +42,7 @@ Windows host                         |
 - SQL Server is capped at 4 GB of RAM because the Wazuh VM reserves 8 GB.
 
 - The Sysmon event channel is collected through the `default` agent group's `agent.conf`, so every future agent in that group picks it up automatically.
-- The VM is reached by hostname (`wazuh.mshome.net`) instead of IP, because Hyper-V's Default Switch hands out a new IP on every VM reboot.
+- The VM is reached by hostname (`soc-vm.mshome.net`) instead of IP, because Hyper-V's Default Switch hands out a new IP on every VM reboot.
 
 ## Timeline
 
@@ -152,6 +152,13 @@ Windows host                         |
 - The latest scheduled loader result was 0 (success). This is task-level continuity evidence, not a substitute for checking a new alert in SQL and a Power BI refresh.
 - Published a [sanitized initial validation report](docs/private-access-validation.md) without actual addresses or account/device inventory. No policy or firewall changes were applied; authenticated login, off-LAN access, denied-source tests and full pipeline verification remain pending.
 
+### 2026-10-03 (continued): Policy review remains the next VPN step
+
+- Reconciled the private source with the published enrollment report. Device enrollment remains complete; the overall VPN security milestone remains in progress. Local port checks and a loader task result do not establish authenticated access, denied-source enforcement or a new event reaching Power BI.
+- Made review of the current Access controls policy an explicit prerequisite before any change. The policy has not yet been supplied for review. The plan now calls out additive grants, legacy ACLs, preserved loader/internal service access, and a separate off-LAN client while the Hyper-V host remains running.
+- Extended the private publisher's inventory redaction and rejection checks. Current public documentation uses a neutral local hostname and SSH account placeholder; literal tailnet addresses are rejected. This changes the current public copy, not previously published Git history.
+- This update is documentation and publication work only. No tailnet policy, operating-system firewall or Wazuh service configuration was changed.
+
 ## Problems hit and how they were solved
 
 ### 1. Wazuh install failed: "No space left on device"
@@ -169,7 +176,7 @@ Windows host                         |
 
 ### 4. SSH stopped working after a VM reboot
 - **Cause:** The Default Switch assigned the VM a new IP (172.26.185.55 became 172.26.183.222).
-- **Fix:** Used the automatic `wazuh.mshome.net` hostname for SSH, the dashboard, and agent enrollment.
+- **Fix:** Used the automatic `soc-vm.mshome.net` hostname for SSH, the dashboard, and agent enrollment.
 
 ### 5. The loader could not reach the Indexer on port 9200
 - **Cause:** The all-in-one install binds the Indexer to `127.0.0.1` inside the VM (`ss -tlnp` showed `[::ffff:127.0.0.1]:9200`), so opening the firewall did nothing.

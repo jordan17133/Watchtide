@@ -19,11 +19,11 @@ What is built, what comes next, and why. Each chapter ends the same way: build i
 
 ## Next, in order
 
-**Current focus (October 3, 2026):** the Windows admin host and Ubuntu VM are enrolled in Tailscale. [Initial local connection tests](docs/private-access-validation.md) confirmed SSH/dashboard port reachability and identified TCP 55000 as needing restriction review. Authenticated access, least-privilege enforcement, off-LAN testing and full pipeline checks are pending. The [private-access plan](docs/private-access-plan.md) records the remaining gates. Later chapters are planned work, with no promised delivery dates.
+**Current focus (October 3, 2026):** the Windows admin host and Ubuntu VM are enrolled in Tailscale. [Initial local connection tests](docs/private-access-validation.md) confirmed SSH/dashboard port reachability and identified TCP 55000 as needing restriction review. The next action is to review the current Access controls policy before changing it. Authenticated access, least-privilege enforcement, off-LAN testing and full pipeline checks are pending. The [private-access plan](docs/private-access-plan.md) records the remaining gates. Later chapters are planned work, with no promised delivery dates.
 
 | # | Chapter | Why it matters | Done when |
 |---|---|---|---|
-| 1 | **Tailscale private remote access** (runbook Stage 4c; in progress) | Practice secure remote administration and least privilege | Approved admin access works off-LAN; an unprivileged test device is denied; direct public access fails; the loader and local agent still work; sanitized results published |
+| 1 | **Tailscale private remote access** (runbook Stage 4c; enrollment complete, validation in progress) | Practice secure remote administration and least privilege | Current policy reviewed; approved admin access works off-LAN; an unprivileged test device and unnecessary API access are denied; direct public access fails; the loader and local agent still work; sanitized results published |
 | 2 | **One remote Wazuh endpoint** (planned) | Prove collection across networks | A benign event from a separate network reaches Wazuh, SQL and Power BI; timestamps and the access restrictions documented |
 | 3 | **Attack simulations, round 2** on a separate test VM (Atomic Red Team) | Turns "a rule exists" into "a rule is proven" | 5+ techniques validated, each with a case; a "validated by test" status on the ATT&CK page |
 | 4 | **Close SG-007** (loopback admin-share access) | Finish the open case | Detailed File Share auditing (event 5145) names the process; case closed |

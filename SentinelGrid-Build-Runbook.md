@@ -27,9 +27,9 @@ What actually happened during the build, including every failure and fix, is rec
 |---|---|
 | Wazuh VM | Hyper-V `SentinelGrid-Wazuh`, Ubuntu Server 24.04.5, 4 vCPU, 8 GB fixed RAM, 150 GB disk, Default Switch |
 | Wazuh version | 4.14.8 all-in-one |
-| Address | `wazuh.mshome.net` (never the raw IP; it changes on VM reboot) |
-| Dashboard | `https://wazuh.mshome.net` |
-| SSH | `ssh <ubuntu-user>@wazuh.mshome.net` |
+| Address | `soc-vm.mshome.net` (never the raw IP; it changes on VM reboot) |
+| Dashboard | `https://soc-vm.mshome.net` |
+| SSH | `ssh <ubuntu-user>@soc-vm.mshome.net` |
 | Monitored endpoint | `jordan-pc` (Windows 11, Sysmon64 + Wazuh agent) |
 | Rollback point | Hyper-V checkpoint `sentinelgrid-pre-attack-2026-10-01` (the earlier `wazuh-clean` was merged when the disk grew) |
 | Pre-VPN firewall exceptions | 22, 443, 1514-1515 from private ranges (10/8, 172.16/12, 192.168/16); Tailscale path checked separately below |
@@ -83,12 +83,12 @@ df -h /
 sudo lvextend -r -l +100%FREE /dev/ubuntu-vg/ubuntu-lv
 ```
 
-7. Record the VM's address with `ip -brief address`. On the Default Switch this IP changes whenever the VM reboots, so use the hostname `wazuh.mshome.net` (the server name plus `.mshome.net`) everywhere instead.
+7. Record the VM's address with `ip -brief address`. On the Default Switch this IP changes whenever the VM reboots, so use the hostname `soc-vm.mshome.net` (the server name plus `.mshome.net`) everywhere instead.
 8. Create a VM checkpoint named `ubuntu-clean`.
 
 ### Completion gate
 
-From Windows, `Test-NetConnection wazuh.mshome.net -Port 22` must succeed. Ping may fail; that is expected.
+From Windows, `Test-NetConnection soc-vm.mshome.net -Port 22` must succeed. Ping may fail; that is expected.
 
 ## Stage 1: Install the all-in-one Wazuh stack
 
@@ -121,7 +121,7 @@ sudo systemctl status wazuh-dashboard --no-pager
 sudo systemctl status filebeat --no-pager
 ```
 
-5. From Windows, open `https://wazuh.mshome.net` and sign in. A certificate warning is expected with the initial self-signed lab certificate.
+5. From Windows, open `https://soc-vm.mshome.net` and sign in. A certificate warning is expected with the initial self-signed lab certificate.
 6. Back up the install secrets. `~/wazuh-install-files.tar` holds the cluster certificates and original passwords. It is owned by root, so take ownership, then copy it from Windows to a private folder outside the repo:
 
 ```bash
@@ -129,7 +129,7 @@ sudo chown <ubuntu-user> ~/wazuh-install-files.tar
 ```
 
 ```powershell
-scp <ubuntu-user>@wazuh.mshome.net:~/wazuh-install-files.tar "$HOME\Documents\SentinelGrid-Private\"
+scp <ubuntu-user>@soc-vm.mshome.net:~/wazuh-install-files.tar "$HOME\Documents\SentinelGrid-Private\"
 ```
 
 7. Rotate the `admin` password. Omitting `-p` makes the tool generate a random password, so it is never typed into shell history. The tool updates Filebeat and the dashboard automatically on an all-in-one install:
@@ -233,7 +233,7 @@ Sysmon events must be visible locally before Wazuh is introduced. Sysmon records
 ### Steps
 
 1. In Wazuh Dashboard, open `Agents management > Summary > Deploy new agent`.
-2. Select Windows (MSI 32/64 bits), enter `wazuh.mshome.net` as the Wazuh Server, name the agent, and copy the generated installation command.
+2. Select Windows (MSI 32/64 bits), enter `soc-vm.mshome.net` as the Wazuh Server, name the agent, and copy the generated installation command.
 3. Run that generated command in an elevated Windows PowerShell window.
 4. Start the agent:
 
@@ -355,9 +355,10 @@ No Critical vulnerability findings remain unexplained, and the Configuration Ass
 
 1. Save the current firewall and tailnet policy privately, record loader/agent health, and take a Hyper-V checkpoint with VM-console access available.
 2. Connect both the admin device and Ubuntu VM to Tailscale. Installing it on the Hyper-V host alone does not enroll the guest. Confirm the correct dashboard HTTPS hostname and certificate before relying on remote access.
-3. Apply narrow grants for approved admin devices to SSH/dashboard and, later, monitored endpoints to agent ingestion. Keep enrollment temporary, the indexer on loopback and the existing restricted loader key. Verify the effective firewall and tailnet policy together.
-4. Test from an approved device off the home network, an unprivileged tailnet test device, and a device without Tailscale. Recheck the local Wazuh agent and the next scheduled SQL load before tightening existing local exceptions.
-5. Publish a sanitized test report and update completion boxes only after the tests pass. Then enroll one remote endpoint and trace a harmless collected event through Wazuh, SQL and Power BI.
+3. Review the current Access controls policy before changing it; it has not yet been supplied for review. Identify broad grants and legacy ACLs that reach SOC services, preserve required access, and keep the saved baseline and VM console available for recovery.
+4. Apply the reviewed narrow permissions for approved admin devices to SSH/dashboard and, later, monitored endpoints to agent ingestion. Keep enrollment temporary, the indexer on loopback and the existing restricted loader key. Verify the effective firewall and tailnet policy together; adding a narrow grant does not override a broad permission.
+5. Test from a separate approved device off the home network, an unprivileged tailnet test device, and a device without Tailscale while the Hyper-V host and Ubuntu VM remain running. Recheck the local Wazuh agent and the next scheduled SQL load before tightening existing local exceptions.
+6. Publish a sanitized test report and update completion boxes only after the tests pass. Then enroll one remote endpoint and trace a harmless collected event through Wazuh, SQL and Power BI.
 
 ### Completion gate
 

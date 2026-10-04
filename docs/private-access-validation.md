@@ -25,13 +25,16 @@ These probes do not establish authenticated application access or prove that all
 
 ## Finding and next action
 
-Adding the VPN created a path on which TCP 55000 is reachable from the Windows admin host. This is an authenticated private-network observation, not evidence of public-internet exposure or unauthorized API use. API authentication was not tested.
+Adding the VPN created a path on which TCP 55000 is reachable from the Windows admin host. This is a private-network TCP observation, not evidence of public-internet exposure or unauthorized API use. API authentication was not tested.
 
 Review the existing tailnet policy before changing it. Apply narrowly selected SSH/dashboard permissions, preserve the restricted loader path, and exclude direct API/indexer access from devices that do not need it. Verify the operating-system firewall and service listeners where required, then repeat the port tests. Tailscale permissions are configured through [grants](https://tailscale.com/docs/features/access-control/grants); joining the tailnet alone is not proof of least privilege.
 
+The current Access controls policy has not yet been supplied for review. No replacement policy has been selected or applied. Inspect both grants and legacy ACLs for broader permissions before preparing a change; retain a private baseline and a working VM-console recovery path. The [policy review plan](private-access-plan.md#next-action-review-the-current-policy) records this next step.
+
 - [x] Enroll Windows admin host and Ubuntu SOC VM.
 - [x] Record initial local TCP reachability and the open API restriction issue.
-- [ ] Review the existing tailnet policy, apply narrow rules, and retest TCP 55000.
+- [ ] Save and review the existing tailnet policy, required access and recovery baseline.
+- [ ] Apply the reviewed narrow permissions, preserve the restricted loader tunnel, and retest TCP 55000 and allowed/denied services.
 - [ ] Verify SSH login and dashboard login with a trusted HTTPS identity.
 - [ ] Test allowed admin access from another network and denied access from an unprivileged device.
 - [ ] Check direct public access, device revocation, new-event flow into SQL and Power BI refresh.

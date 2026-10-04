@@ -48,12 +48,22 @@ Use [Tailscale grants](https://tailscale.com/docs/features/access-control/grants
 
 Tailscale policy and the operating-system firewall control different paths. Review their effective behavior together; do not infer tailnet restrictions solely from `ufw status`. Preserve only the local agent/loader exceptions the lab needs. The [Ubuntu firewall guide](https://tailscale.com/docs/how-to/secure-ubuntu-server-with-ufw) describes restricting non-Tailscale access and testing from outside the private network.
 
+## Next action: review the current policy
+
+The current Access controls policy has not yet been supplied for review. Enrollment is complete, but no policy or firewall change is recorded. Save the actual policy privately before preparing any replacement; public documentation should contain only sanitized roles, selectors and test outcomes.
+
+Review existing `grants` and legacy `acls`, including broad permissions that reach the SOC VM. Check the source and destination selectors, groups, `tagOwners`, any Tailscale SSH rules, and other tailnet access that must be preserved. [Grants are additive](https://tailscale.com/docs/reference/syntax/grants): a narrow grant does not override a broader permission, and grants can coexist with legacy ACLs. Restricting direct TCP 55000 access requires reviewing every rule that could still allow that connection.
+
+Prepare the reviewed change around the access matrix above: approved administration on TCP 22/443, the existing restricted loader tunnel, and the existing local agent connection. Keep dashboard-to-API and dashboard-to-indexer access working inside the VM. Remote ingestion and temporary enrollment permissions belong to the later endpoint exercise. Record proposed permissions separately from deployed permissions, and apply them only after the current policy and recovery path have been reviewed.
+
+Use a separate approved client on another network for the off-LAN test while the Hyper-V host and Ubuntu VM remain running. An approved iPhone on cellular can test dashboard access, but that test does not also prove SSH login or denial of an unprivileged device.
+
 ## Implementation sequence
 
 1. Record current agent status, a successful scheduled load and reporting freshness. Save firewall rules, service listeners and the existing tailnet policy outside Git. Take a Hyper-V checkpoint and verify VM-console access for recovery.
 2. Install/enroll Tailscale on the trusted admin device and inside Ubuntu. Enrolling the Windows Hyper-V host alone does not enroll its guest. Verify both device identities privately; enable MFA at the sign-in provider and review device/key-expiry settings.
 3. Confirm routing and the intended SSH/dashboard ports. Keep ordinary OpenSSH and the existing restricted loader key for this milestone; adopting Tailscale SSH would require a separate review of that tunnel restriction. Resolve dashboard hostname/certificate trust before using its tailnet address; do not disable certificate checking to make the test pass.
-4. Define the narrow grants in the matrix and test them. Keep a working VM-console session while changing access. Remove broad management exceptions only after the private route and necessary local loader access both work.
+4. Review the saved current Access controls policy, then define the narrow grants in the matrix and test them. Account for existing broad grants and legacy ACLs; adding a narrower rule alone does not restrict a broader one. Keep a working VM-console session while changing access. Remove broad management exceptions only after the private route and necessary local loader access both work.
 5. From another network, test successful admin access and failed access from an unprivileged tailnet test device. Also test direct public access with Tailscale off, review router forwarding and any public publishing settings, and record any limits of the external test, including unavailable IPv6.
 6. Wait for the next scheduled load and verify the local agent remains Active, new alerts reach SQL, and Power BI can refresh. A working dashboard alone does not prove the pipeline survived the change.
 7. Publish redacted results, update the build log, and only then mark the private-access milestone complete. Add a remote monitored endpoint as a separate exercise after the policy is validated.
@@ -65,6 +75,7 @@ For every test, record the date, source role, destination/service, expected resu
 | Gate | Required evidence | Status |
 |---|---|---|
 | Admin device and Ubuntu VM enrolled | Ubuntu status output and Windows client status confirm both devices; private inventory reviewed | Verified 2026-10-03 |
+| Current Access controls policy reviewed | Existing permissions, required access and recovery baseline reviewed privately before a change | Pending: current policy not yet supplied |
 | Approved admin access off-LAN | Successful SSH login and dashboard login with verified HTTPS identity | Pending |
 | Unprivileged tailnet device denied | TCP 22/443 connection attempts fail from a device without admin permission | Pending |
 | No direct public service access | External checks for TCP 22/443/1514/1515/9200/55000 fail; forwarding/publishing reviewed; IPv4/IPv6 scope recorded | Pending |

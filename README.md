@@ -20,6 +20,8 @@ Updated October 3, 2026. The pipeline and investigations below are built; these 
 
 The [private-access plan](docs/private-access-plan.md) explains the VPN decision, remaining steps and completion tests. The full [roadmap](ROADMAP.md) also covers phishing analysis, Splunk practice, a short demo video and Suricata. Employers can review the public console and documentation without joining the private lab.
 
+**Next VPN step:** review the current Tailscale Access controls policy before changing permissions. Then restrict administration to approved devices, remove unnecessary direct API access, preserve the restricted loader tunnel, and test both allowed and denied connections. Device enrollment is complete; the overall private-access security milestone remains in progress.
+
 ![SOC Overview page in Power BI](docs/screenshots/powerbi-soc-overview.jpg)
 
 ## Highlights

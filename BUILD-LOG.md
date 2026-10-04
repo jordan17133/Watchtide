@@ -46,6 +46,10 @@ Windows host                         |
 
 ## Timeline
 
+### 2026-10-03: Public repository privacy audit
+- Reviewed current public files, reachable Git history, commit email metadata, and ten distinct image versions. Gitleaks returned zero secret findings, but a separate inventory review identified historical username/hostname disclosures and current personal home-directory paths.
+- Publication privacy remains in progress: free-text snapshot validation, path placeholders, accurate exposure claims, and account/external-access checks still need work. No history rewrite or credential changes were made. See [the bounded audit report](docs/public-privacy-audit.md).
+
 ### 2026-09-29: Planning and host prep
 - Checked host capacity (Ryzen 9 8945HS, 28.8 GB RAM) against the Wazuh all-in-one minimum (4 vCPU, 8 GB RAM, 50 GB disk).
 - Enabled Hyper-V with `Enable-SentinelGridHyperV.ps1`, downloaded Ubuntu Server 24.04.5, and verified the ISO's SHA-256 hash.

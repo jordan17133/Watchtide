@@ -42,6 +42,6 @@ What is built, what comes next, and why. Each chapter ends the same way: build i
 - Weekly: check Pipeline Health (loader success above 95%, data fresh within 30 minutes) and patch the VM.
 - Before risky work: take a Hyper-V checkpoint.
 - After a Wazuh upgrade: re-export the ATT&CK catalog and reload it.
-- After any new case: refresh the console snapshot.
+- After any new case: review its public display text, update the field-scoped approval catalog privately, then validate and refresh the console snapshot. New live text must not be auto-approved.
 - After a device or access-policy change: repeat the allowed/denied connection tests; review available authentication and policy-change records.
-- Before publishing: review new text, configuration examples and screenshots for secrets and personal data; use the existing sanitized public-copy process.
+- Before publishing: run publication regression tests and snapshot validation, review new documentation/configuration/screenshots for secrets and personal data, and use the sanitized public-copy process. [Publication controls](docs/publication-safety.md) supplement the [bounded privacy audit](docs/public-privacy-audit.md); historical disclosures remain separate.

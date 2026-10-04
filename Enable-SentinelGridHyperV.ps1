@@ -1,6 +1,6 @@
 $ErrorActionPreference = "Stop"
 
-$statusPath = "C:\Users\Jordan\Desktop\CTS2120 Templates\sentinelgrid-hyperv-status.txt"
+$statusPath = "C:\Users\SOC-USER\Desktop\Watchtide\sentinelgrid-hyperv-status.txt"
 
 try {
     "Starting Hyper-V enablement at $(Get-Date -Format o)" | Set-Content -LiteralPath $statusPath

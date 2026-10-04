@@ -30,7 +30,7 @@ A review of every Critical and High alert in the Watchtide warehouse found one H
 
 3. **Signature check on the host:** `Get-AuthenticodeSignature` reports **Valid**, signed by `CN=Microsoft Windows`. The file is in its expected location, `System32`.
 4. **Parent service:** `PcaSvc` is the Program Compatibility Assistant, a built-in Windows service. Windows also ships a related scheduled task, `\Microsoft\Windows\Application Experience\SdbinstMergeDbTask` (`sdbinst.exe -mm`).
-5. **What an attack would look like instead:** a shim install uses `sdbinst.exe` with a path to a `.sdb` file (for example `sdbinst.exe -q C:\Users\...\evil.sdb`), usually started by a user process or script, not by `PcaSvc` with `-m -bg`. None of the 15 events looked like that.
+5. **What an attack would look like instead:** a shim install uses `sdbinst.exe` with a path to a `.sdb` file (for example `sdbinst.exe -q C:\Users\SOC-USER\evil.sdb`), usually started by a user process or script, not by `PcaSvc` with `-m -bg`. None of the 15 events looked like that.
 
 ## Tuning
 

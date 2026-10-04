@@ -188,9 +188,9 @@ function selectAlert(id) {
       <dt>Process</dt><dd>${esc(a.process || "-")}</dd>
       <dt>ATT&amp;CK</dt><dd>${techs}</dd>
       <dt>Triage</dt><dd>${a.verdict ? esc(a.verdict) : "This rule has not been triaged."}</dd>
-      <dt>Document ID</dt><dd><code>${esc(a.id)}</code></dd>
+      <dt>Public event reference</dt><dd><code>${esc(a.id)}</code></dd>
     </dl>
-    <p class="muted">Every alert keeps its Wazuh document ID, so it can be traced back to the original event in the SIEM.</p>`;
+    <p class="muted">The public reference is a SHA-256 digest of the source document ID. Original identifiers stay in the private SOC.</p>`;
 }
 
 /* ---------- Cases ---------- */

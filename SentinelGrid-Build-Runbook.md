@@ -198,7 +198,7 @@ Enable-WindowsOptionalFeature -Online -FeatureName Sysmon
 4. Create or download a reviewed Sysmon configuration. Microsoft's guide links to maintained community configurations and includes a small example. This lab uses standalone Sysmon64 (kept in the git-ignored `tools/` folder) with the [SwiftOnSecurity configuration](https://github.com/SwiftOnSecurity/sysmon-config):
 
 ```powershell
-cd C:\Users\Jordan\Desktop\SIEM-SOC\tools
+cd C:\Users\SOC-USER\Desktop\SIEM-SOC\tools
 Invoke-WebRequest https://raw.githubusercontent.com/SwiftOnSecurity/sysmon-config/master/sysmonconfig-export.xml -OutFile sysmonconfig.xml
 .\Sysmon64.exe -accepteula -i sysmonconfig.xml
 ```

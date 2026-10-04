@@ -3,7 +3,7 @@ $ErrorActionPreference = "Stop"
 $vmName = "SentinelGrid-Wazuh"
 $vmRoot = "C:\Hyper-V\SentinelGrid-Wazuh"
 $vhdPath = Join-Path $vmRoot "SentinelGrid-Wazuh.vhdx"
-$isoPath = "C:\Users\Jordan\Downloads\ubuntu-24.04.5-live-server-amd64.iso"
+$isoPath = "C:\Users\SOC-USER\Downloads\ubuntu-24.04.5-live-server-amd64.iso"
 $switchName = "Default Switch"
 
 $principal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())

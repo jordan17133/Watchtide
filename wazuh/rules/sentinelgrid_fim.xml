@@ -14,7 +14,7 @@
   <!-- API keys, app configs, SSH keys, Wazuh install secrets, loader credentials. -->
   <rule id="100110" level="12">
     <if_sid>550,553,554</if_sid>
-    <field name="file" type="pcre2">(?i)^c:\\(apps\\automation\\(\.env|config\\app[^\\]*\.json)$|users\\jordan\\(\.ssh\\|documents\\sentinelgrid-private\\|desktop\\siem-soc\\loader\\\.env$))</field>
+    <field name="file" type="pcre2">(?i)^c:\\(apps\\automation\\(\.env|config\\app[^\\]*\.json)$|users\\soc-user\\(\.ssh\\|documents\\sentinelgrid-private\\|desktop\\siem-soc\\loader\\\.env$))</field>
     <description>Watchtide FIM: secret or credential file changed</description>
     <mitre>
       <id>T1552.001</id>

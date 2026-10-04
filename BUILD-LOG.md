@@ -46,6 +46,11 @@ Windows host                         |
 
 ## Timeline
 
+### 2026-10-04: Publication safeguards
+- Added field-scoped exact approval for snapshot display text and a strict final schema; unfamiliar text is redacted, unreviewed report links omitted, and invalid snapshots rejected before existing files are replaced. Added offline regression tests, including the export flow with a fake SQL connection.
+- Generated examples use neutral Windows profile and machine SID placeholders. Parsed the generated XML and verified all 21 rewritten FIM paths, including secret and startup paths under the user profile. Private deployed configurations were not edited.
+- Migrated the existing snapshot to hashed event references without changing timestamps, counts or its export date. Corrected the console's exposure claim; external testing is still pending. See [publication safety](docs/publication-safety.md) for remaining limits.
+
 ### 2026-10-03: Public repository privacy audit
 - Reviewed current public files, reachable Git history, commit email metadata, and ten distinct image versions. Gitleaks returned zero secret findings, but a separate inventory review identified historical username/hostname disclosures and current personal home-directory paths.
 - Publication privacy remains in progress: free-text snapshot validation, path placeholders, accurate exposure claims, and account/external-access checks still need work. No history rewrite or credential changes were made. See [the bounded audit report](docs/public-privacy-audit.md).

@@ -20,8 +20,9 @@ Audit date: 2026-10-03. Reviewed public revision: `d37ea647c5fe9a842ba0c83dad682
 
 ## Remaining Gates
 
-- Replace personal paths with reviewed placeholders while preserving example configuration and FIM-rule consistency.
-- Harden snapshot publication and add tests before exporting another live snapshot.
+- Completed for the latest generated files on 2026-10-04: Windows profile placeholders, XML-safe SID placeholder, and consistency checks for all rewritten FIM paths. Earlier revisions remain unchanged.
+- Completed on 2026-10-04: field-scoped reviewed snapshot text, final schema validation, and offline regression tests. This was not a new live export. See [publication controls and limits](publication-safety.md).
+- Completed on 2026-10-04: corrected the current console banner and captured a genuine replacement preview image. Historical images retain the old claim; external exposure validation remains pending.
 - Decide whether historical noncredential identifiers warrant a coordinated history rewrite. Rewriting cannot recall existing clones or screenshots and must not be done silently.
 - Validate authenticated private administration, HTTPS trust, off-network access, unauthorized-device denial, revocation, and public exposure separately.
 - Review GitHub/Tailscale account MFA, repository permissions, recovery methods, and backup restoration. Account settings were not audited in this pass.

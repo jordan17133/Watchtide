@@ -1,7 +1,8 @@
 # SOC Reliability: Review Fixes
 
 Date: 2026-10-04. Status: implementation and offline regression checks complete;
-live loader timing, reporting refresh, and VPN validation remain separate gates.
+the first scheduled reconciliation passed. Controlled late-event behavior,
+reporting refresh, and VPN validation remain separate gates.
 
 ## Changes And Evidence
 
@@ -32,11 +33,25 @@ Desktop and mobile Playwright checks passed for all five console views, alert
 selection, search, untriaged alert display, event references and page bounds.
 The preview image was regenerated from the actual corrected console.
 
+## First Scheduled Reconciliation
+
+Run 391 started at 14:57:42 EDT on October 4 after the loader source update. It
+succeeded in 30 seconds, fetched 21,276 alerts, inserted 96 new alerts, and
+snapshotted 10 vulnerability findings. Its null starting watermark confirms a
+full reconciliation, rather than the normal incremental query. The preceding
+incremental run took two seconds; continue monitoring subsequent runtimes.
+
+Read-only SQL checks found none of those 96 inserts outside the preceding run's
+ten-minute lookback window. This run establishes operational compatibility and
+deduplication continuity, not a live demonstration of late-event recovery. The
+synthetic late-event regression passes; a controlled live trace and Power BI
+refresh remain pending. The public snapshot was not refreshed from these rows.
+
 ## Operating Changes
 
 The scheduled loader uses this repository's source. Its next invocation can
-pick up these changes without a service restart; verify the next run rather
-than assuming offline tests prove production compatibility.
+pick up these changes without a service restart. The first run is verified;
+continue checking later runs rather than treating one success as ongoing health.
 
 - Review `sg.load_runs` for success, duration, counts, and errors after the
   first reconciliation; compare subsequent incremental runs. The daily full

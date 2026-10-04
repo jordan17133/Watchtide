@@ -22,7 +22,7 @@ The [private-access plan](docs/private-access-plan.md) explains the VPN decision
 
 **Next VPN step:** verify authenticated SSH/dashboard access and HTTPS trust, investigate the existing IPv6 dashboard reachability gap, then test from a separate approved off-LAN client and an unprivileged device. The current policy has been reviewed and restricted: local IPv4 SSH/dashboard checks pass, direct API/indexer access fails, and the restricted loader still imports new alerts. Device enrollment is complete; the overall private-access security milestone remains in progress.
 
-**Reliability update (October 4):** workspace-review fixes now have offline regression coverage for loader failures, late-alert reconciliation, scoped case start dates, publication parsing and agent restart recovery. Individual alerts no longer inherit a historical rule verdict. Live reconciliation timing and Power BI refresh remain pending. See [validation and limits](docs/reliability-validation.md).
+**Reliability update (October 4):** workspace-review fixes have offline regression coverage for loader failures, late-alert reconciliation, scoped case start dates, publication parsing and agent restart recovery. Individual alerts no longer inherit a historical rule verdict. The first scheduled full reconciliation succeeded in 30 seconds with 96 new alerts; controlled late-event validation and Power BI refresh remain pending. See [validation and limits](docs/reliability-validation.md).
 
 ![SOC Overview page in Power BI](docs/screenshots/powerbi-soc-overview.jpg)
 

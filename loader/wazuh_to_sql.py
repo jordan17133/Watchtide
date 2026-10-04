@@ -6,8 +6,8 @@ Usage (from the repo root):
 Reads settings from loader/.env (see .env.example). The Wazuh Indexer only
 listens on the VM's loopback address, so each run opens an SSH tunnel with a
 key that the VM restricts to forwarding 127.0.0.1:9200. Each run then:
-  1. pulls every alert newer than the warehouse's high-water mark (minus a small
-     overlap, so late-indexed alerts are not missed) from wazuh-alerts-*,
+  1. pulls recent alerts with a small overlap and reconciles all retained alert
+     indices at least daily (or with --reconcile) to recover late-indexed alerts,
   2. inserts only alerts whose Indexer _id is not already stored,
   3. replaces today's vulnerability snapshot from wazuh-states-vulnerabilities-*,
   4. extracts vulnerability and CIS benchmark events from the new alerts,
@@ -16,6 +16,7 @@ key that the VM restricts to forwarding 127.0.0.1:9200. Each run then:
 Re-running is always safe: duplicates are skipped by document ID.
 """
 
+import argparse
 import json
 import os
 import socket
@@ -34,6 +35,7 @@ from requests.adapters import HTTPAdapter
 ENV_FILE = Path(__file__).parent / ".env"
 PAGE_SIZE = 1000
 OVERLAP = timedelta(minutes=10)
+RECONCILE_INTERVAL = timedelta(days=1)
 ALERTS_INDEX = "wazuh-alerts-*"
 VULNS_INDEX = "wazuh-states-vulnerabilities-*"
 VULNS_MAX = 10000
@@ -125,11 +127,17 @@ class Indexer:
         self.session.mount("https://", WazuhCAAdapter(settings["WAZUH_CA_FILE"]))
 
     def search(self, index: str, body: dict) -> dict:
-        resp = self.session.post(f"{self.url}/{index}/_search", json=body, timeout=60)
-        if resp.status_code == 404:
-            return {"hits": {"hits": []}}
+        resp = self.session.post(
+            f"{self.url}/{index}/_search", json=body, timeout=60,
+            params={"allow_no_indices": "false", "ignore_unavailable": "false"},
+        )
         resp.raise_for_status()
-        return resp.json()
+        result = resp.json()
+        if result.get("timed_out") or result.get("_shards", {}).get("failed", 0):
+            raise RuntimeError("Indexer search was incomplete; warehouse state preserved")
+        if result.get("_shards", {}).get("total") == 0:
+            raise RuntimeError("Indexer search matched no shards; warehouse state preserved")
+        return result
 
 
 def parse_ts(value: str) -> datetime:
@@ -161,9 +169,17 @@ def to_int(value):
         return None
 
 
-def get_watermark(cur) -> datetime | None:
+def get_watermark(cur, *, reconcile=False, now=None) -> datetime | None:
+    now = now or datetime.now(timezone.utc).replace(tzinfo=None)
+    if reconcile:
+        return None
+    last_full = cur.execute(
+        "SELECT MAX(finished_at_utc) FROM sg.load_runs WHERE status = 'succeeded' AND watermark_from IS NULL"
+    ).fetchone()[0]
+    if last_full is None or now - last_full >= RECONCILE_INTERVAL:
+        return None
     row = cur.execute("SELECT MAX(alert_ts_utc) FROM sg.alerts").fetchone()
-    return row[0] - OVERLAP if row and row[0] else None
+    return min(row[0], now) - OVERLAP if row and row[0] else None
 
 
 def fetch_alert_pages(indexer: Indexer, since: datetime | None):
@@ -261,10 +277,12 @@ def load_alert_page(cur, hits: list) -> int:
 
 def snapshot_vulnerabilities(cur, indexer: Indexer) -> int:
     """Replace today's vulnerability snapshot with the Indexer's current state."""
-    result = indexer.search(VULNS_INDEX, {"size": VULNS_MAX, "query": {"match_all": {}}})
+    result = indexer.search(VULNS_INDEX, {"size": VULNS_MAX, "track_total_hits": True,
+                                       "query": {"match_all": {}}})
     hits = result["hits"]["hits"]
-    if len(hits) >= VULNS_MAX:
-        print(f"warning: vulnerability snapshot truncated at {VULNS_MAX} findings")
+    total = result["hits"].get("total")
+    if not isinstance(total, dict) or total.get("relation") != "eq" or total.get("value") != len(hits):
+        raise RuntimeError("Vulnerability snapshot is incomplete; previous snapshot preserved")
 
     today = date.today()
     cur.execute("DELETE FROM sg.vulnerability_snapshots WHERE snapshot_date = ?", today)
@@ -301,7 +319,10 @@ def parse_iso(value: str) -> datetime | None:
         return None
 
 
-def main() -> int:
+def main(argv=None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--reconcile", action="store_true", help="rescan every alert still retained by the Indexer")
+    args = parser.parse_args(argv)
     settings = load_settings()
     conn = pyodbc.connect(settings.get(
         "SQL_CONNECTION_STRING",
@@ -315,14 +336,21 @@ def main() -> int:
     ).fetchone()[0]
     conn.commit()
 
-    watermark = get_watermark(cur)
+    watermark = None
+    summary_from = None
     fetched = inserted = vulns = 0
     try:
+        watermark = get_watermark(cur, reconcile=args.reconcile)
         with ssh_tunnel(settings):
             indexer = Indexer(settings)
             for page in fetch_alert_pages(indexer, watermark):
                 fetched += len(page)
-                inserted += load_alert_page(cur, page)
+                added = load_alert_page(cur, page)
+                inserted += added
+                if added:
+                    # A conservative UTC date includes the preceding Eastern day.
+                    page_from = min(parse_ts(hit["_source"]["timestamp"]) for hit in page).date() - timedelta(days=1)
+                    summary_from = min(summary_from, page_from) if summary_from else page_from
                 conn.commit()
             vulns = snapshot_vulnerabilities(cur, indexer)
             conn.commit()
@@ -331,7 +359,7 @@ def main() -> int:
         cur.execute("EXEC sg.refresh_posture_events")
         # Lifecycle (warehouse/sql/05_lifecycle.sql): roll recent days into the
         # permanent daily summaries, then trim or delete old Low-severity detail.
-        cur.execute("EXEC sg.refresh_daily_summary")
+        cur.execute("EXEC sg.refresh_daily_summary @from_date = ?", summary_from)
         cur.execute("EXEC sg.apply_retention").fetchall()
         conn.commit()
         status, error = "succeeded", None

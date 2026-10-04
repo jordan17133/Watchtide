@@ -46,6 +46,13 @@ Windows host                         |
 
 ## Timeline
 
+### 2026-10-04: Reliability fixes after workspace review
+- Removed historical rule verdicts from individual alerts; the exporter and publication validator keep alerts untriaged until event-specific evidence can be linked. Rule and ATT&CK views now label historical context; existing case verdicts remain intact.
+- Loader errors for missing or incomplete indices preserve the previous vulnerability snapshot. Daily retained-index reconciliation and `--reconcile` recover late alerts within source retention, with document-ID deduplication and historical summary refresh.
+- Publication rejects duplicate JSON keys before validation. New cases require a timezone-aware incident window. Hardening apply/revert attempts and verifies agent restart in a `finally` block, including on failure.
+- Offline checks: 23 publication tests, 15 loader/case tests and three mocked PowerShell recovery paths. Removed 555 inherited verdicts from the existing snapshot without changing other values or its export date. No live hardening, case edits, SQL migration or tailnet policy change was executed. The scheduled loader can use the new source on its next run; timing and Power BI refresh still need verification. See [reliability validation](docs/reliability-validation.md).
+- Read-only Indexer compatibility check: 21,249 retained alerts fetched in 22 pages, 10 exact vulnerability results, 1.58 seconds for the tunnel/query check; no SQL writes. Desktop/mobile console checks passed and its genuine preview image was regenerated. This is not a complete loader benchmark or an off-network VPN test.
+
 ### 2026-10-04: Publication safeguards
 - Added field-scoped exact approval for snapshot display text and a strict final schema; unfamiliar text is redacted, unreviewed report links omitted, and invalid snapshots rejected before existing files are replaced. Added offline regression tests, including the export flow with a fake SQL connection.
 - Generated examples use neutral Windows profile and machine SID placeholders. Parsed the generated XML and verified all 21 rewritten FIM paths, including secret and startup paths under the user profile. Private deployed configurations were not edited.

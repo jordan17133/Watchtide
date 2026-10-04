@@ -2,19 +2,20 @@
 
 Usage (from the repo root):
     .venv\\Scripts\\python.exe warehouse\\cases.py list
-    .venv\\Scripts\\python.exe warehouse\\cases.py open "Title" --severity High --rules 5710,5760 [--assign Jordan]
+    .venv\\Scripts\\python.exe warehouse\\cases.py open "Title" --severity High --rules 5710,5760 --since 2026-10-04T12:00:00Z [--until 2026-10-04T13:00:00Z] [--assign Jordan]
     .venv\\Scripts\\python.exe warehouse\\cases.py assign 7 Jordan
     .venv\\Scripts\\python.exe warehouse\\cases.py note 7 "Checked the parent process"
     .venv\\Scripts\\python.exe warehouse\\cases.py close 7 --verdict "True positive" --report triage/<file>.md
 
 Every change is written to sg.cases and recorded in sg.case_events, so each
-case keeps its full history. The first alert time is looked up from the
-case's rules in sg.alerts.
+case keeps its full history. New cases require an explicit incident start
+window so recurring rules do not borrow the start date of an old incident.
 """
 
 import argparse
 import getpass
 import sys
+from datetime import datetime, timezone
 
 import pyodbc
 
@@ -46,18 +47,24 @@ def cmd_list(cur, _args) -> None:
 
 
 def cmd_open(cur, args) -> None:
-    rules = [int(r) for r in args.rules.split(",")]
+    rules = list(dict.fromkeys(int(r) for r in args.rules.split(",")))
+    until = args.until or datetime.now(timezone.utc).replace(tzinfo=None)
+    if args.since > until:
+        raise SystemExit("incident start must not be after its end")
     marks = ",".join("?" * len(rules))
-    first = cur.execute(f"SELECT MIN(alert_ts_utc) FROM sg.alerts WHERE rule_id IN ({marks})", *rules).fetchone()[0]
+    first = cur.execute(
+        f"SELECT MIN(alert_ts_utc) FROM sg.alerts WHERE rule_id IN ({marks}) "
+        "AND alert_ts_utc >= ? AND alert_ts_utc <= ?", *rules, args.since, until,
+    ).fetchone()[0]
     if first is None:
-        raise SystemExit("no alerts found for those rules; check the rule IDs")
+        raise SystemExit("no alerts found for those rules in the selected incident window")
     key = f"{first:%Y-%m-%d}-{rules[0]}-{args.title[:30].lower().replace(' ', '-')}"
     case_id = cur.execute(
         "INSERT INTO sg.cases (case_key, title, severity, status, assigned_to, first_alert_utc, opened_utc)"
         " OUTPUT INSERTED.case_id VALUES (?, ?, ?, ?, ?, ?, SYSUTCDATETIME())",
         key, args.title, args.severity, "In progress" if args.assign else "Open", args.assign, first).fetchone()[0]
     cur.executemany("INSERT INTO sg.case_rules (case_id, rule_id) VALUES (?, ?)", [(case_id, r) for r in rules])
-    log(cur, case_id, "Opened", f"rules {args.rules}")
+    log(cur, case_id, "Opened", f"rules {args.rules}; incident window {args.since.isoformat()}Z to {until.isoformat()}Z")
     if args.assign:
         log(cur, case_id, "Assigned", args.assign)
     print(f"opened SG-{case_id:03d}")
@@ -83,6 +90,16 @@ def cmd_close(cur, args) -> None:
     log(cur, args.case_id, "Closed", f"{args.verdict}: {args.report or 'no report'}")
 
 
+def utc_timestamp(value):
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        if parsed.tzinfo is None:
+            raise ValueError
+        return parsed.astimezone(timezone.utc).replace(tzinfo=None)
+    except ValueError:
+        raise argparse.ArgumentTypeError("use an ISO timestamp with Z or an explicit UTC offset") from None
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -91,6 +108,8 @@ def main() -> int:
     p.add_argument("title")
     p.add_argument("--severity", required=True, choices=["Critical", "High", "Medium", "Low"])
     p.add_argument("--rules", required=True, help="comma-separated Wazuh rule IDs")
+    p.add_argument("--since", required=True, type=utc_timestamp, help="incident window start, with UTC offset")
+    p.add_argument("--until", type=utc_timestamp, help="incident window end; defaults to now")
     p.add_argument("--assign")
     p = sub.add_parser("assign")
     p.add_argument("case_id", type=int)

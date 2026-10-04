@@ -85,7 +85,7 @@ CREATE TABLE sg.attack_catalog_loads (
 );
 GO
 
--- Rules whose alerts were investigated, with the outcome. Curated by hand from triage/.
+-- Historical rule research from triage/, not verdicts on later alert documents.
 IF OBJECT_ID(N'sg.rule_triage') IS NULL
 CREATE TABLE sg.rule_triage (
     rule_id      int            NOT NULL CONSTRAINT PK_rule_triage PRIMARY KEY,

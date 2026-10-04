@@ -1,0 +1,65 @@
+# SOC Reliability: Review Fixes
+
+Date: 2026-10-04. Status: implementation and offline regression checks complete;
+live loader timing, reporting refresh, and VPN validation remain separate gates.
+
+## Changes And Evidence
+
+| Review finding | Change | Offline evidence |
+|---|---|---|
+| New alerts inherited a past rule verdict | Exported alerts remain untriaged; final validation rejects non-null alert verdicts until an event-specific evidence link exists. Rule and ATT&CK notes are labeled historical context; case verdicts remain intact. | A reviewed historical rule verdict cannot classify a new alert. Removed 555 inherited verdicts from the historical snapshot while preserving all other values. |
+| A missing index cleared today's vulnerability snapshot | Missing-index HTTP errors now fail the load. Searches reject missing shards, timeouts, and shard failures; snapshot replacement requires an exact, complete result count. | Synthetic 404/403/500, incomplete searches, and truncated results perform no snapshot delete. A verified empty result remains valid. |
+| Alerts older than the ten-minute overlap could be skipped indefinitely | Incremental loads retain the overlap, with a complete scan of retained alert indices at least daily and an explicit `--reconcile` option. Document-ID deduplication remains; daily summaries rebuild far enough back for reconciled events. | An old synthetic alert is included in reconciliation, an existing document is not inserted twice, and summaries include its historical date. |
+| Duplicate JSON keys bypassed snapshot review | Strict parsing rejects duplicate keys at every object depth before publication. Diagnostics omit raw keys and values. | Nested duplicate-key snapshots are rejected; an existing public checkout is preserved. |
+| New cases borrowed the earliest historical alert for a recurring rule | Opening a case requires `--since`, with optional `--until`, both timezone-aware. The first alert is selected only inside that incident window. | A recurring rule's earlier history is excluded; empty/reversed windows are rejected. Existing cases are not rewritten. |
+| A hardening exception could leave the agent stopped | Apply and revert use a shared `try/finally` helper that attempts restart and waits for Running status. Unverified audit settings now fail explicitly. | Three isolated mocked paths cover success, an action failure, and a stop failure. No real hardening was executed. |
+
+The Python suites contain 23 publication tests and 15 loader/case tests. The
+PowerShell helper has three mocked recovery checks. They use fake HTTP, SQL,
+and service objects, not the live SOC. The console snapshot migration is a
+correction to historical display data, not a fresh SQL export.
+
+## Read-Only Compatibility Check
+
+A read-only check through the existing restricted loader tunnel fetched 21,249
+retained alerts in 22 pages and verified 10 vulnerability results with an exact
+total. The combined query/tunnel check took 1.58 seconds. No SQL rows were
+written. This confirms the deployed Indexer accepts the changed search options;
+it does not measure a complete loader run or prove Power BI refresh.
+
+The error and exact-count handling follow the [OpenSearch Search API](https://docs.opensearch.org/latest/api-reference/search-apis/search/).
+Desktop and mobile Playwright checks passed for all five console views, alert
+selection, search, untriaged alert display, event references and page bounds.
+The preview image was regenerated from the actual corrected console.
+
+## Operating Changes
+
+The scheduled loader uses this repository's source. Its next invocation can
+pick up these changes without a service restart; verify the next run rather
+than assuming offline tests prove production compatibility.
+
+- Review `sg.load_runs` for success, duration, counts, and errors after the
+  first reconciliation; compare subsequent incremental runs. The daily full
+  scan can take longer, particularly as retained indices grow. Measure before
+  adding endpoints; it cannot recover data already deleted from the Indexer.
+- If a vulnerability query fails, preserve the last valid snapshot and
+  investigate the error. A successful empty query is not the same as a missing
+  index. More than 10,000 findings now fails rather than publishing partial
+  posture; pagination is required before scaling beyond that limit.
+- Verify a controlled late event reaches SQL once and its historical daily
+  summary updates. Refresh Power BI independently. No scheduled task, SQL
+  schema, retention setting, SSH restriction, or network policy was changed.
+- Open new cases with an explicit incident window. Counts in `rpt.cases` still
+  use rule/time matching, not an exact document-to-case association. Future
+  alert verdicts require that association; historical rule research is not it.
+- Test full hardening/revert only in an approved isolated test environment.
+  Cleanup attempts and reports restart failures; it cannot guarantee a broken
+  operating-system service will start.
+
+## Next Security Gate
+
+Continue [Stage 4c](private-access-validation.md): authenticated SSH and trusted
+HTTPS dashboard access, IPv6 diagnosis, approved off-network access, denial
+from an unprivileged device, external exposure checks, revocation, a controlled
+event trace, and Power BI refresh. Device enrollment and the existing narrow
+policy remain complete; the full private-access milestone stays in progress.

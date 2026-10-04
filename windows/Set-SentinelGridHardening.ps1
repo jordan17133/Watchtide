@@ -88,6 +88,18 @@ function Get-Lockout {
        Window    = & $val 'Lockout observation window' }
 }
 
+function Invoke-WithWazuhStopped {
+    param([scriptblock]$Action)
+    try {
+        Stop-Service -Name WazuhSvc
+        & $Action
+    } finally {
+        Start-Service -Name WazuhSvc -ErrorAction Stop
+        $agent = Get-Service -Name WazuhSvc -ErrorAction Stop
+        $agent.WaitForStatus([System.ServiceProcess.ServiceControllerStatus]::Running, [TimeSpan]::FromSeconds(30))
+    }
+}
+
 if ($Revert) {
     if (-not (Test-Path $stateFile)) { throw "No backup found at $stateFile" }
     $state = Get-Content $stateFile -Raw | ConvertFrom-Json
@@ -105,10 +117,11 @@ if ($Revert) {
     if ([int]$state.Lockout.Threshold -gt 0) {
         net accounts /lockoutduration:$($state.Lockout.Duration) /lockoutwindow:$($state.Lockout.Window) | Out-Null
     }
-    Stop-Service -Name WazuhSvc
-    Start-Sleep -Seconds 8
-    auditpol /restore /file:$auditFile | Out-Null
-    Start-Service -Name WazuhSvc
+    Invoke-WithWazuhStopped {
+        Start-Sleep -Seconds 8
+        auditpol /restore /file:$auditFile | Out-Null
+        if ($LASTEXITCODE -ne 0) { throw "Audit policy restore failed (exit $LASTEXITCODE)." }
+    }
     "Reverted to the settings saved on $($state.SavedAt)."
     return
 }
@@ -152,48 +165,48 @@ Start-Sleep -Seconds 5
 # The Wazuh agent (FIM whodata) saves the audit policy when it starts and restores
 # that copy when it stops. Setting audit policy while it runs gets undone at its next
 # stop, so: stop the agent, set the policy, then start it so it saves the new policy.
-Stop-Service -Name WazuhSvc
-# The agent's restore runs in the background while it shuts down; let it finish first.
-$deadline = (Get-Date).AddSeconds(60)
-do { Start-Sleep -Seconds 3 } while ((Get-Process auditpol -ErrorAction SilentlyContinue) -and (Get-Date) -lt $deadline)
-Start-Sleep -Seconds 5
+Invoke-WithWazuhStopped {
+    # The agent's restore runs in the background while it shuts down; let it finish first.
+    $deadline = (Get-Date).AddSeconds(60)
+    do { Start-Sleep -Seconds 3 } while ((Get-Process auditpol -ErrorAction SilentlyContinue) -and (Get-Date) -lt $deadline)
+    Start-Sleep -Seconds 5
 
-function Test-AuditSet($a) {
-    $l = auditpol /get "/subcategory:{$($a.Guid)}" /r 2>&1 | ConvertFrom-Csv | Select-Object -First 1
-    if (-not $l) { return $false }
-    $want = if ($a.S -and $a.F) { 'Success and Failure' } elseif ($a.S) { 'Success' } else { 'Failure' }
-    $l.'Inclusion Setting' -eq $want -or $l.'Inclusion Setting' -eq 'Success and Failure'
-}
-$auditFailures = 0
-foreach ($attempt in 1..3) {
-    $pending = @($audit | Where-Object { -not (Test-AuditSet $_) })
-    if (-not $pending) { break }
-    foreach ($a in $pending) {
-        $auditArgs = @('/set', "/subcategory:{$($a.Guid)}")
-        if ($a.S) { $auditArgs += '/success:enable' }
-        if ($a.F) { $auditArgs += '/failure:enable' }
-        $out = (auditpol @auditArgs 2>&1) -join ' '
-        if ($LASTEXITCODE -ne 0) { Write-Warning "auditpol could not set '$($a.Name)' (exit $LASTEXITCODE): $out" }
+    function Test-AuditSet($a) {
+        $l = auditpol /get "/subcategory:{$($a.Guid)}" /r 2>&1 | ConvertFrom-Csv | Select-Object -First 1
+        if (-not $l) { return $false }
+        $want = if ($a.S -and $a.F) { 'Success and Failure' } elseif ($a.S) { 'Success' } else { 'Failure' }
+        $l.'Inclusion Setting' -eq $want -or $l.'Inclusion Setting' -eq 'Success and Failure'
     }
-    Start-Sleep -Seconds 2
-}
-$auditFailures = @($audit | Where-Object { -not (Test-AuditSet $_) }).Count
+    $auditFailures = 0
+    foreach ($attempt in 1..3) {
+        $pending = @($audit | Where-Object { -not (Test-AuditSet $_) })
+        if (-not $pending) { break }
+        foreach ($a in $pending) {
+            $auditArgs = @('/set', "/subcategory:{$($a.Guid)}")
+            if ($a.S) { $auditArgs += '/success:enable' }
+            if ($a.F) { $auditArgs += '/failure:enable' }
+            $out = (auditpol @auditArgs 2>&1) -join ' '
+            if ($LASTEXITCODE -ne 0) { Write-Warning "auditpol could not set '$($a.Name)' (exit $LASTEXITCODE): $out" }
+        }
+        Start-Sleep -Seconds 2
+    }
+    $auditFailures = @($audit | Where-Object { -not (Test-AuditSet $_) }).Count
 
-# ---- Report ----
-"Applied: $($registry.Count) registry values, $($services.Count) services disabled, $($audit.Count - $auditFailures)/$($audit.Count) audit subcategories, account lockout 5 attempts / 15 minutes."
-"Audit policy as Windows now reports it:"
-foreach ($a in $audit) {
-    $line = auditpol /get "/subcategory:{$($a.Guid)}" /r 2>&1 | ConvertFrom-Csv | Select-Object -First 1
-    "  {0,-60} {1}" -f $a.Name, $(if ($line) { $line.'Inclusion Setting' } else { 'unreadable' })
-}
-$lock = Get-Lockout
-"Lockout now: threshold=$($lock.Threshold) duration=$($lock.Duration) window=$($lock.Window)"
-$services | ForEach-Object { $svc = Get-Service $_.Name; "Service $($_.Name): $($svc.Status), $($svc.StartType)" }
-"RunAsPPL = $((Get-ItemProperty $lsa).RunAsPPL)   ConsentPromptBehaviorAdmin = $((Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System').ConsentPromptBehaviorAdmin)"
+    # ---- Report ----
+    "Applied: $($registry.Count) registry values, $($services.Count) services disabled, $($audit.Count - $auditFailures)/$($audit.Count) audit subcategories, account lockout 5 attempts / 15 minutes."
+    "Audit policy as Windows now reports it:"
+    foreach ($a in $audit) {
+        $line = auditpol /get "/subcategory:{$($a.Guid)}" /r 2>&1 | ConvertFrom-Csv | Select-Object -First 1
+        "  {0,-60} {1}" -f $a.Name, $(if ($line) { $line.'Inclusion Setting' } else { 'unreadable' })
+    }
+    $lock = Get-Lockout
+    "Lockout now: threshold=$($lock.Threshold) duration=$($lock.Duration) window=$($lock.Window)"
+    $services | ForEach-Object { $svc = Get-Service $_.Name; "Service $($_.Name): $($svc.Status), $($svc.StartType)" }
+    "RunAsPPL = $((Get-ItemProperty $lsa).RunAsPPL)   ConsentPromptBehaviorAdmin = $((Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System').ConsentPromptBehaviorAdmin)"
 
-# Start the agent: it saves the new audit policy as its restore point, adds its own
-# file-auditing subcategories for whodata, and runs a fresh CIS scan.
-Start-Service -Name WazuhSvc
+    if ($auditFailures) { throw "$auditFailures audit subcategories could not be verified." }
+    # The finally block restarts the agent on success and on any terminating error.
+}
 Start-Sleep -Seconds 15
 $kept = @($audit | Where-Object {
     $l = auditpol /get "/subcategory:{$($_.Guid)}" /r 2>&1 | ConvertFrom-Csv | Select-Object -First 1

@@ -11,6 +11,10 @@ with no live connection to Wazuh or the SQL warehouse.
 - A strict final schema rejects extra fields, invalid identifiers, unreviewed
   text, incorrect types, and nonfinite numbers. Validation runs both during
   export and before generation of the public copy.
+- Strict JSON parsing rejects duplicate object keys before schema validation,
+  including nested keys, without printing their potentially private contents.
+- Individual alert verdicts stay unset until event-specific evidence can be
+  linked. Historical rule research remains context, not a verdict on new events.
 - Rejected snapshots leave the previous snapshot and public checkout unchanged.
   Diagnostics identify fields without echoing their contents.
 - Public event references are SHA-256 digests instead of source document IDs.
@@ -41,5 +45,6 @@ not prove that the SOC has no exposure through other routes. External exposure,
 account security, authenticated access, revocation, and backup tests remain open.
 
 Allowlists supplement, not replace, secret scanning and manual review of public
-documentation and images. Detection correctness and rule-level triage inheritance
-need separate reliability work; this change does not validate every new alert.
+documentation and images. [Reliability fixes](reliability-validation.md) remove
+rule-verdict inheritance and document the remaining live validation requirements;
+they do not establish that every alert has been investigated.

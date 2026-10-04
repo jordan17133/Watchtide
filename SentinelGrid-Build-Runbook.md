@@ -451,6 +451,13 @@ restrict,port-forwarding,permitopen="127.0.0.1:9200",command="/bin/false" ssh-ed
 6. Run `.venv\Scripts\python.exe loader\wazuh_to_sql.py` twice. The second run must insert only new alerts.
 7. Schedule it every 15 minutes as `\SentinelGrid\SentinelGridLoader`, running `.venv\Scripts\pythonw.exe` so no console window appears. If Wazuh is unreachable, the run is logged as failed in `sg.load_runs` and the next run catches up.
 
+October 4 reliability update: the loader performs daily retained-index reconciliation
+or an explicit `--reconcile` run in addition to incremental loads. Missing or
+incomplete index results fail without replacing valid vulnerability state; a
+complete empty result is allowed. Monitor reconciliation runtime and verify late
+events, historical summaries and Power BI refresh. [Offline validation and
+remaining limits](docs/reliability-validation.md) are separate from live proof.
+
 ### Programs and documentation
 
 - [SQL Server 2025 Developer download](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)

@@ -19,6 +19,8 @@ What is built, what comes next, and why. Each chapter ends the same way: build i
 
 ## Next, in order
 
+**Reliability checkpoint (October 4, 2026):** the six workspace-review findings have implementation fixes and offline regression checks. Verify the next scheduled loader's reconciliation runtime, a controlled late event and Power BI refresh before expanding collection. The public console keeps individual alerts untriaged and historical rule reviews separate. See [validation and limits](docs/reliability-validation.md). This does not close the private-access security gates below.
+
 **Current focus (October 3, 2026):** the Windows admin host and Ubuntu VM are enrolled in Tailscale. The actual policy was reviewed, its default allow-all grant replaced with device-scoped TCP 22/443 access, and four policy tests accepted on save. [Local before/after results](docs/private-access-validation.md) confirm IPv4 SSH/dashboard reachability, API/indexer unreachability and a successful post-change SQL load with new Sysmon alerts. Next: authenticated SSH/dashboard access and HTTPS trust, the existing IPv6 dashboard gap, then separate off-LAN and unprivileged-device tests. Public-access/revocation checks, a controlled event trace and Power BI refresh remain pending. The [private-access plan](docs/private-access-plan.md) records the remaining gates. Later chapters are planned work, with no promised delivery dates.
 
 | # | Chapter | Why it matters | Done when |

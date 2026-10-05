@@ -259,8 +259,10 @@ every possible cause of the earlier host error was ruled out. The device-bound
 startup design is described in [Ubuntu's packaging change](https://lists.ubuntu.com/archives/kernel-team/2020-August/112923.html).
 
 The user's terminal subsequently reported all five services active: the VSS
-helper, Wazuh manager, indexer, dashboard and Tailscale. These checks preceded
-the reported checkpoint creation; post-checkpoint health is still pending.
+helper, Wazuh manager, indexer, dashboard and Tailscale. After reporting
+checkpoint creation, the user reran the five-service check and reported five
+`active` results. Post-checkpoint guest-service health is now a user-reported
+pass, not an independently collected application or pipeline test.
 
 A later settings screenshot confirmed checkpoints enabled, Production-Only
 selected and standard fallback unchecked. The user then reported a new
@@ -283,9 +285,26 @@ checkpoint settings and reported creation. No Wazuh, firewall, restricted
 loader, certificate or tailnet-policy change was made in this follow-up. Raw
 logs and screenshots containing private inventory remain outside publication.
 
-Next: confirm the new checkpoint entry and post-checkpoint service health,
-retain exact configuration backups privately, then resolve trusted dashboard
+Next: confirm the new checkpoint entry, retain exact configuration backups
+privately with reviewed local permissions, then resolve trusted dashboard
 HTTPS and continue access/pipeline validation before sensor expansion.
+
+### Private Backup Inventory and Local Permissions
+
+A read-only Windows metadata check found the documented installer archive and
+an extracted installer folder outside both Git repositories, with September 30
+timestamps. The archive was not opened, compared with current VM settings or
+restored. Its presence does not establish a fresh current configuration backup
+or a SQL/database recovery point. The [Wazuh backup guide](https://documentation.wazuh.com/current/migration-guide/creating/wazuh-central-components.html)
+lists current configuration, certificate and data backup requirements separately.
+
+The backup folder and archive both inherit read/execute permission for an
+additional local group containing two local accounts, besides the user's
+account, SYSTEM and administrators. This is a local access-control finding, not proof
+of internet exposure, credential use or compromise. No ACL or group membership
+was changed, and no secret contents were read. Review the intended backup
+readers and storage/encryption before placing a new sensitive backup there.
+Raw account identities, paths and ACL output remain private.
 
 ## Remaining checks
 
@@ -301,7 +320,10 @@ HTTPS and continue access/pipeline validation before sensor expansion.
 - [x] Recheck local Hyper-V and tailnet IPv4/IPv6 TCP paths without application authentication; record the local enrollment-port gap rather than enabling it.
 - [x] Record user-provided screenshot evidence of an authenticated Hyper-V Ubuntu console session.
 - [x] Record user-reported new checkpoint creation after the Hyper-V backup helper repair; the supplied settings screenshot shows Production-Only with standard fallback disabled.
-- [ ] Confirm the new checkpoint's name, timestamp and type, and recheck all five guest services after creation.
+- [x] Record the user's reported five active guest services after checkpoint creation; application, agent and reporting validation remain separate.
+- [ ] Confirm the new checkpoint's name, timestamp and type.
+- [x] Review the documented Windows installer-backup metadata and local ACLs without reading secret contents; record additional local-group read access.
+- [ ] Review backup readers/storage protection before creating fresh sensitive copies; existing backup ACLs were not changed.
 - [ ] Retain exact current configuration backups privately and validate separate backup/restore capability before further VM/firewall changes; a checkpoint and console access are not a tested restore.
 - [ ] Verify SSH login and dashboard login with a trusted HTTPS identity.
 - [ ] Test approved admin access from another network and the remaining denied services/address families from an unprivileged device.

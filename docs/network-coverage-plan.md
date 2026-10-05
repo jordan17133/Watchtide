@@ -1,7 +1,9 @@
 # Network Coverage and Browsing Privacy Plan
 
-Updated: October 5, 2026. Status: Suricata pilot preparation with a read-only
-host baseline; no sensor, gateway or privacy-VPN deployment has been made.
+Updated: October 5, 2026. Status: Suricata 8.0.7 installed for offline rule
+validation, with no live capture feed, gateway or privacy-VPN deployment.
+The service remains masked; the [offline proof](suricata-offline-validation.md)
+does not establish whole-home visibility.
 
 The owner has moved on to traffic interpretation, events, rules and reporting
 and deferred extra VPN/router work. Leave existing Tailscale access unchanged
@@ -14,7 +16,7 @@ complete; it is not a prerequisite for the [Suricata pilot](suricata-pilot.md).
 |---|---|---|
 | Endpoint SOC | Windows/Sysmon to Wazuh, SQL and Power BI is built; the public console uses a sanitized historical snapshot | Recheck loader performance and reporting refresh before adding load |
 | Private SOC administration | Local trusted IPv4 HTTPS/login verified; renewal setup reported successful; management-only Windows grant unchanged; phone remains denied | Automatic renewal check/actual rotation, remaining denied/public-access and recovery checks; approved off-LAN administration deferred |
-| Network IDS | Stage 5 preparation: benign marker rule/guide; no engine validation or sensor deployment | Resource/version review, positive/negative rule test, genuine alert through Wazuh/reporting, then measured live capture |
+| Network IDS | Stage 5 partial: offline 8.0.7 marker test passed; package/health independently checked; service masked | Inspect genuine EVE, approve bounded Wazuh collection, prove reporting path, then measure live capture |
 | Whole-network browsing privacy | Extra VPN/router work deferred; not implemented or validated | Separate approval and gateway/client, egress/DNS/IPv6 and failure tests if resumed |
 
 ## Read-Only Baseline: October 5

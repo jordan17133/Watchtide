@@ -11,7 +11,7 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
 | 2. Sysmon on Windows | Done |
 | 3. Wazuh agent on Windows | Done, agent `jordan-pc` is Active |
 | 4. Prove the event path end to end | Done, traced through every layer (docs/event-trace.md) |
-| 5. Suricata network telemetry | Pilot guide and harmless alert-only rule prepared; resource review, engine validation and deployment pending |
+| 5. Suricata network telemetry | Partial: 8.0.7 installed and offline marker-rule validation passed; service masked; live capture/Wazuh/reporting pending |
 | 6. Watchtide API on live Wazuh data | Private live API not started; public console serves a sanitized snapshot of real lab data |
 | 4b. Posture review | Done: 437 of 447 vulnerability findings resolved (10 open, zero Critical); CIS 27.1% to 37.0% |
 | 7. SQL Server reporting storage | Done: loader every 15 minutes; case log with history (`warehouse/cases.py`) meets the incident gate |
@@ -45,6 +45,11 @@ Windows host                         |
 - The VM is reached by hostname (`soc-vm.mshome.net`) instead of IP, because Hyper-V's Default Switch hands out a new IP on every VM reboot.
 
 ## Timeline
+
+### 2026-10-05: Complete the isolated Suricata rule test
+- The owner supplied `OFFLINE_SURICATA_VALIDATION_PASSED`: one positive packet produced one SID 9000001 alert, and two negative controls produced zero alerts. The job's syntax and exact ten-package checks passed; the result reported a masked Suricata service and all five existing SOC services active. No live capture, Wazuh collection change or extra SSH key was included.
+- A subsequent read-only maintenance check independently confirmed installed package `1:8.0.7-0ubuntu0`, all five services active, unused guest swap and available guest memory/disk. This does not independently retrieve the raw engine logs, close host/SQL performance follow-up, or prove recovery.
+- Added a sanitized [validation report](docs/suricata-offline-validation.md) and updated current statuses. Synthetic test traffic is not a compromise, new incident case or new ATT&CK coverage credit. Wazuh ingestion, SQL/Power BI trace and live/whole-home traffic coverage remain separate open gates. No further collection/configuration change was made; the next scope awaits owner choice.
 
 ### 2026-10-05: Verify restricted maintenance and prepare the offline install/test job
 - The owner reported successful activation. A subsequent actual tailnet status request passed with all five existing services active. Shell commands, extra arguments, command chaining, a no-command shell request and remote port forwarding were denied. These are tested local boundaries, not proof of off-LAN access, future expiry or revocation.

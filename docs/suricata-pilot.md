@@ -1,9 +1,10 @@
 # Suricata Pilot: Traffic, Rules and Reporting
 
-Updated: October 5, 2026. Status: restricted maintenance access and package-source
-preparation verified; offline installation/engine validation awaiting activation
-and results. No sensor, capture feed, Wazuh collection change or network reporting
-view has been deployed. The starter rule is not yet engine-validated.
+Updated: October 5, 2026. Status: Suricata 8.0.7 installed and isolated marker-rule
+validation passed in the owner's supplied engine result. A subsequent maintenance
+check confirmed the installed package and five healthy SOC services. Suricata
+remains masked; no live capture feed, Wazuh collection change or network reporting
+view has been deployed. See the [validation evidence](suricata-offline-validation.md).
 
 ## What We Are Adding
 
@@ -62,10 +63,10 @@ before providing an installation command. Repository metadata can be stale;
 review the actual package version, dependencies and any service auto-start
 behavior before installation. Use documentation matching that version.
 
-**October 5 result:** the owner supplied the read-only guest checks. Available
+**Initial October 5 preflight:** the owner supplied the read-only guest checks. Available
 memory and disk support attempting a bounded pilot, not an always-on capture or
-resolution of the Windows/SQL performance issue. Suricata is not installed;
-the cached Ubuntu candidate is 7.0.3. Upstream now lists 7.x as end-of-life and
+resolution of the Windows/SQL performance issue. At that point Suricata was not
+installed and the cached Ubuntu candidate was 7.0.3. Upstream lists 7.x as end-of-life and
 8.x as stable ([release page](https://suricata.io/download/)). Review the actual
 candidate from the [developer-maintained Ubuntu source](https://docs.suricata.io/en/suricata-8.0.7/install/ubuntu.html)
 and simulate installation before installing anything.
@@ -82,21 +83,27 @@ The approved source-setup action backed up APT sources privately, added the
 developer-maintained stable PPA, refreshed package metadata and simulated the
 installation. The actual candidate is `1:8.0.7-0ubuntu0`: ten new packages,
 zero upgrades and zero removals. All five existing services were active after
-this action. Suricata remains uninstalled; this connection cannot install it.
+this action. This action did not install Suricata; the maintenance connection
+still cannot install software.
 
-The owner separately approved preparation of a one-time offline installation
+The owner separately approved and ran a one-time offline installation
 job. Its reviewed package tries to enable/start the service during installation,
 so the job uses a service mask and temporary Suricata-only startup denial, then
 verifies the service is inactive and still masked. It pins the reviewed package
 and nine dependencies, checks trusted APT origin/package digest and refuses a
 changed plan. Offline tests run as the non-root Suricata account with one rule
 and synthetic PCAP files. No new SSH key, live capture, packet blocking, Wazuh
-edit or firewall change is included. Actual installation and engine results
-remain pending; passing its regression tests is not deployment proof.
+edit or firewall change is included. The supplied result passed: one positive
+packet produced one SID 9000001 alert; two negative controls produced zero.
+All ten pinned package versions passed the job's checks, Suricata remained
+masked, and all five SOC services stayed active. A subsequent maintenance check
+independently confirmed the installed package and service health. Raw engine
+logs have not been independently retrieved; the [report](suricata-offline-validation.md)
+separates those evidence sources and remaining limits.
 
 ## Step 2: Prove One Harmless Rule
 
-The prepared [starter rule](../suricata/rules/watchtide-pilot.rules) matches an
+The validated [starter rule](../suricata/rules/watchtide-pilot.rules) matches an
 IPv4 ICMP echo request containing the exact ASCII marker `WATCHTIDE-PILOT`.
 It is a validation signal, not an attack signature or a general ping detector.
 
@@ -109,10 +116,10 @@ It is a validation signal, not an attack signature or a general ping detector.
 | `priority:3` | Low-priority validation signal in Suricata; not Wazuh level 3 |
 | `sid:9000001; rev:1` | Identify this Suricata signature and its revision; not a Wazuh rule ID |
 
-After version/resource review, syntax-test the rule with the installed engine
-and replay one positive marker packet and two negative controls: a request
-without the marker and an echo reply with the marker. This tests both the
-content match and the echo-request constraint.
+The completed offline job syntax-tested the rule and replayed one positive
+marker packet and two negative controls: a request without the marker and an
+echo reply with the marker. This tests both the content match and the
+echo-request constraint; the supplied result matched the expected counts.
 Use only this rule for the isolated replay; check for SID collisions before
 merging it into any larger ruleset. Do not download malware or scan other
 people's devices. A deliberately generated match should be classified as a
@@ -121,7 +128,8 @@ controlled test, not an incident or a false positive.
 Suricata supports configuration testing (`-T`), isolated rule selection (`-S`)
 and offline packet replay (`-r`); see its
 [command-line reference](https://docs.suricata.io/en/suricata-8.0.7/command-line-options.html).
-The linked version is a reference, not proof of the deployed version.
+The package version is now verified separately; documentation alone is not
+deployment evidence.
 
 ## Step 3: Read The Event Before Tuning
 
@@ -172,8 +180,8 @@ increase in collection.
 | Gate | Current status | Required proof |
 |---|---|---|
 | Maintenance access | Tested local status allowed; forbidden commands and remote forwarding denied | Other-source, future expiry/revocation and off-LAN tests remain separate |
-| Resource/package review | Guest headroom and actual 8.0.7 candidate/dependencies verified; startup scripts reviewed; offline job prepared | Execute the pinned job and verify actual package state/startup prevention; host/SQL performance follow-up remains open |
-| Rule engine validation | Pending | Engine syntax test; positive match and negative non-match |
+| Resource/package review | Installed 8.0.7 verified; ten pinned versions and startup prevention passed in the supplied result | Host/SQL performance follow-up remains open before sustained capture |
+| Rule engine validation | Passed in supplied engine output: one positive alert, zero alerts on two controls | Raw evidence private; no live feed or Wazuh ingestion inferred |
 | Wazuh alert | Pending | Matching EVE and decoded/indexed Wazuh record, with test verdict |
 | SQL and Power BI | Pending | Same indexed alert in SQL; correct network fields and successful refresh |
 | Limited live capture | Pending | Verified interface, harmless live test, recorded load/drops and capture gaps |

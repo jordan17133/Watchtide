@@ -16,6 +16,7 @@ What is built, what comes next, and why. Each chapter ends the same way: build i
 - [x] Least-privilege reporting role, tested
 - [x] Five Power BI dashboards kept as code in Git
 - [x] Public read-only SOC console on a scrubbed snapshot ([console](https://jordan17133.github.io/Watchtide/))
+- [x] Offline Suricata 8.0.7 marker-rule validation: one positive alert, zero alerts on two controls; no live capture or Wazuh ingestion claimed ([evidence](docs/suricata-offline-validation.md))
 
 ## Current Execution Order
 
@@ -30,13 +31,17 @@ prerequisite for this pilot. See the [pilot guide](docs/suricata-pilot.md) and
 3. Collect a genuine EVE alert into Wazuh, inspect its decoded fields, and trace the same record into SQL and Power BI. Keep raw network logs private and collection bounded.
 4. Validate a limited live capture point, then plan a supported feed for wider coverage. Record each observed device/segment and gaps rather than assuming the NAT VM sees the whole home.
 
-The Suricata starter rule/guide are prepared, not engine-validated or deployed.
+Suricata 8.0.7 is installed, and the starter rule passed isolated engine
+validation in the owner's supplied output. An independent maintenance check
+confirmed the installed package and five healthy SOC services.
 The temporary maintenance connection passed actual allowed/denied local SSH
 checks. Stable-source setup and a simulated installation passed: Suricata 8.0.7,
 ten new packages, no upgrades/removals, and all five SOC services still active.
-The separately approved offline installation job is prepared; activation and
-engine results remain pending. It prevents automatic service startup, uses
-synthetic packets and does not change Wazuh collection or existing SSH keys.
+The separately approved offline job completed with one expected positive alert
+and zero alerts on two controls. The service remains masked; synthetic packets
+do not establish live coverage. Wazuh collection and existing SSH keys were
+unchanged. Genuine EVE inspection and bounded Wazuh integration are the
+recommended next gate, subject to owner approval.
 No whole-network privacy-egress change has been deployed.
 Permanent phone dashboard access is not required; the phone currently serves
 as a denied off-LAN test client. Other portfolio chapters remain planned work,
@@ -44,7 +49,7 @@ not prerequisites that must all precede the network pilot.
 
 **Reliability checkpoint (October 4, 2026):** the six workspace-review findings have implementation fixes and offline regression checks. The first scheduled reconciliation succeeded in 30 seconds with 96 new alerts. A later incremental run succeeded but took over eight minutes; SQL timeout and host paging evidence make runtime/memory follow-up the next prerequisite. A controlled late-event trace and Power BI refresh remain pending before expanding collection. The public console keeps individual alerts untriaged and historical rule reviews separate. See [validation and limits](docs/reliability-validation.md). This does not close the private-access security gates below.
 
-**Current focus (October 5, 2026):** the owner moved on to Suricata traffic, events, rules and reporting and deferred extra VPN/router work. The Windows-only management grant remains unchanged; the phone stays denied and approved off-LAN administration stays deferred/unverified. Local trusted dashboard access and reported renewal setup are retained; automatic renewal and actual replacement remain unproven. Suricata preparation is not deployment evidence. Remaining exposure/revocation, recovery, loader-performance and controlled SQL/Power BI checks stay open. The [pilot guide](docs/suricata-pilot.md), [network plan](docs/network-coverage-plan.md) and [access results](docs/private-access-validation.md) keep these gates separate.
+**Current focus (October 5, 2026):** the owner moved on to Suricata traffic, events, rules and reporting and deferred extra VPN/router work. Offline network-rule validation passed; live capture, Wazuh ingestion and network reporting remain pending. The Windows-only management grant remains unchanged; the phone stays denied and approved off-LAN administration stays deferred/unverified. Local trusted dashboard access and reported renewal setup are retained; automatic renewal and actual replacement remain unproven. Remaining exposure/revocation, recovery, loader-performance and controlled SQL/Power BI checks stay open. The [pilot guide](docs/suricata-pilot.md), [network plan](docs/network-coverage-plan.md) and [access results](docs/private-access-validation.md) keep these gates separate.
 
 ## Portfolio Chapters
 

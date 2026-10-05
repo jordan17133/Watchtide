@@ -344,8 +344,9 @@ subsequently showed HTTPS enabled, with MagicDNS already on. On October 5 the
 user reported `CERTIFICATE_READY` from the reviewed staging block, which checks
 the certificate chain, hostname and matching private key before reporting success.
 Only that marker was supplied; the issued certificate's dates and files have
-not been independently inspected. No certificate has yet been installed into
-the running dashboard, and renewal and trusted browser login remain pending.
+not been independently inspected at that staging point. Installation, renewal
+and browser login were then pending; the subsequent installation and Windows
+verification are recorded below.
 [Tailscale's HTTPS guidance](https://tailscale.com/docs/how-to/set-up-https-certificates)
 explains permanent public certificate-name disclosure and the renewal
 responsibility for certificates installed as files. No Funnel, device rename,
@@ -366,6 +367,46 @@ expected hostname and exact staged leaf. It does not alter network access or
 schedule renewal. These are offline, partly mocked tests, not evidence of a VM
 installation, Linux permissions, browser login or pipeline continuity.
 
+### Dashboard HTTPS Installation and Windows Verification
+
+On October 5 the user ran the private one-time installer and supplied
+`HTTPS_PREFLIGHT_PASSED` and `HTTPS_INSTALLED_AND_LOCALLY_VERIFIED`, with five
+services active and a new private rollback-copy location. The helper changes
+only the two browser-facing certificate paths, leaves original certificate
+files and upstream TLS settings intact, and restarts only the dashboard.
+Its success marker includes system-trusted loopback HTTPS, the expected hostname,
+the exact staged leaf, unauthenticated readiness and the five service checks.
+This installation result is user-reported; the private key and Linux permission
+metadata were not independently read.
+
+Independent checks from the selected Windows computer resolved the full private
+hostname to the expected tailnet IPv4 address. A direct IPv4 HTTPS request with
+normal certificate verification returned HTTP 302 and verification result zero.
+A separate Windows TLS handshake using default validation, without a custom
+acceptance callback, also passed. Its served certificate issuer is Let's Encrypt,
+with observed UTC validity from October 5, 2026 to January 3, 2027. No warning
+bypass, trust-store import or login credentials were used. These checks establish
+local Windows IPv4 HTTPS trust and an unauthenticated response, not browser login,
+approved off-LAN access, IPv6 dashboard support or SQL/Power BI continuity.
+
+A fresh Windows-to-VM tailnet IPv4 TCP recheck reached 22/443 and did not reach
+9200/55000, consistent with the existing management-only policy. This is still
+one local approved-source check, not an unprivileged or external exposure test.
+The latest Windows loader task metadata reported result zero for its October 5
+run. That scheduler result is not a new SQL row audit, controlled event trace or
+Power BI refresh, and does not resolve the previously recorded memory pressure.
+
+A separate private renewal helper was prepared, but has not been deployed.
+Eighteen additional offline tests passed, bringing the suite to sixty including
+sixteen installer and twenty-six publication tests. The helper is designed to
+install root-owned scripts and a daily timer, require an initial successful
+service run before enabling it, validate replacements, skip restart for unchanged
+files, and preserve the existing health/rollback behavior when activating a
+separate certificate version. Network grants and data-service settings are not
+part of this job. Linux schedule/permissions, actual rotation and recovery during
+a real renewal failure remain unverified. Browser login and renewal setup are
+the next user-assisted checks; the overall private-access milestone stays open.
+
 ## Remaining checks
 
 - [x] Enroll Windows admin host and Ubuntu SOC VM.
@@ -385,7 +426,9 @@ installation, Linux permissions, browser login or pipeline continuity.
 - [x] Review the documented Windows installer-backup metadata and local ACLs without reading secret contents; record additional local-group read access.
 - [x] Record the user's successful dashboard/UFW configuration-backup checks; the copy is local to the VM, not a full SOC backup or tested restore.
 - [x] Recheck the dashboard's public certificate metadata without accepting it or sending credentials; identify its loopback-only identity and incomplete Windows trust chain.
-- [x] Verify Tailscale HTTPS issuance enabled and record the user's verified certificate-staging marker; installation, renewal and browser trust remain pending.
+- [x] Verify Tailscale HTTPS issuance enabled and record the user's verified certificate-staging marker.
+- [x] Record user-reported dashboard certificate installation/five active services and independently verify trusted Windows IPv4 HTTPS without authentication or validation bypass.
+- [ ] Verify browser login and deploy/test the prepared renewal timer; a future actual certificate replacement is separate evidence.
 - [ ] Review backup readers/storage protection before creating fresh sensitive copies; existing backup ACLs were not changed.
 - [ ] Retain exact current configuration backups privately and validate separate backup/restore capability before further VM/firewall changes; a checkpoint and console access are not a tested restore.
 - [ ] Verify SSH login and dashboard login with a trusted HTTPS identity.

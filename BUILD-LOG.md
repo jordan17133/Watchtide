@@ -46,11 +46,18 @@ Windows host                         |
 
 ## Timeline
 
+### 2026-10-05: Install dashboard HTTPS and verify Windows trust
+- The user ran the private one-time installer and reported both preflight and local HTTPS installation success, a new private rollback copy, and five active services. Only browser-facing certificate paths changed; original certificates and upstream TLS settings were retained, and only the dashboard restarted.
+- Independent Windows checks resolved the expected tailnet IPv4 address, received HTTP 302 with normal HTTPS validation, and passed a separate default-validation TLS handshake. The served Let's Encrypt certificate expires January 3, 2027. No trust import, validation bypass or login credentials were used.
+- A fresh local approved-source TCP check still reaches 22/443 and fails on 9200/55000. The latest scheduled loader task reports result zero; this is metadata, not a controlled event trace, SQL audit or Power BI refresh, and the host memory-pressure follow-up remains open.
+- Prepared a separate root-owned renewal helper and daily timer setup. Eighteen additional offline tests passed; sixty total tests now cover installation, renewal and publication. The helper is not yet deployed, and mocked rotation/rollback tests are not live Linux renewal proof.
+- Browser login and renewal setup are next; approved off-LAN access, denied-path/revocation checks and reporting continuity remain open. No Funnel, network-policy, firewall, loader, SQL, Power BI or public-console change was made in this follow-up. See [installation evidence and limits](docs/private-access-validation.md#dashboard-https-installation-and-windows-verification).
+
 ### 2026-10-05: Stage Tailscale HTTPS and prepare the existing dashboard installation
 - After the public certificate-name disclosure explanation, the user requested the approved certificate. The first attempt failed while HTTPS issuance was disabled; authenticated DNS settings subsequently confirmed it enabled, with MagicDNS already on.
 - The user reported `CERTIFICATE_READY` from the block that verifies the chain, hostname and matching key. This is user-reported staging, not independently inspected certificate files, a dashboard installation or a trusted login.
 - Prepared a private installer that changes only the two browser-facing TLS paths, retains original certificates and upstream TLS settings, keeps a root-only rollback copy, and restarts/checks only the existing dashboard. Sixteen offline installer tests and twenty-six publication-privacy tests passed; Linux installation and permissions remain unverified.
-- Installation, browser login and scheduled renewal are next. No Funnel, access-rule, firewall, loader, SQL, Power BI or public-console runtime change was made. The private-access milestone remains in progress. See [HTTPS preparation and limits](docs/private-access-validation.md#current-configuration-backup-and-https-preparation).
+- At this staging point installation, browser login and scheduled renewal were pending; the subsequent installation is recorded above. No Funnel, access-rule, firewall, loader, SQL, Power BI or public-console runtime change was made during staging. The private-access milestone remains in progress. See [HTTPS preparation and limits](docs/private-access-validation.md#current-configuration-backup-and-https-preparation).
 
 ### 2026-10-04: Repair Hyper-V backup helper and create a recovery baseline
 - A user-provided checkpoint list showed an October 1 recovery point predating VPN work. An initial production-only checkpoint attempt failed with "The operation is not supported"; no old checkpoint was applied or deleted and standard fallback remained disabled.
@@ -312,7 +319,8 @@ Windows host                         |
 - [x] Record the user's `BACKUP_CHECK_PASSED` result for a root-only, VM-local dashboard/UFW configuration copy; full recovery remains separate.
 - [x] Inspect dashboard certificate metadata without accepting it or sending credentials; record loopback-only identity and incomplete Windows trust chain.
 - [x] Enable the selected Tailscale HTTPS issuance route after public-name disclosure and record user-reported verified certificate staging.
-- [ ] Complete the Tailscale-issued HTTPS route: install the staged certificate in the existing dashboard, verify trusted browser login, and configure/test renewal ([preparation](docs/private-access-validation.md#current-configuration-backup-and-https-preparation)).
+- [x] Record reported certificate installation/five active services and independently verify trusted Windows IPv4 HTTPS with no credentials or validation bypass.
+- [ ] Complete the Tailscale-issued HTTPS route: verify trusted browser login and deploy/test the prepared renewal timer ([installation results](docs/private-access-validation.md#dashboard-https-installation-and-windows-verification)).
 - [ ] Confirm the new checkpoint metadata; review backup readers/storage protection, retain exact current configuration backups and validate separate backup/restore before further VM/firewall changes.
 - [ ] Diagnose local enrollment TCP 1515 unreachability before new agent enrollment; do not open it automatically.
 - [ ] Verify authenticated SSH/dashboard access and HTTPS trust; record the intended supported address families.

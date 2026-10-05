@@ -1,8 +1,10 @@
 # Suricata To Wazuh: Controlled Handoff
 
-Updated October 5, 2026. Status: owner selected this next step; the one-time
-handoff job is prepared and tested locally, but has not been run on Ubuntu.
-No Wazuh collection change, indexed pilot alert or dashboard proof is claimed.
+Updated October 5, 2026. Status: the first Ubuntu attempt validated the saved
+EVE event and installed Wazuh rule, then stopped at the protected-parent check
+before changing collection or restarting the manager. A corrected one-time job
+is prepared and tested locally; its execution and indexed/dashboard proof remain
+pending. No completed Wazuh collection integration is claimed.
 
 ## Purpose
 
@@ -11,6 +13,26 @@ rule matches the intended synthetic packet and not two negative controls.
 This step checks the next connection: can the existing Wazuh manager read that
 actual saved EVE event, decode its fields and produce an alert for the existing
 dashboard? It does not install another dashboard or enable network capture.
+
+## First Attempt And Correction
+
+The owner supplied `EVE_AND_WAZUH_RULE_PREFLIGHT_PASSED`, followed by a parent
+ownership/write-permission refusal. In the reviewed job, that refusal occurs
+before the pilot directory is created, configuration is replaced or the manager
+is restarted. Independent checks found five active SOC services and zero indexed
+pilot alerts. The exact rejected parent's metadata was not separately retrieved.
+
+The first job placed the input beneath a shared system-log parent and required
+root-only write trust. The correction keeps that guard intact and instead puts
+the single-event input at `/var/lib/watchtide-suricata-pilot/eve.json`, beneath
+the private application-state parent that already passed the guest check. It
+does not loosen shared folder permissions or add a logging-group exception.
+Parent checks now run earlier and identify the rejected path on failure.
+
+The corrected activation also pins the stopped attempt's private evidence and
+requires its original configuration and EVE checksums to match current inputs.
+It refuses completed/recovery evidence, old/new pilot directories or an existing
+old/new collector. It is a separately reviewed continuation, not a blind rerun.
 
 ## Reviewed Job
 
@@ -22,7 +44,9 @@ dashboard? It does not install another dashboard or enable network capture.
 3. Test the actual EVE line against the installed Wazuh JSON decoder and built-in
    Suricata rule using `wazuh-logtest`. Stop if the expected rule does not match,
    the alert threshold would discard it, or an automatic response may act on it.
-4. Back up the manager configuration privately. Append only a JSON collector
+4. For this corrected continuation, first compare current inputs with the stopped
+   attempt's protected backup. Back up the manager configuration privately and
+   append only a JSON collector
    for a protected, initially empty, controlled-test log. Keep existing bytes,
    file ownership, permissions and extended attributes; validate before restart.
 5. Briefly restart only `wazuh-manager`. Wait for its collector to announce the
@@ -48,13 +72,14 @@ tested restore scenario. Any already emitted test alert is retained as evidence.
 
 ## Evidence And Remaining Gates
 
-- All 134 project tests pass, including 27 focused handoff checks. The guest job
+- All 140 project tests pass, including 33 focused handoff checks. The guest job
   parses with Python 3.12 syntax. These are offline checks, not deployment proof.
 - Independent preflight confirmed all five existing SOC services active and a
   working TLS-verified, read-only Indexer search through the existing restricted
   loader tunnel. It found zero SID 9000001 alerts before the proposed handoff.
-- Local alert proof remains pending. The expected built-in Wazuh rule is 86601,
-  level 3, decoder `json`; Suricata SID 9000001 and priority 3 are separate fields.
+- Actual saved EVE and the installed built-in rule passed in the supplied guest
+  preflight result: rule 86601, level 3, decoder `json`. Suricata SID 9000001 and
+  priority 3 are separate fields. A generated local manager alert remains pending.
 - Then verify the same labeled event in the Indexer and authenticated dashboard.
   An alert in the local manager log alone is not dashboard proof. Dashboard
   filter: `rule.groups:suricata AND data.alert.signature_id:9000001`.

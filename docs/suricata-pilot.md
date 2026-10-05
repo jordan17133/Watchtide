@@ -5,8 +5,10 @@ validation passed in the owner's supplied engine result. A subsequent maintenanc
 check confirmed the installed package and five healthy SOC services. Suricata
 remains masked; no live capture feed, Wazuh collection change or network reporting
 view has been deployed. See the [validation evidence](suricata-offline-validation.md).
-The owner selected the [controlled Wazuh handoff](suricata-wazuh-handoff.md);
-its one-time job is prepared and tested but not yet executed on Ubuntu.
+The first [controlled Wazuh handoff](suricata-wazuh-handoff.md) passed saved
+EVE/rule preflight, then stopped at a folder guard before collection changes or
+restart. A corrected one-time job is prepared and tested; continuation remains
+pending.
 
 ## What We Are Adding
 
@@ -184,7 +186,7 @@ increase in collection.
 | Maintenance access | Tested local status allowed; forbidden commands and remote forwarding denied | Other-source, future expiry/revocation and off-LAN tests remain separate |
 | Resource/package review | Installed 8.0.7 verified; ten pinned versions and startup prevention passed in the supplied result | Host/SQL performance follow-up remains open before sustained capture |
 | Rule engine validation | Passed in supplied engine output: one positive alert, zero alerts on two controls | Raw evidence private; no live feed or Wazuh ingestion inferred |
-| Wazuh alert | Pending | Matching EVE and decoded/indexed Wazuh record, with test verdict |
+| Wazuh alert | Saved EVE/rule preflight passed; collector handoff pending after folder-guard correction | Matching generated manager alert and indexed Wazuh record, with test verdict |
 | SQL and Power BI | Pending | Same indexed alert in SQL; correct network fields and successful refresh |
 | Limited live capture | Pending | Verified interface, harmless live test, recorded load/drops and capture gaps |
 | Whole-home coverage | Not verified | Supported capture feed and per-device/segment tests |

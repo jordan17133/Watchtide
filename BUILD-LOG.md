@@ -46,6 +46,11 @@ Windows host                         |
 
 ## Timeline
 
+### 2026-10-05: Stop safely at the input-folder guard and prepare a correction
+- The owner supplied actual saved-EVE/installed-rule preflight success, then a protected-parent refusal. In the reviewed job, that refusal occurs before pilot creation, configuration replacement or restart. Independent read-only checks found five active SOC services and zero indexed pilot alerts; the exact rejected parent metadata was not retrieved.
+- Kept the strict permissions guard and moved the proposed one-event input beneath the already checked private application-state parent. Prepared a corrected one-time activation that compares the stopped attempt's protected original settings/EVE with current inputs and rejects completed/recovery evidence and both old/new collector locations or directories. No shared-folder permission changes, live capture or new SSH/network permissions are included.
+- All 140 tests pass, including 33 focused handoff checks. Corrected payload/hash, Python 3.12 syntax and private Windows artifact permissions passed. Corrected guest execution, a generated manager alert and indexed/dashboard/reporting proof remain pending ([scope and results](docs/suricata-wazuh-handoff.md)).
+
 ### 2026-10-05: Prepare the selected Suricata-to-Wazuh handoff
 - The owner selected getting the validated alert into the existing Wazuh dashboard. Prepared one password-authenticated job to inspect genuine saved EVE, test the installed decoder/rule, back up settings and add a protected controlled-test log source. A brief manager-only restart and one preserved historical EVE append are included; live capture, blocking and new SSH/network permissions are not.
 - All 134 project tests pass, including 27 focused handoff checks for preservation, event matching, duplicate refusal, automatic-response safety, configuration replacement and recovery. Python 3.12 syntax and private artifact-directory permissions pass. These are preparation checks, not Ubuntu deployment proof.

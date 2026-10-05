@@ -18,7 +18,7 @@ complete; it is not a prerequisite for the [Suricata pilot](suricata-pilot.md).
 |---|---|---|
 | Endpoint SOC | Windows/Sysmon to Wazuh, SQL and Power BI is built; the public console uses a sanitized historical snapshot | Recheck loader performance and reporting refresh before adding load |
 | Private SOC administration | Local trusted IPv4 HTTPS/login verified; renewal setup reported successful; management-only Windows grant unchanged; phone remains denied | Automatic renewal check/actual rotation, remaining denied/public-access and recovery checks; approved off-LAN administration deferred |
-| Network IDS | Stage 5 partial: offline marker controls and bounded Wazuh handoff passed; same labeled event independently verified in the Indexer and SQL; service masked | Confirm dashboard view, build verified network reporting fields and check Power BI refresh, then measure limited live capture |
+| Network IDS | Stage 5 partial: controlled event verified in dashboard/Indexer/SQL; network view deployed and sixth Power BI page defined/checked; service masked | Verify actual Desktop refresh/rendering, then measure limited live capture |
 | Whole-network browsing privacy | Extra VPN/router work deferred; not implemented or validated | Separate approval and gateway/client, egress/DNS/IPv6 and failure tests if resumed |
 
 ## Read-Only Baseline: October 5
@@ -52,9 +52,10 @@ audited.
    engine/version evidence; prepared files are not proof that the rule works.
 3. The saved-EVE inspection, bounded manager-local collection and exact
    Indexer-to-SQL trace are complete. The existing VM is a manager; no agent
-   was installed over it. Finish dashboard visual confirmation and add network
-   reporting fields from the observed decoded data, then verify the existing
-   Power BI refresh. Recheck sustained loader/refresh performance.
+   was installed over it. Dashboard visual confirmation and read-only network
+   fields now pass; the sixth Power BI page is defined and Microsoft
+   model/schema checked ([report](network-reporting-validation.md)). Verify
+   actual Desktop refresh/rendering and recheck sustained loader performance.
 4. Verify a limited live interface and harmless live test separately. Then
    design a supported traffic feed for broader coverage; no whole-home mirror
    has been verified on the current NAT/Wi-Fi setup. Record devices/segments,

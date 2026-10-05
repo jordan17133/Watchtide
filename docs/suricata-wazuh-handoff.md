@@ -5,8 +5,10 @@ owner's supplied guest result. An independent TLS-verified, read-only Indexer
 query found exactly one matching labeled alert with the original network fields.
 This proves controlled offline EVE-to-SIEM ingestion, not live network coverage.
 The normal scheduled loader collected the same event, independently verified in
-SQL. The dashboard tab currently requires login; visual confirmation, network
-reporting views and Power BI refresh remain separate gates.
+SQL. A subsequent [reporting check](network-reporting-validation.md) opened the
+exact alert in the authenticated dashboard and deployed a verified network view.
+The sixth Power BI page is defined and model/schema checked; actual Desktop
+refresh/rendering remain separate gates.
 
 ## Purpose
 
@@ -65,8 +67,10 @@ test earns no new incident-case or ATT&CK technique credit.
 
 A subsequent independent maintenance status check confirmed the five services
 active. The Indexer query is proof of searchable storage, not proof that the
-alert has been opened in the authenticated dashboard. The browser currently
-shows its login page.
+alert has been opened in the authenticated dashboard. A later authenticated
+Threat Hunting check did open the same alert-index document, with the same label,
+fields and timestamps. The view had initially selected archives; it was switched
+to alerts to match the exact Indexer document. Raw screenshots stay private.
 
 The first bounded SQL lookup preceded the next scheduled load. A later read-only
 query matched the exact Indexer document and Wazuh alert in `sg.alerts`, including
@@ -122,16 +126,17 @@ tested restore scenario. Any already emitted test alert is retained as evidence.
   loader tunnel. It found zero SID 9000001 alerts before the proposed handoff.
 - Actual saved EVE/installed-rule preflight and local manager alert generation
   passed in the supplied guest result; the independent Indexer query confirmed
-  the same alert and network fields. Dashboard visual confirmation remains open.
+  the same alert and network fields. Subsequent dashboard visual confirmation passed.
   An alert in the local manager log alone is not dashboard proof. Dashboard
   filter: `rule.groups:suricata AND data.alert.signature_id:9000001`.
 - Packet time is fixed January 1, 2026; the independently inspected Wazuh
   processing timestamp is October 5. Classify the result as controlled offline validation,
   not an incident, live traffic observation or new ATT&CK test coverage.
 - SQL ingestion and preservation of the network fields passed independently
-  after the normal scheduled load. Network reporting views and Power BI refresh
-  remain separate checks. The guest job neither writes SQL directly nor alters
-  that loader.
+  after the normal scheduled load. A later read-only network view deployment and
+  report-definition validation passed; actual Power BI refresh/rendering remain
+  separate ([report](network-reporting-validation.md)). The guest job neither
+  writes SQL directly nor alters that loader.
 - Limited live capture, capture loss/resource measurement and wider home-network
   visibility remain future gates. This does not inspect personal browsing.
 

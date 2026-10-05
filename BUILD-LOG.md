@@ -11,11 +11,11 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
 | 2. Sysmon on Windows | Done |
 | 3. Wazuh agent on Windows | Done, agent `jordan-pc` is Active |
 | 4. Prove the event path end to end | Done, traced through every layer (docs/event-trace.md) |
-| 5. Suricata network telemetry | Partial: offline marker controls and bounded Wazuh/SQL handoff passed; same event independently verified; service masked; dashboard/network reporting/live capture pending |
+| 5. Suricata network telemetry | Partial: controlled event verified in dashboard/Indexer/SQL; network view deployed; sixth Power BI page defined and parsed/schema checked; actual refresh/live capture pending |
 | 6. Watchtide API on live Wazuh data | Private live API not started; public console serves a sanitized snapshot of real lab data |
 | 4b. Posture review | Done: 437 of 447 vulnerability findings resolved (10 open, zero Critical); CIS 27.1% to 37.0% |
 | 7. SQL Server reporting storage | Done: loader every 15 minutes; case log with history (`warehouse/cases.py`) meets the incident gate |
-| 8. Power BI report | Done: five pages (including Cases) built as a Power BI Project (definitions in Git, data cache ignored), ATT&CK catalog loaded |
+| 8. Power BI report | Original five pages built, ATT&CK catalog loaded; sixth Network Detection definition added and model/schema checked, actual refresh/rendering pending; imported cache ignored |
 | Detection validation | In progress: controlled SSH password-guessing test detected end to end; every Critical alert since tuning explained |
 | 4c. Tailscale private remote access | Trusted local HTTPS/dashboard login verified; renewal setup reported successful; phone test declined and approved off-LAN access deferred; remaining exposure/recovery/reporting gates open |
 
@@ -45,6 +45,17 @@ Windows host                         |
 - The VM is reached by hostname (`soc-vm.mshome.net`) instead of IP, because Hyper-V's Default Switch hands out a new IP on every VM reboot.
 
 ## Timeline
+
+### 2026-10-05: Diagnose the actual Power BI refresh failure
+- The owner reported an unresponsive refresh, then supplied SQL deadlock error 1205 on `rpt alerts`, with the other tables cancelled. Read-only inspection of the existing SQL event file confirmed two Power BI reads and a Python writer in a page-lock cycle on `sg.alerts`; committed-snapshot reads were disabled. This is not a Suricata incident.
+- Windows had less than 1 GB available memory, 88% committed memory and substantial paging at a sampled point. Two report reads exceeded seven minutes, while the latest scheduled loader succeeded in 113 seconds versus two seconds on each of the preceding two runs. Memory pressure may contribute; sustained performance is not resolved.
+- The repeat test run timed out creating its isolated database (144 tests, one setup error). Strengthened partial-creation cleanup and added guarded opt-in snapshot maintenance plus five guard/two SQL concurrency tests. A subsequent quiet rerun passed 160 publication/setup tests, another 15 reliability tests and three mocked PowerShell recovery paths. No disposable test databases remained. The next scheduled loader succeeded in 1.764 seconds before any snapshot-option change. The owner approved a quiet-window change after Power BI closes; deployment and successful Desktop refresh remain pending. No other-client rollback, session kill, service restart or live capture is included. See [refresh reliability](docs/report-refresh-reliability.md).
+
+### 2026-10-05: Verify the dashboard and add bounded network reporting
+- Opened the existing authenticated Wazuh Threat Hunting view, filtered SID 9000001 and checked the exact alert-index document against the earlier Indexer/SQL result. The same rule, validation label, synthetic addresses and packet/processing timestamps are visible. Raw screenshot evidence remains private.
+- Added only `rpt.network_alerts` to the live warehouse in a validated transaction; zero telemetry rows changed. The exact pilot fields matched. Existing reporting-user simulation can read the view but not the raw alert table; no account or grant changed. Bounded verification took 0.45 seconds, not a sustained benchmark.
+- Added a Network Detection page to the existing Power BI project without regenerating the original five pages. The complete model parsed with Microsoft's Analysis Services library; the new page's 11 definitions passed published schemas and offline layout/query checks. Original visual schema 2.13.0 was not yet public; the new page uses published 2.12.0. Actual Desktop refresh, DAX evaluation and visual rendering remain open.
+- All 153 tests passed, including nine disposable-database SQL tests. Fixed two test-harness issues and removed this run's leftover synthetic test database before the successful cleanup-verified rerun. No live capture, blocking, Wazuh restart, network/SSH permission change, loader change or public snapshot refresh was performed. See [reporting evidence and limits](docs/network-reporting-validation.md).
 
 ### 2026-10-05: Complete the controlled Wazuh handoff and verify the same alert in SQL
 - The owner supplied the corrected job's success: stopped-backup match, genuine EVE/rule preflight, manager-only restart and `SURICATA_WAZUH_LOCAL_ALERT_VERIFIED`. The measured alert uses Suricata SID 9000001 and Wazuh rule 86601/level 3, with all five SOC services active and live capture disabled.

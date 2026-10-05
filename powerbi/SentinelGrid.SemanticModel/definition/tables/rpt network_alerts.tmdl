@@ -1,0 +1,303 @@
+table 'rpt network_alerts'
+	lineageTag: 457a2b65-99f5-5573-a660-b8eb3340e3f2
+
+	measure 'Network records' = COUNTROWS('rpt network_alerts') + 0
+		formatString: #,0
+		lineageTag: bda7c280-f0c1-576a-a689-bb92f8b01967
+
+	measure 'Controlled tests' = CALCULATE([Network records], 'rpt network_alerts'[observation_context] = "Controlled validation") + 0
+		formatString: #,0
+		lineageTag: 1cd02d19-ab2d-576f-9110-8bfdf590a4e0
+
+	measure 'Unclassified alerts' = CALCULATE([Network records], 'rpt network_alerts'[observation_context] = "Unclassified") + 0
+		formatString: #,0
+		lineageTag: 03d02f16-ba14-5399-9e77-353ee7dd25cf
+
+	measure 'Network signatures' = DISTINCTCOUNTNOBLANK('rpt network_alerts'[signature_id]) + 0
+		formatString: #,0
+		lineageTag: 8ad489d2-e841-544d-a266-898ca7f7364d
+
+	column doc_id
+		dataType: string
+		lineageTag: 24397400-7a2b-503f-ac80-1b631709b002
+		summarizeBy: none
+		sourceColumn: doc_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column index_name
+		dataType: string
+		isHidden
+		lineageTag: 6e085a50-9b00-5d8c-bd0d-d75538014c3d
+		summarizeBy: none
+		sourceColumn: index_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column wazuh_alert_id
+		dataType: string
+		isHidden
+		lineageTag: ae825fc0-7646-5171-8971-845e8faa2be8
+		summarizeBy: none
+		sourceColumn: wazuh_alert_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column alert_ts_utc
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 50155a36-d1bb-579f-a538-18153ea92d7d
+		summarizeBy: none
+		sourceColumn: alert_ts_utc
+
+		annotation SummarizationSetBy = Automatic
+
+	column alert_time_local
+		dataType: dateTime
+		formatString: mmm d, h:nn:ss AM/PM
+		lineageTag: b5c72635-a33f-5280-a73c-f72907dbb951
+		summarizeBy: none
+		sourceColumn: alert_time_local
+
+		annotation SummarizationSetBy = Automatic
+
+	column alert_hour_local
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 8c7ff6d7-de2b-5d56-9a98-9a6fb14df13e
+		summarizeBy: none
+		sourceColumn: alert_hour_local
+
+		annotation SummarizationSetBy = Automatic
+
+	column loaded_at_utc
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 8e5ba53a-7772-53dd-84cd-ddabae27ae3e
+		summarizeBy: none
+		sourceColumn: loaded_at_utc
+
+		annotation SummarizationSetBy = Automatic
+
+	column agent_id
+		dataType: string
+		isHidden
+		lineageTag: 05859821-67f0-55c1-ac7f-95dd09e72d6c
+		summarizeBy: none
+		sourceColumn: agent_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column agent_name
+		dataType: string
+		lineageTag: 0eb3f821-f7ec-5d1f-a669-ac860a987b9a
+		summarizeBy: none
+		sourceColumn: agent_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column rule_id
+		dataType: int64
+		formatString: 0
+		lineageTag: fddac302-c0b4-59fd-a1bf-c6a0fc11048b
+		summarizeBy: none
+		sourceColumn: rule_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column rule_level
+		dataType: int64
+		formatString: 0
+		lineageTag: 91814559-10cd-5e70-b737-52fe70f03d4c
+		summarizeBy: none
+		sourceColumn: rule_level
+
+		annotation SummarizationSetBy = Automatic
+
+	column rule_description
+		dataType: string
+		lineageTag: 9ebda428-c857-5677-84fc-24aaade974c3
+		summarizeBy: none
+		sourceColumn: rule_description
+
+		annotation SummarizationSetBy = Automatic
+
+	column eve_timestamp_utc
+		dataType: dateTime
+		formatString: yyyy-mm-dd hh:nn:ss
+		lineageTag: dddc0a14-4433-59a9-b816-0b57c4337f25
+		summarizeBy: none
+		sourceColumn: eve_timestamp_utc
+
+		annotation SummarizationSetBy = Automatic
+
+	column eve_timestamp_text
+		dataType: string
+		lineageTag: f65adf3f-eab6-5f83-bcdd-9a696aecfcb3
+		summarizeBy: none
+		sourceColumn: eve_timestamp_text
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_ip
+		dataType: string
+		lineageTag: 590069a9-13ad-5b0d-a95c-21496d3678db
+		summarizeBy: none
+		sourceColumn: source_ip
+
+		annotation SummarizationSetBy = Automatic
+
+	column destination_ip
+		dataType: string
+		lineageTag: 6076e8f5-bd0d-595d-81b2-fd81bc8c630a
+		summarizeBy: none
+		sourceColumn: destination_ip
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_port
+		dataType: int64
+		formatString: 0
+		lineageTag: 6fddbd55-7883-53df-bff2-5feccb85e86e
+		summarizeBy: none
+		sourceColumn: source_port
+
+		annotation SummarizationSetBy = Automatic
+
+	column destination_port
+		dataType: int64
+		formatString: 0
+		lineageTag: 228bf08b-8819-543b-93b3-132c9597daf7
+		summarizeBy: none
+		sourceColumn: destination_port
+
+		annotation SummarizationSetBy = Automatic
+
+	column protocol
+		dataType: string
+		lineageTag: 86bd7cc5-603c-5179-a2e9-c32ec1fa3bdd
+		summarizeBy: none
+		sourceColumn: protocol
+
+		annotation SummarizationSetBy = Automatic
+
+	column app_protocol
+		dataType: string
+		lineageTag: f306f1e1-793f-5d30-bc29-88a4e6b6c8d5
+		summarizeBy: none
+		sourceColumn: app_protocol
+
+		annotation SummarizationSetBy = Automatic
+
+	column signature_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 7e944f56-7998-54bc-8f60-a30d89a16f8e
+		summarizeBy: none
+		sourceColumn: signature_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column signature
+		dataType: string
+		lineageTag: 39ad8585-387d-5550-83ec-61053c13acd2
+		summarizeBy: none
+		sourceColumn: signature
+
+		annotation SummarizationSetBy = Automatic
+
+	column signature_revision
+		dataType: int64
+		formatString: 0
+		lineageTag: 8d9bdbde-fe29-5201-a653-22e44ff3efdc
+		summarizeBy: none
+		sourceColumn: signature_revision
+
+		annotation SummarizationSetBy = Automatic
+
+	column suricata_priority
+		dataType: int64
+		formatString: 0
+		lineageTag: 5ef3e7d6-39ae-5759-95a7-3f7741d90b4a
+		summarizeBy: none
+		sourceColumn: suricata_priority
+
+		annotation SummarizationSetBy = Automatic
+
+	column category
+		dataType: string
+		lineageTag: deaab96d-dc49-5c1f-a146-d6ae0d817647
+		summarizeBy: none
+		sourceColumn: category
+
+		annotation SummarizationSetBy = Automatic
+
+	column alert_action
+		dataType: string
+		lineageTag: 66c4a923-5eb3-5860-b240-020108772189
+		summarizeBy: none
+		sourceColumn: alert_action
+
+		annotation SummarizationSetBy = Automatic
+
+	column flow_id
+		dataType: string
+		lineageTag: f2b026b5-dacd-58b1-9150-7140695deef2
+		summarizeBy: none
+		sourceColumn: flow_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column packet_source
+		dataType: string
+		lineageTag: 10a51189-5481-5450-8a28-434405f56a98
+		summarizeBy: none
+		sourceColumn: packet_source
+
+		annotation SummarizationSetBy = Automatic
+
+	column icmp_type
+		dataType: int64
+		formatString: 0
+		lineageTag: 5cb98364-0b30-5a1f-8f42-07fbadebf506
+		summarizeBy: none
+		sourceColumn: icmp_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column icmp_code
+		dataType: int64
+		formatString: 0
+		lineageTag: e4ec6239-1b6a-5693-aa92-956558cc8038
+		summarizeBy: none
+		sourceColumn: icmp_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column validation_label
+		dataType: string
+		lineageTag: 8306e860-898c-530f-ab45-edbc14117ede
+		summarizeBy: none
+		sourceColumn: validation_label
+
+		annotation SummarizationSetBy = Automatic
+
+	column observation_context
+		dataType: string
+		lineageTag: e17dcf88-283f-5790-947a-296a1f6473a3
+		summarizeBy: none
+		sourceColumn: observation_context
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'rpt network_alerts' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost", "SentinelGridWarehouse"),
+				    rpt_network_alerts = Source{[Schema="rpt",Item="network_alerts"]}[Data]
+				in
+				    rpt_network_alerts
+
+	annotation PBI_ResultType = Table
+

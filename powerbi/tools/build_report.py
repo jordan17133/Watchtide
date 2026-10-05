@@ -1,7 +1,8 @@
-"""Write the five report pages (PBIR) for the Watchtide Power BI project.
+"""Write the six report pages (PBIR) for the Watchtide Power BI project.
 
 Usage (from the repo root, after build_model.py, with Power BI Desktop closed):
     .venv\\Scripts\\python.exe powerbi\\tools\\build_report.py
+    .venv\\Scripts\\python.exe powerbi\\tools\\build_report.py --network-only
 
 Idempotent: page and visual folders are named from stable hashes, and the
 generated pages are rewritten in full on every run, so layout changes belong
@@ -9,6 +10,7 @@ here rather than in Power BI Desktop. Page 1 keeps its original page id.
 Colors follow one rule throughout: gray is "before" (first scan), blue is now.
 """
 
+import argparse
 import hashlib
 import json
 import shutil
@@ -498,12 +500,64 @@ def cases_page():
     return p, "Cases", v
 
 
-def main():
+NETWORK = "rpt network_alerts"
+
+
+def network_page():
+    p = "network"
+    v = [header(p, "Network Detection", "Suricata alert records | US Eastern processing time"),
+         slicer(p, "context", W - M - 200, 18, 200, 56,
+                col(NETWORK, "observation_context"), "Observation context")]
+    v += kpi_row(p, [
+        (mea(NETWORK, "Network records"), "Network records"),
+        (mea(NETWORK, "Controlled tests"), "Controlled validation", NOW),
+        (mea(NETWORK, "Unclassified alerts"), "Unclassified alerts", ORANGE),
+        (mea(NETWORK, "Network signatures"), "Distinct signatures"),
+    ])
+    half = (W - 2 * M - GAP) / 2
+    v.append(bar(p, "volume", M, ROW2_Y, half, ROW2_H, "columnChart",
+                 col(NETWORK, "alert_hour_local"), [(mea(NETWORK, "Network records"), "Records")],
+                 "Records by processing hour", series=col(NETWORK, "observation_context"),
+                 series_colors=[("Controlled validation", NOW), ("Labeled validation", NOW_LIGHT),
+                                ("Offline replay", BEFORE), ("Unclassified", ORANGE)], value_axis=True))
+    v.append(bar(p, "signatures", M + half + GAP, ROW2_Y, half, ROW2_H, "clusteredBarChart",
+                 col(NETWORK, "signature"), [(mea(NETWORK, "Network records"), "Records")],
+                 "Detection signatures", colors=[(mea(NETWORK, "Network records"), NOW)],
+                 topn=(6, mea(NETWORK, "Network records")), sort_by=mea(NETWORK, "Network records")))
+    v.append(table(p, "events", M, ROW3_Y, W - 2 * M, ROW3_H,
+                   [(col(NETWORK, "alert_time_local"), "Processed (Eastern)"),
+                    (col(NETWORK, "observation_context"), "Context"),
+                    (col(NETWORK, "source_ip"), "Source"), (col(NETWORK, "destination_ip"), "Destination"),
+                    (col(NETWORK, "protocol"), "Protocol"),
+                    (col(NETWORK, "signature_id"), "SID"), (col(NETWORK, "signature"), "Signature"),
+                    (col(NETWORK, "suricata_priority"), "IDS priority"),
+                    (col(NETWORK, "rule_level"), "Wazuh level"),
+                    (col(NETWORK, "eve_timestamp_utc"), "Packet time (UTC)"),
+                    (col(NETWORK, "doc_id"), "Document")],
+                   "Network event register", sort_by=col(NETWORK, "alert_time_local"),
+                   widths=[(col(NETWORK, "alert_time_local"), 150),
+                           (col(NETWORK, "observation_context"), 145),
+                           (col(NETWORK, "source_ip"), 110), (col(NETWORK, "destination_ip"), 110),
+                           (col(NETWORK, "protocol"), 65), (col(NETWORK, "signature_id"), 75),
+                           (col(NETWORK, "signature"), 250), (col(NETWORK, "suricata_priority"), 70),
+                           (col(NETWORK, "rule_level"), 70), (col(NETWORK, "eve_timestamp_utc"), 150),
+                           (col(NETWORK, "doc_id"), 200)]))
+    v.append(footer(p, "Source: rpt.network_alerts | Current pilot: offline validation | Live coverage: unverified"))
+    for _, visual in v:
+        visual["$schema"] = f"{SCHEMA}/visualContainer/2.12.0/schema.json"
+    return p, "Network Detection", v
+
+
+def main(network_only=False):
     pages_meta = json.loads((PAGES / "pages.json").read_text(encoding="utf-8"))
     order = []
-    for key, display, visuals in (soc_page(), posture_page(), attack_page(), cases_page(), pipeline_page()):
+    selected = (network_page(),) if network_only else (
+        soc_page(), posture_page(), attack_page(), cases_page(), pipeline_page(), network_page())
+    for key, display, visuals in selected:
         page_id = SOC_PAGE_ID if key == "soc" else hid("page", key)
         folder = PAGES / page_id
+        if folder.resolve() != PAGES.resolve() / page_id:
+            raise RuntimeError("Generated page path must remain within the report pages directory")
         if folder.exists():
             shutil.rmtree(folder)
         (folder / "visuals").mkdir(parents=True)
@@ -519,10 +573,15 @@ def main():
                                                                     newline="\r\n")
         order.append(page_id)
         print(f"{display}: {len(visuals)} visuals -> {page_id}")
-    pages_meta["pageOrder"] = order
-    pages_meta["activePageName"] = SOC_PAGE_ID   # open on the overview
+    if network_only:
+        pages_meta["pageOrder"] = list(dict.fromkeys(pages_meta["pageOrder"] + order))
+    else:
+        pages_meta["pageOrder"] = order
+        pages_meta["activePageName"] = SOC_PAGE_ID   # open on the overview
     (PAGES / "pages.json").write_text(json.dumps(pages_meta, indent=2), encoding="utf-8", newline="\r\n")
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--network-only", action="store_true", help="Regenerate only the network page")
+    main(network_only=parser.parse_args().network_only)

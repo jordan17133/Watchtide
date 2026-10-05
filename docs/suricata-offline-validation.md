@@ -47,12 +47,13 @@ not a confirmed attack, new incident case or additional ATT&CK technique.
 This is a working offline detection proof, not completion of the network SOC:
 
 - No verified live traffic feed or whole-home visibility; the VM still uses Hyper-V NAT.
-- The later approved one-time handoff validated genuine saved EVE and generated a Wazuh alert; independent read-only Indexer and SQL queries verified the same record and its fields. This does not grant arbitrary file access to the restricted maintenance key. Dashboard visual confirmation, network reporting views and Power BI refresh remain pending.
+- The later approved handoff validated saved EVE and generated a Wazuh alert; independent Indexer/SQL queries and the existing dashboard verified the same record. A read-only network view is deployed and a sixth Power BI page is defined and model/schema checked ([reporting proof](network-reporting-validation.md)); actual Desktop refresh/rendering remain pending. This does not grant arbitrary file access to the restricted maintenance key.
 - Raw package/engine logs, PCAPs, EVE and activation details remain private. No screenshot or reconstructed example is presented as the missing raw event.
 - Host-memory/loader performance, full recovery and remaining private-access tests are still open.
 
 The original next gate, bounded EVE-to-Wazuh ingestion, has now passed in the
-later [handoff report](suricata-wazuh-handoff.md). Finish visual dashboard and
-network-reporting/Power BI verification before sustained collection. Keep continuous capture
-disabled while proving that event path.
+later [handoff report](suricata-wazuh-handoff.md). Dashboard and SQL network-view
+verification now pass; finish actual Power BI refresh/rendering and assess host
+load before sustained collection. Keep continuous capture disabled during this
+reporting check.
 See the [pilot guide](suricata-pilot.md) and [network scope](network-coverage-plan.md).

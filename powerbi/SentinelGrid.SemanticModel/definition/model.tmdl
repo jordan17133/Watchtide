@@ -9,7 +9,7 @@ model Model
 
 annotation __PBI_TimeIntelligenceEnabled = 0
 
-annotation PBI_QueryOrder = ["rpt agent_health","rpt alert_tactics","rpt alert_techniques","rpt alerts","rpt attack_catalog_info","rpt attack_coverage","rpt attack_observed","rpt cases","rpt cis_check_results","rpt cis_score_history","rpt ingest_latency_hourly","rpt load_runs","rpt pipeline_status","rpt rule_performance","rpt vulnerabilities_current","rpt vulnerability_findings","rpt vulnerability_trend"]
+annotation PBI_QueryOrder = ["rpt agent_health","rpt alert_tactics","rpt alert_techniques","rpt alerts","rpt attack_catalog_info","rpt attack_coverage","rpt attack_observed","rpt cases","rpt cis_check_results","rpt cis_score_history","rpt ingest_latency_hourly","rpt load_runs","rpt network_alerts","rpt pipeline_status","rpt rule_performance","rpt vulnerabilities_current","rpt vulnerability_findings","rpt vulnerability_trend"]
 
 annotation PBI_ProTooling = ["DevMode"]
 
@@ -30,6 +30,7 @@ ref table 'rpt ingest_latency_hourly'
 ref table 'rpt pipeline_status'
 ref table 'rpt vulnerability_findings'
 ref table 'rpt cases'
+ref table 'rpt network_alerts'
 
 ref cultureInfo en-US
 

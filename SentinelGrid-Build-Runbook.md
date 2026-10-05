@@ -15,11 +15,11 @@ What actually happened during the build, including every failure and fix, is rec
 | 4. First real event path | Done 2026-09-30 |
 | 4b. Review posture findings | Done 2026-10-01 (437 of 447 findings resolved, 10 open; CIS 27.1% to 37.0%) |
 | 7. SQL Server warehouse (moved ahead of Stage 6) | Done 2026-09-30; case log added 2026-10-01 (`warehouse/cases.py`) |
-| 8. Power BI report | Done 2026-10-01 (five pages including Cases, kept as a Power BI Project in Git) |
+| 8. Power BI report | Original five pages built 2026-10-01; sixth Network Detection page defined October 5 and model/schema checked, Desktop refresh/rendering pending; project kept in Git |
 | Detection validation | In progress: controlled SSH password-guessing test detected and written up |
 | 4c. Tailscale private remote access | Trusted local HTTPS/dashboard login verified; renewal setup reported successful; phone remains denied and approved off-LAN testing deferred; remaining exposure/reporting/recovery gates open ([results](docs/private-access-validation.md)) |
 | 6. Watchtide API | Planned |
-| 5. Suricata network telemetry | Partial: offline marker controls passed; same controlled event independently verified in the Wazuh Indexer and SQL; dashboard/network reporting/live capture pending ([proof](docs/suricata-wazuh-handoff.md)) |
+| 5. Suricata network telemetry | Partial: controlled event verified in dashboard/Indexer/SQL; network view deployed and sixth Power BI page defined/checked; actual refresh/live capture pending ([proof](docs/network-reporting-validation.md)) |
 
 ## Lab facts
 
@@ -375,8 +375,10 @@ administration are deferred, not prerequisites. Review resources first, then
 start with a bounded harmless replay before live capture. That replay and its
 bounded EVE-to-Wazuh-to-SQL handoff now pass: the same labeled test event and
 network fields were independently verified in the Indexer and warehouse. Five
-SOC services are active; Suricata remains masked. Dashboard visual confirmation,
-network reporting views and Power BI refresh remain open. Do not rerun the
+SOC services were active after ingestion; Suricata remains masked. The dashboard
+event and read-only network view are now verified; a sixth Power BI page is
+defined and Microsoft model/schema checked. Actual Desktop refresh/rendering
+remain open ([reporting evidence](docs/network-reporting-validation.md)). Do not rerun the
 completed activation jobs. A sensor in the NAT VM does not prove whole-home
 visibility; browsing-privacy routing is separate.
 
@@ -512,6 +514,12 @@ Closing or assigning an incident in Watchtide must persist in SQL, and a reporti
 ### Completion gate
 
 A Power BI visual must trace back to a SQL reporting view, which must trace back to a Watchtide incident or Wazuh alert ID.
+
+**October 5 refresh follow-up:** the six-page project definitions pass model and
+new-page schema checks, but the actual Desktop refresh failed with a confirmed
+loader/read deadlock. Guarded committed-snapshot maintenance passed isolated
+tests and awaits its approved quiet window. Successful Desktop refresh and
+sustained host performance remain open; see [diagnosis and retest](docs/report-refresh-reliability.md).
 
 ## Recommended first milestone
 

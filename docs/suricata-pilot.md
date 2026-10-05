@@ -5,8 +5,10 @@ validation passed in the owner's supplied engine result. A subsequent maintenanc
 check confirmed the installed package and five healthy SOC services. The corrected
 [controlled Wazuh handoff](suricata-wazuh-handoff.md) completed in supplied guest
 output, and independent Indexer/SQL queries verified the same labeled alert.
-Suricata remains masked; no live capture feed or network reporting view has been
-deployed. Dashboard visual confirmation and Power BI refresh remain open. See
+Suricata remains masked; no live capture feed is enabled. The exact alert is now
+verified in the existing dashboard and a deployed read-only network reporting
+view. A sixth Power BI page is defined and model/schema checked; actual Desktop
+refresh/rendering remain open ([reporting proof](network-reporting-validation.md)). See
 the [engine validation evidence](suricata-offline-validation.md).
 
 ## What We Are Adding
@@ -172,8 +174,8 @@ the manager. The independent Indexer lookup verified the same alert with its
 label, signature, original packet timestamp and network fields. The normal
 scheduled loader collected that exact record, verified read-only in SQL. Do not
 rerun the activation or treat this fixed test input as a live sensor feed. The
-existing dashboard needs login for visual confirmation; network reporting views
-and Power BI refresh remain separate.
+existing dashboard now visibly shows the exact alert-index record. The network
+view is deployed; actual Power BI refresh/rendering remain separate.
 
 The current loader already retains each indexed alert's full JSON in
 `sg.alerts.raw_json`, but its extracted process/channel fields and current
@@ -194,9 +196,9 @@ increase in collection.
 | Maintenance access | Tested local status allowed; forbidden commands and remote forwarding denied | Other-source, future expiry/revocation and off-LAN tests remain separate |
 | Resource/package review | Installed 8.0.7 verified; ten pinned versions and startup prevention passed in the supplied result | Host/SQL performance follow-up remains open before sustained capture |
 | Rule engine validation | Passed in supplied engine output: one positive alert, zero alerts on two controls | Raw evidence private; no live feed or Wazuh ingestion inferred |
-| Wazuh alert | Local-alert success reported; one exact indexed alert independently verified | Dashboard visual confirmation still requires login; test verdict is controlled offline validation |
-| SQL ingestion | Passed: exact indexed event and preserved network fields independently matched in `sg.alerts.raw_json` after a normal scheduled load | Network-specific reporting view remains separate from raw JSON storage |
-| Power BI network reporting | Pending | Verified network reporting fields and successful refresh in the existing report |
+| Wazuh alert | Same exact alert verified in the Indexer and existing authenticated dashboard | Verdict remains controlled offline validation, not an incident |
+| SQL ingestion/reporting | Exact indexed event and network fields independently matched; read-only `rpt.network_alerts` deployed and verified | Sustained performance and actual reporting-account review remain separate |
+| Power BI network reporting | Sixth page defined; complete model and new-page schemas checked | Actual Desktop refresh, DAX evaluation and visual rendering pending |
 | Limited live capture | Pending | Verified interface, harmless live test, recorded load/drops and capture gaps |
 | Whole-home coverage | Not verified | Supported capture feed and per-device/segment tests |
 

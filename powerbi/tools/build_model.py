@@ -1,4 +1,4 @@
-"""Add the posture, ATT&CK and pipeline tables to the Watchtide semantic model (TMDL).
+"""Add reporting tables to the Watchtide semantic model (TMDL).
 
 Usage (from the repo root, with Power BI Desktop closed):
     .venv\\Scripts\\python.exe powerbi\\tools\\build_model.py
@@ -171,6 +171,24 @@ SPEC = {
         ],
         "columns": {"loaded_hour_local": {"format": "General Date"},
                     **{k: {"format": "0.0", "summarize": "none"} for k in ("p50_minutes", "p95_minutes", "max_minutes")}},
+    },
+    "network_alerts": {
+        "measures": [
+            ("Network records", "COUNTROWS('rpt network_alerts') + 0", "#,0"),
+            ("Controlled tests",
+             "CALCULATE([Network records], 'rpt network_alerts'[observation_context] = \"Controlled validation\") + 0", "#,0"),
+            ("Unclassified alerts",
+             "CALCULATE([Network records], 'rpt network_alerts'[observation_context] = \"Unclassified\") + 0", "#,0"),
+            ("Network signatures", "DISTINCTCOUNTNOBLANK('rpt network_alerts'[signature_id]) + 0", "#,0"),
+        ],
+        "columns": {
+            **{k: {"summarize": "none"} for k in (
+                "rule_id", "rule_level", "source_port", "destination_port", "signature_id",
+                "signature_revision", "suricata_priority", "icmp_type", "icmp_code")},
+            **{k: {"hidden": True} for k in ("index_name", "wazuh_alert_id", "agent_id")},
+            "alert_time_local": {"format": "mmm d, h:nn:ss AM/PM"},
+            "eve_timestamp_utc": {"format": "yyyy-mm-dd hh:nn:ss"},
+        },
     },
 }
 

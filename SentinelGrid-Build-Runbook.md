@@ -17,7 +17,7 @@ What actually happened during the build, including every failure and fix, is rec
 | 7. SQL Server warehouse (moved ahead of Stage 6) | Done 2026-09-30; case log added 2026-10-01 (`warehouse/cases.py`) |
 | 8. Power BI report | Done 2026-10-01 (five pages including Cases, kept as a Power BI Project in Git) |
 | Detection validation | In progress: controlled SSH password-guessing test detected and written up |
-| 4c. Tailscale private remote access | Narrow Windows TCP 22/443 grant unchanged; trusted local HTTPS/dashboard login verified; renewal setup reported successful; phone remains denied; approved off-LAN, remaining denied-path/reporting and recovery tests pending ([results](docs/private-access-validation.md)) |
+| 4c. Tailscale private remote access | Trusted local HTTPS/dashboard login verified; renewal setup reported successful; phone remains denied and approved off-LAN testing deferred; remaining exposure/reporting/recovery gates open ([results](docs/private-access-validation.md)) |
 | 6. Watchtide API | Planned |
 | 5. Suricata network telemetry | Planned |
 
@@ -349,7 +349,7 @@ No Critical vulnerability findings remain unexplained, and the Configuration Ass
 
 ## Stage 4c: Add private remote access with Tailscale
 
-**Status:** Windows admin host, Ubuntu VM and test phone enrolled. The policy still permits only Windows-to-VM TCP 22/443, with four accepted policy tests. Local trusted IPv4 HTTPS and authenticated dashboard access are verified; renewal setup, its initial service run and enabled daily timer were reported successful. Automatic execution and actual certificate replacement remain unproven. The phone remains denied, with a prior user-confirmed cellular HTTPS timeout; a temporary dashboard-only test needs fresh policy review and separate approval, followed by removal and a fresh denial test. The dashboard has no IPv6 listener. Reported production-checkpoint creation and VM-local configuration-backup checks do not prove a full SOC restore. Approved off-LAN access, remaining denied paths, exposure/revocation, controlled reporting validation and recovery checks remain open. See [docs/private-access-validation.md](docs/private-access-validation.md) for evidence and limits, and [docs/private-access-plan.md](docs/private-access-plan.md) for remaining gates and rollback.
+**Status:** Windows admin host, Ubuntu VM and test phone enrolled. The policy still permits only Windows-to-VM TCP 22/443, with four accepted policy tests. Local trusted IPv4 HTTPS and authenticated dashboard access are verified; renewal setup, its initial service run and enabled daily timer were reported successful. Automatic execution and actual certificate replacement remain unproven. The owner declined temporary phone access; leave the phone denied and approved off-LAN administration deferred/unverified. The current priority is the [home-network privacy/security plan](docs/network-coverage-plan.md), not repeating certificate setup. The dashboard has no IPv6 listener. Reported production-checkpoint creation and VM-local configuration-backup checks do not prove a full SOC restore. Remaining denied paths, exposure/revocation, controlled reporting validation and recovery checks stay open. See [docs/private-access-validation.md](docs/private-access-validation.md) for evidence and limits, and [docs/private-access-plan.md](docs/private-access-plan.md) for remaining gates and rollback.
 
 ### Steps
 
@@ -369,8 +369,10 @@ Approved remote SSH/dashboard access succeeds; unauthorized tailnet access and d
 Do this only after Stage 4 works reliably.
 
 The [network coverage plan](docs/network-coverage-plan.md) now prioritizes this
-pilot after current access/health checks. First verify the router/switch/Hyper-V
-capture path and available resources; a sensor in the NAT VM does not by itself
+pilot as a separate detection layer after the current privacy/security design.
+Approved off-LAN administration is deferred, not a prerequisite for planning.
+First verify the router/switch/Hyper-V capture path and available resources;
+a sensor in the NAT VM does not by itself
 prove whole-home visibility. Browsing-privacy routing is a separate planned
 control, not an effect of installing Suricata.
 

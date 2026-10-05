@@ -17,7 +17,7 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
 | 7. SQL Server reporting storage | Done: loader every 15 minutes; case log with history (`warehouse/cases.py`) meets the incident gate |
 | 8. Power BI report | Done: five pages (including Cases) built as a Power BI Project (definitions in Git, data cache ignored), ATT&CK catalog loaded |
 | Detection validation | In progress: controlled SSH password-guessing test detected end to end; every Critical alert since tuning explained |
-| 4c. Tailscale private remote access | Narrow policy saved; trusted local HTTPS/dashboard login verified; renewal setup reported successful; approved off-LAN, remaining denied-path and reporting tests pending |
+| 4c. Tailscale private remote access | Trusted local HTTPS/dashboard login verified; renewal setup reported successful; phone test declined and approved off-LAN access deferred; remaining exposure/recovery/reporting gates open |
 
 ## What is running
 
@@ -45,6 +45,12 @@ Windows host                         |
 - The VM is reached by hostname (`soc-vm.mshome.net`) instead of IP, because Hyper-V's Default Switch hands out a new IP on every VM reboot.
 
 ## Timeline
+
+### 2026-10-05: Prioritize home-network privacy and security
+- The owner declined temporary phone dashboard access and prioritized privacy/security. No phone grant was added. Approved off-LAN administration is deferred/unverified rather than marked complete; the working local Tailscale/HTTPS setup remains in place.
+- Read-only host checks found an active Wi-Fi connection, Windows Firewall enabled on all three profiles, and Defender antivirus/real-time/behavior/download protection and tamper protection enabled. Tailscale reports Running with no exit node selected. These are bounded observations, not a full security audit or proof that no other privacy tool exists.
+- Disk-encryption inspection returned access denied, leaving status unknown. No encryption setting or recovery key changed. The owner supplied the ISP-gateway model privately; its admin settings were not inspected.
+- Reviewed primary vendor guidance distinguishing VPN pass-through from a gateway VPN client and warning that bridge mode turns off private Wi-Fi. Updated the [network/privacy plan](docs/network-coverage-plan.md) to prioritize supported privacy routing and recovery before gateway changes, with Suricata a separate later detection layer. No router, DNS, firewall, VPN, Hyper-V, account, loader or reporting runtime change was made; no provider, hardware purchase or new service was selected.
 
 ### 2026-10-05: Verify dashboard login and renewal timer setup
 - After the user signed in, the existing private Wazuh overview was directly observed in an authenticated state. Its aggregate summary showed one Active agent and zero Disconnected agents; this is not a newly traced event or independently identified endpoint-health check.
@@ -331,7 +337,7 @@ Windows host                         |
 - [ ] Confirm the new checkpoint metadata; review backup readers/storage protection, retain exact current configuration backups and validate separate backup/restore before further VM/firewall changes.
 - [ ] Diagnose local enrollment TCP 1515 unreachability before new agent enrollment; do not open it automatically.
 - [ ] Complete authenticated tailnet SSH and approved off-LAN dashboard tests; local dashboard login/trusted IPv4 HTTPS now pass, and IPv6 dashboard support is absent.
-- [ ] Test approved off-LAN access and the remaining denied-service paths, direct public access and device revocation.
+- [ ] Approved off-LAN administration deferred after the phone test was declined; remaining denied-service/public-access and device-revocation checks stay open.
 - [ ] Confirm individual agent identity/health, a controlled event trace and Power BI refresh; the authenticated overview showed one Active and zero Disconnected agents ([plan](docs/private-access-plan.md)).
 - [ ] Enroll one remote endpoint and publish a benign event trace through Wazuh, SQL and Power BI.
 

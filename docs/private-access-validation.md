@@ -450,6 +450,20 @@ loader, SQL, Power BI or public-console runtime change was made in this
 follow-up. Local HTTPS/login and renewal setup are complete within these limits;
 the overall private-access milestone remains in progress.
 
+### Phone Test Deferred and Privacy Priority
+
+The owner subsequently declined temporary phone dashboard access and requested
+privacy/security work instead. No phone permission was applied; keep the phone
+denied. Approved off-LAN administration is deferred and remains unverified, not
+complete. It does not block privacy-routing or capture-point planning, but it
+must not be reported as successful remote administration.
+
+Read-only Windows security and connection checks and the new execution order
+are recorded in the [network/privacy plan](network-coverage-plan.md). No router,
+DNS, VPN, firewall or SOC runtime setting changed in that review. Existing
+private-access exposure/revocation, renewal upkeep, recovery and reporting
+validation remain open; no browsing-privacy or Suricata deployment is claimed.
+
 ## Remaining checks
 
 - [x] Enroll Windows admin host and Ubuntu SOC VM.
@@ -476,7 +490,7 @@ the overall private-access milestone remains in progress.
 - [ ] Review backup readers/storage protection before creating fresh sensitive copies; existing backup ACLs were not changed.
 - [ ] Retain exact current configuration backups privately and validate separate backup/restore capability before further VM/firewall changes; a checkpoint and console access are not a tested restore.
 - [ ] Complete authenticated tailnet SSH and approved off-LAN dashboard tests; local trusted dashboard login is verified.
-- [ ] Test approved admin access from another network and the remaining denied services/address families from an unprivileged device.
+- [ ] Deferred: approved admin access from another network; phone access was declined. Remaining denied services/address families still need independent testing.
 - [ ] Check direct public access, device revocation, new-event flow into SQL and Power BI refresh.
 
 The remaining gates and recovery procedure are in [private-access-plan.md](private-access-plan.md). The earlier tailnet policy change was applied and tested locally without changing guest services or firewall rules. The later recovery follow-up installed guest integration helpers and changed checkpoint settings, with creation reported by the user. The overall private-access security milestone remains in progress. Private addresses, account/device inventory and unredacted screenshots are excluded from public publication.

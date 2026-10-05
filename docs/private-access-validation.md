@@ -234,6 +234,59 @@ then choose the trusted dashboard certificate path. Public exposure, revocation,
 approved off-LAN access and reporting health remain unverified. No runtime
 settings were changed during these checks.
 
+### Production Checkpoint Recovery Follow-Up
+
+On October 4, the user supplied a Hyper-V checkpoint-list screenshot showing
+an October 1 recovery point, predating the VPN work. No existing checkpoint
+was applied or deleted. An initial production-only checkpoint attempt failed
+with "The operation is not supported"; that generic error did not identify
+the complete cause.
+
+Guest diagnostics showed the Hyper-V backup device existed, but
+`hv-vss-daemon.service` and its process were initially absent. A simulated
+installation preview selected three kernel-matched Ubuntu cloud-tools
+packages, with no upgrades or removals. The user's actual installation log
+confirmed all three packages installed, including the VSS, KVP and file-copy
+helpers. Package installation reported a systemctl invocation warning.
+
+After a service-manager reload, starting VSS immediately led to a systemd
+stop. Its installed unit bound the service to the backup device, whose udev
+metadata lacked the `systemd` tag. Reloading the installed udev rules and
+issuing a targeted change event for that device populated `SYSTEMD_WANTS`
+and the `systemd` tags. VSS then stayed running through a three-second check.
+This resolves the observed helper startup problem; it does not establish that
+every possible cause of the earlier host error was ruled out. The device-bound
+startup design is described in [Ubuntu's packaging change](https://lists.ubuntu.com/archives/kernel-team/2020-August/112923.html).
+
+The user's terminal subsequently reported all five services active: the VSS
+helper, Wazuh manager, indexer, dashboard and Tailscale. These checks preceded
+the reported checkpoint creation; post-checkpoint health is still pending.
+
+A later settings screenshot confirmed checkpoints enabled, Production-Only
+selected and standard fallback unchecked. The user then reported a new
+checkpoint successfully created. Record this as user-reported creation under
+the pictured settings, not independently queried checkpoint metadata. The
+new entry's name, timestamp and type still need confirmation; the proposed
+baseline name has not been confirmed as applied. The host's Backup integration
+checkbox was not shown in the supplied screenshot.
+
+This checkpoint is a post-repair VM baseline, not a pre-installation backup.
+It does not capture the Windows SQL warehouse or the cloud tailnet policy,
+and no separate export, exact current configuration backup or restore test
+was verified. [Microsoft's checkpoint guide](https://learn.microsoft.com/en-us/windows-server/virtualization/hyper-v/checkpoints)
+distinguishes production checkpoints and exporting recovery points. The
+private-access milestone remains in progress.
+
+Runtime changes in this follow-up were user-performed guest integration-tool
+installation, device-rule refresh and helper start, plus production-only
+checkpoint settings and reported creation. No Wazuh, firewall, restricted
+loader, certificate or tailnet-policy change was made in this follow-up. Raw
+logs and screenshots containing private inventory remain outside publication.
+
+Next: confirm the new checkpoint entry and post-checkpoint service health,
+retain exact configuration backups privately, then resolve trusted dashboard
+HTTPS and continue access/pipeline validation before sensor expansion.
+
 ## Remaining checks
 
 - [x] Enroll Windows admin host and Ubuntu SOC VM.
@@ -247,9 +300,11 @@ settings were changed during these checks.
 - [x] Review complete user-supplied IPv4/IPv6 filter-table exports and identify the nf_tables backend; separate new TCP restrictions from control traffic, established connections and forwarding exceptions.
 - [x] Recheck local Hyper-V and tailnet IPv4/IPv6 TCP paths without application authentication; record the local enrollment-port gap rather than enabling it.
 - [x] Record user-provided screenshot evidence of an authenticated Hyper-V Ubuntu console session.
-- [ ] Verify a current checkpoint and exact private configuration backups before VM/firewall changes; console evidence is not a restore test.
+- [x] Record user-reported new checkpoint creation after the Hyper-V backup helper repair; the supplied settings screenshot shows Production-Only with standard fallback disabled.
+- [ ] Confirm the new checkpoint's name, timestamp and type, and recheck all five guest services after creation.
+- [ ] Retain exact current configuration backups privately and validate separate backup/restore capability before further VM/firewall changes; a checkpoint and console access are not a tested restore.
 - [ ] Verify SSH login and dashboard login with a trusted HTTPS identity.
 - [ ] Test approved admin access from another network and the remaining denied services/address families from an unprivileged device.
 - [ ] Check direct public access, device revocation, new-event flow into SQL and Power BI refresh.
 
-The remaining gates and recovery procedure are in [private-access-plan.md](private-access-plan.md). A tailnet policy change was applied and tested locally; no firewall or service configuration change was made. The overall private-access security milestone remains in progress. Private addresses, account/device inventory and unredacted screenshots are excluded from public publication.
+The remaining gates and recovery procedure are in [private-access-plan.md](private-access-plan.md). The earlier tailnet policy change was applied and tested locally without changing guest services or firewall rules. The later recovery follow-up installed guest integration helpers and changed checkpoint settings, with creation reported by the user. The overall private-access security milestone remains in progress. Private addresses, account/device inventory and unredacted screenshots are excluded from public publication.

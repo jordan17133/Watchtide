@@ -8,7 +8,7 @@ VPN deployment has been made for this plan.
 | Layer | Current state | Next evidence |
 |---|---|---|
 | Endpoint SOC | Windows/Sysmon to Wazuh, SQL and Power BI is built; the public console uses a sanitized historical snapshot | Recheck loader performance and reporting refresh before adding load |
-| Private SOC administration | Stage 4c in progress: Windows/VM/phone enrolled, management-only Windows grant, local checks and a reported phone denial over cellular | Firewall/recovery review, trusted authenticated access, approved off-LAN access, remaining denied paths and revocation |
+| Private SOC administration | Stage 4c in progress: Windows/VM/phone enrolled, management-only Windows grant, local checks and a reported phone denial over cellular; firewall tables reviewed, backup helper repaired and new checkpoint creation reported under pictured Production-Only settings | Checkpoint metadata/post-creation health, current private backups and separate restore validation; trusted authenticated access, approved off-LAN access, remaining denied paths and revocation |
 | Network IDS | Stage 5 not started; no whole-home packet coverage verified | Verified capture point, Suricata pilot, benign event through Wazuh and reporting |
 | Whole-network browsing privacy | Not implemented or validated by this project | Gateway/client coverage, egress/DNS/IPv6 tests, provider trust and failure behavior reviewed |
 

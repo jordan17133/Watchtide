@@ -46,6 +46,12 @@ Windows host                         |
 
 ## Timeline
 
+### 2026-10-04: Repair Hyper-V backup helper and create a recovery baseline
+- A user-provided checkpoint list showed an October 1 recovery point predating VPN work. An initial production-only checkpoint attempt failed with "The operation is not supported"; no old checkpoint was applied or deleted and standard fallback remained disabled.
+- Guest diagnostics found the backup device but no VSS helper unit/process. The user installed three kernel-matched Ubuntu cloud-tools packages after a no-upgrade/no-removal preview. The installed helper then stopped immediately while its device dependency lacked the expected systemd tag; reloading installed udev rules and issuing a targeted device change event resolved the observed startup issue.
+- User-provided output showed the VSS helper running and all five guest services active before checkpoint creation was reported. A later screenshot confirmed Production-Only settings with standard fallback unchecked, and the user reported successful creation. The new checkpoint name/timestamp/type and post-creation health still need confirmation; separate backup/export and restore validation remain open.
+- Recorded these user-performed integration-service and checkpoint changes without changing Wazuh, firewall, loader, certificates or tailnet permissions. The overall private-access milestone remains in progress; raw logs and screenshots stay private. See the [recovery follow-up](docs/private-access-validation.md#production-checkpoint-recovery-follow-up).
+
 ### 2026-10-04: Complete supplied filter-table configuration review
 - Reviewed the user's full IPv4/IPv6 filter exports, whose headers identify the nf_tables backend. Existing private IPv4 TCP 22/443/1514/1515 exceptions match the UFW summary; there are no user-defined IPv6 TCP service allowances. No reachable rule permitting new non-Tailscale TCP API/indexer access was found outside the loopback and established/related exceptions.
 - Recorded Tailscale-before-UFW input and forwarding precedence. The default FORWARD DROP policy does not negate Tailscale's earlier forwarding accepts, and the presence of those rules does not establish enabled kernel routing, subnet advertising or exit-node use.
@@ -294,7 +300,8 @@ Windows host                         |
 - [x] Enroll an iPhone test client and record its reported private HTTPS timeout over cellular with a working public-web control.
 - [x] Identify the IPv6 dashboard gap: user-provided listener output shows no IPv6 dashboard listener.
 - [x] Review supplied full IPv4/IPv6 filter tables and record user-provided authenticated Hyper-V console evidence.
-- [ ] Verify the current checkpoint and exact private configuration backups before changing VM/firewall settings; console access is not a tested restore.
+- [x] Record user-reported new checkpoint creation after the backup-helper repair and a Production-Only settings screenshot.
+- [ ] Confirm the new checkpoint metadata and post-creation guest health; retain exact current configuration backups and validate separate backup/restore before further VM/firewall changes.
 - [ ] Diagnose local enrollment TCP 1515 unreachability before new agent enrollment; do not open it automatically.
 - [ ] Verify authenticated SSH/dashboard access and HTTPS trust; record the intended supported address families.
 - [ ] Test approved off-LAN access and the remaining denied-service paths, direct public access and device revocation.

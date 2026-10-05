@@ -303,6 +303,9 @@ Windows host                         |
 - [x] Review supplied full IPv4/IPv6 filter tables and record user-provided authenticated Hyper-V console evidence.
 - [x] Record user-reported new checkpoint creation after the backup-helper repair and a Production-Only settings screenshot.
 - [x] Record the user's reported five active guest services after checkpoint creation.
+- [x] Record the user's `BACKUP_CHECK_PASSED` result for a root-only, VM-local dashboard/UFW configuration copy; full recovery remains separate.
+- [x] Inspect dashboard certificate metadata without accepting it or sending credentials; record loopback-only identity and incomplete Windows trust chain.
+- [ ] Complete the selected Tailscale-issued HTTPS route: confirm public certificate-name disclosure, enable issuance, install and renew the certificate, and verify trusted dashboard login ([preparation](docs/private-access-validation.md#current-configuration-backup-and-https-preparation)).
 - [ ] Confirm the new checkpoint metadata; review backup readers/storage protection, retain exact current configuration backups and validate separate backup/restore before further VM/firewall changes.
 - [ ] Diagnose local enrollment TCP 1515 unreachability before new agent enrollment; do not open it automatically.
 - [ ] Verify authenticated SSH/dashboard access and HTTPS trust; record the intended supported address families.

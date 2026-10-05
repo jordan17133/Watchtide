@@ -70,7 +70,8 @@ distribution before remote login. A private CA avoids publishing certificate
 names but requires securely distributing trust to approved clients. Tailscale
 can provision publicly trusted HTTPS certificates; its [HTTPS documentation](https://tailscale.com/docs/how-to/set-up-https-certificates)
 explains that those certificate hostnames enter public Certificate Transparency
-logs. That tradeoff needs review before enabling it; neither route was applied.
+logs. Neither route was applied during that recheck. The later choice and
+preparation are recorded below.
 
 A subsequent read-only SQL check initially timed out, then succeeded on retry.
 Windows had less than 1 GB free memory, and SQL Server logged event 17890 about
@@ -306,6 +307,47 @@ was changed, and no secret contents were read. Review the intended backup
 readers and storage/encryption before placing a new sensitive backup there.
 Raw account identities, paths and ACL output remain private.
 
+### Current Configuration Backup and HTTPS Preparation
+
+On October 4, the user ran the reviewed Ubuntu backup block and reported
+`BACKUP_CHECK_PASSED`. The block creates a unique root-owned directory under
+`/root` with restrictive new-file permissions. It archives the current
+`/etc/wazuh-dashboard` directory, the dashboard application's `wazuh.yml`, and
+`/etc/ufw`, and captures IPv4/IPv6 firewall rules as private reference files.
+The keystore was verified by the user at
+`/etc/wazuh-dashboard/opensearch_dashboards.keystore`, rather than the earlier
+assumed path under `/usr/share`.
+
+Before reporting success, the block checks gzip readability, compares archived
+entries with their source files, and creates and verifies SHA-256 checksums.
+This is a user-reported configuration-copy validation, not an independently
+inspected archive or a restore test. Its permission report and backup contents
+were not supplied. The copy remains inside the VM and is not encrypted by the
+archiving step. It does not capture manager/indexer alert data, Windows SQL,
+or the cloud tailnet policy. No service, listener, firewall rule or existing
+file permission was changed by this block. Separate protected storage and
+full recovery validation remain open.
+
+A fresh Windows-to-VM IPv4 certificate-metadata probe found the dashboard's
+certificate covers only the loopback IP, not its tailnet hostname. Windows
+reported a name mismatch and an incomplete issuer chain; the certificate was
+not expired at the time of the check. The probe's validation callback always
+rejected the certificate, and no application request or login credentials were
+sent. This identifies the outstanding HTTPS configuration issues, not evidence
+of compromise or authenticated access.
+
+The user selected Tailscale-issued HTTPS rather than importing a new private
+CA into Windows. The authenticated DNS settings show MagicDNS already enabled
+and HTTPS certificates disabled. The enablement notice was opened for review;
+the exact device-name disclosure still awaits confirmation. Issuance,
+installation, renewal automation and trusted dashboard login are not complete.
+[Tailscale's HTTPS guidance](https://tailscale.com/docs/how-to/set-up-https-certificates)
+explains permanent public certificate-name disclosure and the renewal
+responsibility for certificates installed as files. No Funnel, device rename,
+access-rule change, Windows trust-store change or Wazuh certificate change has
+been made in this preparation. Real names, addresses, certificate fingerprints
+and backup inventory remain outside publication.
+
 ## Remaining checks
 
 - [x] Enroll Windows admin host and Ubuntu SOC VM.
@@ -323,6 +365,8 @@ Raw account identities, paths and ACL output remain private.
 - [x] Record the user's reported five active guest services after checkpoint creation; application, agent and reporting validation remain separate.
 - [ ] Confirm the new checkpoint's name, timestamp and type.
 - [x] Review the documented Windows installer-backup metadata and local ACLs without reading secret contents; record additional local-group read access.
+- [x] Record the user's successful dashboard/UFW configuration-backup checks; the copy is local to the VM, not a full SOC backup or tested restore.
+- [x] Recheck the dashboard's public certificate metadata without accepting it or sending credentials; identify its loopback-only identity and incomplete Windows trust chain.
 - [ ] Review backup readers/storage protection before creating fresh sensitive copies; existing backup ACLs were not changed.
 - [ ] Retain exact current configuration backups privately and validate separate backup/restore capability before further VM/firewall changes; a checkpoint and console access are not a tested restore.
 - [ ] Verify SSH login and dashboard login with a trusted HTTPS identity.

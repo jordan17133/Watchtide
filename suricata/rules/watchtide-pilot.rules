@@ -1,0 +1,2 @@
+# Controlled validation only; this marker is not evidence of malicious traffic.
+alert icmp any any -> any any (msg:"WATCHTIDE benign ICMP pilot marker"; itype:8; content:"WATCHTIDE-PILOT"; classtype:misc-activity; priority:3; sid:9000001; rev:1;)

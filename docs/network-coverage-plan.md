@@ -1,12 +1,12 @@
 # Network Coverage and Browsing Privacy Plan
 
-Updated: October 5, 2026. Status: privacy/security planning with a read-only
+Updated: October 5, 2026. Status: Suricata pilot preparation with a read-only
 host baseline; no sensor, gateway or privacy-VPN deployment has been made.
 
-The owner has prioritized home-network privacy and security and declined the
-temporary phone dashboard test. Leave the phone denied. Off-LAN administration
-is deferred and unverified, not complete; it is not a prerequisite for planning
-privacy routing or network detection.
+The owner has moved on to traffic interpretation, events, rules and reporting
+and deferred extra VPN/router work. Leave existing Tailscale access unchanged
+and the phone denied. Off-LAN administration is deferred and unverified, not
+complete; it is not a prerequisite for the [Suricata pilot](suricata-pilot.md).
 
 ## Where The Project Is
 
@@ -14,8 +14,8 @@ privacy routing or network detection.
 |---|---|---|
 | Endpoint SOC | Windows/Sysmon to Wazuh, SQL and Power BI is built; the public console uses a sanitized historical snapshot | Recheck loader performance and reporting refresh before adding load |
 | Private SOC administration | Local trusted IPv4 HTTPS/login verified; renewal setup reported successful; management-only Windows grant unchanged; phone remains denied | Automatic renewal check/actual rotation, remaining denied/public-access and recovery checks; approved off-LAN administration deferred |
-| Network IDS | Stage 5 not started; no whole-home packet coverage verified | Verified capture point, Suricata pilot, benign event through Wazuh and reporting |
-| Whole-network browsing privacy | Not implemented or validated by this project | Gateway/client coverage, egress/DNS/IPv6 tests, provider trust and failure behavior reviewed |
+| Network IDS | Stage 5 preparation: benign marker rule/guide; no engine validation or sensor deployment | Resource/version review, positive/negative rule test, genuine alert through Wazuh/reporting, then measured live capture |
+| Whole-network browsing privacy | Extra VPN/router work deferred; not implemented or validated | Separate approval and gateway/client, egress/DNS/IPv6 and failure tests if resumed |
 
 ## Read-Only Baseline: October 5
 
@@ -39,34 +39,30 @@ audited.
 
 ## Execution Order
 
-1. Preserve the current private SOC access and keep the phone denied. Review
-   gateway Wi-Fi/admin security, account MFA, updates and backup recovery before
-   changing settings. Investigate recorded host memory pressure before adding
-   sensor or gateway load to the SOC host; confirm SQL and Power BI health.
-2. Privately inventory the gateway, existing routers/firewalls, Wi-Fi segments,
-   intended devices and any existing VPN subscription. Check actual vendor
-   support for an outbound VPN client, not just VPN pass-through or a VPN
-   server. Do not buy equipment, choose a paid service or flash firmware yet.
-3. Design whole-home privacy routing first. Compare a supported VPN-capable
-   gateway with a device-client pilot if hardware is unavailable. A device
-   pilot protects only tested devices, not the whole home. Review provider
-   trust, DNS, IPv4/IPv6, tunnel-failure behavior, local SOC access and Wi-Fi
-   migration. Keep a wired recovery route and validated backups before a
-   gateway cutover; do not enable bridge mode while relying on its Wi-Fi.
-4. Deploy only the reviewed, approved design, then test each intended device
-   and segment. Verify external routing, DNS/IPv6 handling and no unintended
-   direct fallback when the tunnel fails. Recheck private SOC/loader access and
-   reporting. Record any bypasses and device exceptions explicitly.
-5. Plan a supported traffic capture feed and build a separate Suricata pilot
-   after resource and capture-point review. Follow the
-   [Wazuh Suricata integration](https://documentation.wazuh.com/current/proof-of-concept-guide/integrate-network-ids-suricata.html)
-   for EVE log collection. Trace a benign event through the sensor and Wazuh;
-   validate the SQL/reporting representation separately rather than assuming
-   endpoint-oriented reports already cover network fields. Installing a sensor
-   in the Hyper-V NAT VM is not evidence of whole-home coverage. Test each
-   intended segment, record capture gaps/drops and protect the private logs.
+1. Preserve current private SOC access and the phone denial. Check Ubuntu
+   memory/disk/package state and review installation behavior. Follow up host
+   memory pressure, SQL runtime and Power BI health before sustained capture.
+2. Use a short, isolated benign replay to syntax-test and validate the prepared
+   marker rule with positive and negative samples. Start alert-only, without
+   packet blocking, a second VM or a large downloaded ruleset. Record actual
+   engine/version evidence; prepared files are not proof that the rule works.
+3. Inspect the resulting EVE record and connect a bounded collection path to
+   Wazuh. The existing VM is a manager, so do not install an agent over it;
+   verify local collection or use an agent on a later separate sensor. Trace
+   the indexed alert into SQL and add network reporting fields from observed
+   decoded data. Recheck loader/refresh performance.
+4. Verify a limited live interface and harmless live test separately. Then
+   design a supported traffic feed for broader coverage; no whole-home mirror
+   has been verified on the current NAT/Wi-Fi setup. Record devices/segments,
+   gaps, drops, retention and access restrictions explicitly.
+5. Keep broader privacy routing deferred unless the owner resumes it. A later
+   design needs its own approval, provider-trust review, per-device DNS/IPv4/
+   IPv6/failure tests and recovery plan. It does not block the detection pilot.
 
 ## ISP Gateway Constraints
+
+The references below are retained for deferred privacy-routing work, not a
+current purchase recommendation or a prerequisite for the Suricata pilot.
 
 [Xfinity documents VPN pass-through](https://www.xfinity.com/support/articles/using-a-vpn-connection),
 which is different from running an outbound VPN for every home device. A

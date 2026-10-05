@@ -14,3 +14,8 @@ warehouse/data/
 
 # Local preview config for the console
 /.claude/
+
+# Packet captures and local network telemetry are private, not portfolio assets.
+*.pcap
+*.pcapng
+/suricata/data/

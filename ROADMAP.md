@@ -19,24 +19,26 @@ What is built, what comes next, and why. Each chapter ends the same way: build i
 
 ## Current Execution Order
 
-The immediate goal is a SOC covering the home network, with a separate
-whole-network browsing-privacy design. Private SOC access, network detection,
-and internet egress privacy are different controls; phone enrollment does not
-complete any of them. See the [network coverage plan](docs/network-coverage-plan.md).
+The immediate goal is a bounded Suricata pilot for traffic interpretation,
+rules and reporting. Whole-home SOC coverage remains the longer-term goal.
+The owner deferred extra VPN/router work; browsing-privacy routing is not a
+prerequisite for this pilot. See the [pilot guide](docs/suricata-pilot.md) and
+[network coverage plan](docs/network-coverage-plan.md).
 
-1. Preserve the working private SOC access and leave the phone denied. Approved off-LAN administration is deferred, not complete. Review gateway/account security and backup recovery, and recheck loader/reporting health before changes.
-2. Map the gateway, Wi-Fi and intended devices privately. Review existing hardware/subscriptions and supported VPN-client capabilities; prioritize a whole-home browsing-privacy design with DNS, IPv4/IPv6, tunnel-failure and local-access tests.
-3. Deploy only an approved privacy-routing design with Wi-Fi migration and a wired recovery path ready; verify every intended device and record exceptions. No purchase or gateway cutover is authorized by this plan.
-4. Review capture feeds and resources, then build a separate Stage 5 Suricata pilot. Trace a benign network event into Wazuh/reporting and expand measured segment coverage with protected private logs.
+1. Preserve working Tailscale access and leave the phone denied. Check Ubuntu resources/package state; follow up recorded host memory pressure and loader/reporting health before adding sustained load.
+2. Test the prepared alert-only marker rule with a short, isolated benign positive/negative replay. Record engine version and results; offline success is not live capture proof.
+3. Collect a genuine EVE alert into Wazuh, inspect its decoded fields, and trace the same record into SQL and Power BI. Keep raw network logs private and collection bounded.
+4. Validate a limited live capture point, then plan a supported feed for wider coverage. Record each observed device/segment and gaps rather than assuming the NAT VM sees the whole home.
 
-No Suricata sensor or whole-network privacy-egress change has been deployed.
+The Suricata starter rule/guide are prepared, not engine-validated or deployed.
+No whole-network privacy-egress change has been deployed.
 Permanent phone dashboard access is not required; the phone currently serves
 as a denied off-LAN test client. Other portfolio chapters remain planned work,
 not prerequisites that must all precede the network pilot.
 
 **Reliability checkpoint (October 4, 2026):** the six workspace-review findings have implementation fixes and offline regression checks. The first scheduled reconciliation succeeded in 30 seconds with 96 new alerts. A later incremental run succeeded but took over eight minutes; SQL timeout and host paging evidence make runtime/memory follow-up the next prerequisite. A controlled late-event trace and Power BI refresh remain pending before expanding collection. The public console keeps individual alerts untriaged and historical rule reviews separate. See [validation and limits](docs/reliability-validation.md). This does not close the private-access security gates below.
 
-**Current focus (October 5, 2026):** the owner has prioritized privacy/security and declined the temporary phone dashboard test. The existing Windows-only management grant remains unchanged; the phone stays denied. Local trusted dashboard access and reported renewal setup are retained; automatic execution and actual replacement remain unproven. Read-only Windows checks confirmed Firewall and Defender protections enabled and no Tailscale exit node selected; disk encryption remains unknown because inspection was denied. The ISP gateway was identified privately, but its configuration has not been inspected or changed. Review supported privacy routing and available hardware/subscription before selecting or deploying anything. Suricata remains a separate planned detection layer. Off-LAN administration is deferred/unverified, while remaining exposure/revocation, recovery and controlled SQL/Power BI checks stay open. The [network/privacy plan](docs/network-coverage-plan.md) and [access results](docs/private-access-validation.md) keep the evidence and limits separate.
+**Current focus (October 5, 2026):** the owner moved on to Suricata traffic, events, rules and reporting and deferred extra VPN/router work. The Windows-only management grant remains unchanged; the phone stays denied and approved off-LAN administration stays deferred/unverified. Local trusted dashboard access and reported renewal setup are retained; automatic renewal and actual replacement remain unproven. Suricata preparation is not deployment evidence. Remaining exposure/revocation, recovery, loader-performance and controlled SQL/Power BI checks stay open. The [pilot guide](docs/suricata-pilot.md), [network plan](docs/network-coverage-plan.md) and [access results](docs/private-access-validation.md) keep these gates separate.
 
 ## Portfolio Chapters
 

@@ -349,7 +349,7 @@ No Critical vulnerability findings remain unexplained, and the Configuration Ass
 
 ## Stage 4c: Add private remote access with Tailscale
 
-**Status:** Windows admin host, Ubuntu VM and test phone enrolled. The policy still permits only Windows-to-VM TCP 22/443, with four accepted policy tests. Local trusted IPv4 HTTPS and authenticated dashboard access are verified; renewal setup, its initial service run and enabled daily timer were reported successful. Automatic execution and actual certificate replacement remain unproven. The owner declined temporary phone access; leave the phone denied and approved off-LAN administration deferred/unverified. The current priority is the [home-network privacy/security plan](docs/network-coverage-plan.md), not repeating certificate setup. The dashboard has no IPv6 listener. Reported production-checkpoint creation and VM-local configuration-backup checks do not prove a full SOC restore. Remaining denied paths, exposure/revocation, controlled reporting validation and recovery checks stay open. See [docs/private-access-validation.md](docs/private-access-validation.md) for evidence and limits, and [docs/private-access-plan.md](docs/private-access-plan.md) for remaining gates and rollback.
+**Status:** Windows admin host, Ubuntu VM and test phone enrolled. The policy still permits only Windows-to-VM TCP 22/443, with four accepted policy tests. Local trusted IPv4 HTTPS and authenticated dashboard access are verified; renewal setup, its initial service run and enabled daily timer were reported successful. Automatic execution and actual certificate replacement remain unproven. The owner declined temporary phone access; leave the phone denied and approved off-LAN administration deferred/unverified. The current priority is the [Suricata pilot](docs/suricata-pilot.md), not repeating certificate setup or adding another VPN/router. The dashboard has no IPv6 listener. Reported production-checkpoint creation and VM-local configuration-backup checks do not prove a full SOC restore. Remaining denied paths, exposure/revocation, controlled reporting validation and recovery checks stay open. See [docs/private-access-validation.md](docs/private-access-validation.md) for evidence and limits, and [docs/private-access-plan.md](docs/private-access-plan.md) for remaining gates and rollback.
 
 ### Steps
 
@@ -368,13 +368,11 @@ Approved remote SSH/dashboard access succeeds; unauthorized tailnet access and d
 
 Do this only after Stage 4 works reliably.
 
-The [network coverage plan](docs/network-coverage-plan.md) now prioritizes this
-pilot as a separate detection layer after the current privacy/security design.
-Approved off-LAN administration is deferred, not a prerequisite for planning.
-First verify the router/switch/Hyper-V capture path and available resources;
-a sensor in the NAT VM does not by itself
-prove whole-home visibility. Browsing-privacy routing is a separate planned
-control, not an effect of installing Suricata.
+The [pilot guide](docs/suricata-pilot.md) now makes traffic interpretation,
+rules and reporting the next focus. Extra VPN/router work and approved off-LAN
+administration are deferred, not prerequisites. Review resources first, then
+start with a bounded harmless replay before live capture. A sensor in the NAT
+VM does not prove whole-home visibility; browsing-privacy routing is separate.
 
 ### Documentation
 
@@ -383,10 +381,10 @@ control, not an effect of installing Suricata.
 
 ### Steps
 
-1. Install Suricata on a Linux sensor VM that can observe the lab traffic.
-2. Configure the correct monitoring interface and verify that `/var/log/suricata/eve.json` receives JSON records.
-3. Install a Wazuh agent on the sensor.
-4. Configure that agent to collect the EVE file:
+1. Run the pilot's read-only Ubuntu preflight; review package/version and any service auto-start behavior before installation. Follow up memory pressure and slow SQL loads before sustained capture.
+2. Syntax-test the prepared alert-only marker rule and run isolated benign positive/negative offline samples. Inspect EVE fields and classify the result as a controlled test. No blocking or broad ruleset is needed.
+3. Review a bounded Wazuh JSON collection path. A separate sensor uses its own Wazuh agent; the existing all-in-one VM uses the manager's verified local logcollector. Never install an agent over the manager.
+4. After choosing the actual log path and retention/permissions, add a backed-up and validated localfile stanza. This is an example, not a change already applied:
 
 ```xml
 <localfile>
@@ -395,11 +393,12 @@ control, not an effect of installing Suricata.
 </localfile>
 ```
 
-5. Restart Suricata and the Wazuh agent, then confirm Suricata events appear in Wazuh.
+5. Apply only the reviewed collection change/restart and confirm the decoded/indexed Wazuh alert. Trace its exact document into SQL and validate network reporting fields and Power BI refresh; current process/channel fields are Windows-oriented.
+6. Separately verify a limited live monitoring interface and harmless live event before expanding coverage. Keep the private capture data, resource limits and observed gaps documented in the [network plan](docs/network-coverage-plan.md).
 
 ### Completion gate
 
-At least one benign DNS or HTTP connection must be visible in `eve.json` and traceable to a Wazuh record.
+The marker rule passes engine syntax, positive and negative tests; a genuine network alert is traced through EVE, Wazuh, SQL and Power BI. A harmless live DNS or HTTP event and the sensor's actual capture scope are verified separately. Do not mark whole-home coverage complete from a replay or a NAT-VM test.
 
 ## Stage 6: Connect the Watchtide API
 

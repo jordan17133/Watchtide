@@ -11,7 +11,7 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
 | 2. Sysmon on Windows | Done |
 | 3. Wazuh agent on Windows | Done, agent `jordan-pc` is Active |
 | 4. Prove the event path end to end | Done, traced through every layer (docs/event-trace.md) |
-| 5. Suricata network telemetry | Not started |
+| 5. Suricata network telemetry | Pilot guide and harmless alert-only rule prepared; resource review, engine validation and deployment pending |
 | 6. Watchtide API on live Wazuh data | Private live API not started; public console serves a sanitized snapshot of real lab data |
 | 4b. Posture review | Done: 437 of 447 vulnerability findings resolved (10 open, zero Critical); CIS 27.1% to 37.0% |
 | 7. SQL Server reporting storage | Done: loader every 15 minutes; case log with history (`warehouse/cases.py`) meets the incident gate |
@@ -45,6 +45,13 @@ Windows host                         |
 - The VM is reached by hostname (`soc-vm.mshome.net`) instead of IP, because Hyper-V's Default Switch hands out a new IP on every VM reboot.
 
 ## Timeline
+
+### 2026-10-05: Prepare the Suricata traffic/rules/reporting pilot
+- The owner deferred extra VPN/router work and moved on to traffic interpretation, events, rules and reporting. Existing Tailscale permissions remain unchanged and the phone stays denied; broader privacy routing and approved off-LAN administration remain deferred/unverified.
+- Reviewed the loader and reporting views: full indexed-alert JSON is retained in SQL, but extracted process/channel fields are Windows-oriented. Network reporting needs real decoded field validation, not a new public connection to the SOC.
+- Prepared an alert-only ICMP marker rule and a [plain-English pilot guide](docs/suricata-pilot.md), with positive/negative engine tests, Wazuh collection, reporting and live capture as separate pending gates. The rule has not been loaded by a Suricata engine. A NAT-VM sensor does not establish whole-home visibility.
+- Read-only Windows checks again found limited free memory at that moment; Hyper-V switch inventory was denied by permissions, not evidence of a missing switch. Requested read-only Ubuntu resource/package output before installation. No packages, services, firewall, VPN, Hyper-V, loader, SQL, Power BI or console snapshot changed.
+- Reserved private sensor-data storage outside publication and added text scanning for rule files. All 62 publication/recovery regression tests passed, including two new rule-file/data-exclusion checks; these tests do not validate packet detection or live collection.
 
 ### 2026-10-05: Prioritize home-network privacy and security
 - The owner declined temporary phone dashboard access and prioritized privacy/security. No phone grant was added. Approved off-LAN administration is deferred/unverified rather than marked complete; the working local Tailscale/HTTPS setup remains in place.

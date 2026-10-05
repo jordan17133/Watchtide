@@ -1,8 +1,9 @@
 # Suricata Pilot: Traffic, Rules and Reporting
 
-Updated: October 5, 2026. Status: preparation only. The starter rule has not
-been loaded or validated by a Suricata engine. No sensor, capture feed, Wazuh
-collection change or network reporting view has been deployed.
+Updated: October 5, 2026. Status: restricted maintenance access and package-source
+preparation verified; offline installation/engine validation awaiting activation
+and results. No sensor, capture feed, Wazuh collection change or network reporting
+view has been deployed. The starter rule is not yet engine-validated.
 
 ## What We Are Adding
 
@@ -69,11 +70,29 @@ the cached Ubuntu candidate is 7.0.3. Upstream now lists 7.x as end-of-life and
 candidate from the [developer-maintained Ubuntu source](https://docs.suricata.io/en/suricata-8.0.7/install/ubuntu.html)
 and simulate installation before installing anything.
 
-The owner approved preparation of a separate, temporary maintenance connection
-to handle those checks/source setup remotely. Its initial fixed-action scope
-does not authorize package installation or Wazuh changes. Activation, live
-allowed/denied SSH tests and repository setup remain pending; private keys,
-device selectors and the activation payload are not portfolio assets.
+The owner activated the separate temporary maintenance connection. An actual
+tailnet status request succeeded; shell commands, extra arguments, command
+chaining, a no-command shell request and remote port forwarding were denied.
+This proves the tested local access boundaries, not off-network access, future
+expiry or every forwarding mode. The original loader and network policy remain
+unchanged. Private keys, device selectors and activation payloads are not
+portfolio assets.
+
+The approved source-setup action backed up APT sources privately, added the
+developer-maintained stable PPA, refreshed package metadata and simulated the
+installation. The actual candidate is `1:8.0.7-0ubuntu0`: ten new packages,
+zero upgrades and zero removals. All five existing services were active after
+this action. Suricata remains uninstalled; this connection cannot install it.
+
+The owner separately approved preparation of a one-time offline installation
+job. Its reviewed package tries to enable/start the service during installation,
+so the job uses a service mask and temporary Suricata-only startup denial, then
+verifies the service is inactive and still masked. It pins the reviewed package
+and nine dependencies, checks trusted APT origin/package digest and refuses a
+changed plan. Offline tests run as the non-root Suricata account with one rule
+and synthetic PCAP files. No new SSH key, live capture, packet blocking, Wazuh
+edit or firewall change is included. Actual installation and engine results
+remain pending; passing its regression tests is not deployment proof.
 
 ## Step 2: Prove One Harmless Rule
 
@@ -91,7 +110,9 @@ It is a validation signal, not an attack signature or a general ping detector.
 | `sid:9000001; rev:1` | Identify this Suricata signature and its revision; not a Wazuh rule ID |
 
 After version/resource review, syntax-test the rule with the installed engine
-and replay a positive marker sample and a negative sample without that marker.
+and replay one positive marker packet and two negative controls: a request
+without the marker and an echo reply with the marker. This tests both the
+content match and the echo-request constraint.
 Use only this rule for the isolated replay; check for SID collisions before
 merging it into any larger ruleset. Do not download malware or scan other
 people's devices. A deliberately generated match should be classified as a
@@ -150,7 +171,8 @@ increase in collection.
 
 | Gate | Current status | Required proof |
 |---|---|---|
-| Resource/package review | Guest headroom reported; old candidate identified; stable-source/dependency review pending | Actual supported candidate, simulated dependencies and installation behavior reviewed before installation |
+| Maintenance access | Tested local status allowed; forbidden commands and remote forwarding denied | Other-source, future expiry/revocation and off-LAN tests remain separate |
+| Resource/package review | Guest headroom and actual 8.0.7 candidate/dependencies verified; startup scripts reviewed; offline job prepared | Execute the pinned job and verify actual package state/startup prevention; host/SQL performance follow-up remains open |
 | Rule engine validation | Pending | Engine syntax test; positive match and negative non-match |
 | Wazuh alert | Pending | Matching EVE and decoded/indexed Wazuh record, with test verdict |
 | SQL and Power BI | Pending | Same indexed alert in SQL; correct network fields and successful refresh |

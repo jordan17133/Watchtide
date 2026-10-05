@@ -31,6 +31,12 @@ prerequisite for this pilot. See the [pilot guide](docs/suricata-pilot.md) and
 4. Validate a limited live capture point, then plan a supported feed for wider coverage. Record each observed device/segment and gaps rather than assuming the NAT VM sees the whole home.
 
 The Suricata starter rule/guide are prepared, not engine-validated or deployed.
+The temporary maintenance connection passed actual allowed/denied local SSH
+checks. Stable-source setup and a simulated installation passed: Suricata 8.0.7,
+ten new packages, no upgrades/removals, and all five SOC services still active.
+The separately approved offline installation job is prepared; activation and
+engine results remain pending. It prevents automatic service startup, uses
+synthetic packets and does not change Wazuh collection or existing SSH keys.
 No whole-network privacy-egress change has been deployed.
 Permanent phone dashboard access is not required; the phone currently serves
 as a denied off-LAN test client. Other portfolio chapters remain planned work,

@@ -3,8 +3,9 @@
 Updated October 5, 2026. The first refresh attempt of the six-page Power BI
 project failed. The existing alert table was the SQL deadlock victim; other
 tables, including the new network view, were cancelled afterward. A guarded
-committed-snapshot fix passed isolated tests and awaits the approved quiet-window
-change. Actual successful Desktop refresh/rendering remain open.
+committed-snapshot fix passed isolated tests and was applied during the approved
+quiet window. The next scheduled loader and all 18 SQL report sources passed
+bounded checks. Actual successful Desktop refresh/rendering remain open.
 
 ## What Happened
 
@@ -64,8 +65,14 @@ production refresh.
 ## Deployment And Retest
 
 The owner approved testing and applying the fix only during a quiet window after
-Power BI is closed. Close reporting clients normally, wait for the loader to
-finish, inspect status, and apply only if the guards pass. Never terminate an
+Power BI is closed. After the report closed, an empty Untitled Desktop window
+remained, but the database preflight found no other warehouse connections or
+transactions. The guarded change succeeded and independent status confirmed
+`READ_COMMITTED_SNAPSHOT` enabled. No client was disconnected, transaction
+forcibly rolled back, service restarted or loader manually invoked.
+
+For future maintenance, close reporting clients normally, wait for the loader
+to finish, inspect status, and apply only if the guards pass. Never terminate an
 active loader to make the window quiet.
 
 ```powershell
@@ -73,12 +80,27 @@ active loader to make the window quiet.
 .venv\Scripts\python.exe -m warehouse.reporting_snapshot --enable
 ```
 
-After verification, reopen the existing PBIP and refresh once. Check the
-original five pages and [Network Detection](network-reporting-validation.md).
-If resource pressure persists, use Power BI's documented Current File / Data
-Load setting to limit concurrent loading to One; no Desktop setting has been
-changed automatically. Record a successful loader run and actual Desktop
-refresh before closing this reliability gate. Keep live capture disabled.
+The next automatic loader succeeded in 2.537 seconds and inserted 91 alerts.
+An initial network-context aggregate timed out; a later bounded repeat completed
+in 0.432 seconds with one controlled-validation record. A separate sequential
+read fetched every row from all 18 report sources in 1.872 seconds, including
+26,846 alert rows and the one network record. These are point-in-time checks,
+not a sustained benchmark or proof that intermittent resource pressure is gone.
+At a later diagnostic sample, host memory available was about 4.2 GB and no
+other user query was active; warehouse row-version space reported zero KB at
+that instant, not a prediction of future storage use.
+
+A quiet post-change regression rerun passed 160 publication/setup tests,
+including 11 actual isolated SQL checks, another 15 reliability tests and three
+mocked PowerShell recovery paths. The new page's 11 definitions again passed
+published Microsoft schemas.
+
+The existing PBIP is reopened. Power BI's Current File / Data Load option
+`One (disable parallel loading)` is selected, but confirmation and a completed
+refresh still require verification. Check the original five pages and
+[Network Detection](network-reporting-validation.md) after one refresh. Do not
+claim Desktop/DAX/rendering success from the SQL reads alone. Keep live capture
+disabled and the sustained performance gate open.
 
 Raw deadlock XML, session identifiers, client account/host information and memory
 diagnostics are not published. The public console snapshot was not refreshed.

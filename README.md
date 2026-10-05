@@ -24,7 +24,7 @@ The [private-access plan](docs/private-access-plan.md) explains the VPN decision
 
 **Reliability update (October 4):** workspace-review fixes have offline regression coverage for loader failures, late-alert reconciliation, scoped case start dates, publication parsing and agent restart recovery. Individual alerts no longer inherit a historical rule verdict. The first scheduled full reconciliation succeeded in 30 seconds with 96 new alerts. A subsequent incremental run succeeded but took over eight minutes; a SQL timeout and recorded host memory pressure require follow-up before expanding the lab. Controlled late-event validation and Power BI refresh remain pending. See [validation and limits](docs/reliability-validation.md).
 
-**Refresh follow-up (October 5):** the first actual six-page refresh failed with a confirmed loader/read deadlock. A guarded committed-snapshot fix passed isolated tests and is approved for a quiet window; live application and successful Desktop retest remain open. See [diagnosis and safeguards](docs/report-refresh-reliability.md).
+**Refresh follow-up (October 5):** the first actual six-page refresh failed with a confirmed loader/read deadlock. A guarded committed-snapshot fix passed isolated tests and was applied in the approved quiet window. The next scheduled loader inserted 91 alerts in 2.537 seconds, and all 18 SQL report sources passed a bounded read; successful Desktop retest and sustained performance remain open. See [diagnosis and safeguards](docs/report-refresh-reliability.md).
 
 ![SOC Overview page in Power BI](docs/screenshots/powerbi-soc-overview.jpg)
 

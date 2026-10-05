@@ -14132,6 +14132,331 @@ cultureInfo en-US
 			          }
 			        }
 			      ]
+			    },
+			    "rpt_network_alerts.controlled_tests": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "rpt network_alerts",
+			          "ConceptualProperty": "Controlled tests"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Controlled validation": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "rpt_network_alerts.network_records": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "rpt network_alerts",
+			          "ConceptualProperty": "Network records"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Records": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        },
+			        {
+			          "Network records": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "rpt_network_alerts.network_signatures": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "rpt network_alerts",
+			          "ConceptualProperty": "Network signatures"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Distinct signatures": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "rpt_network_alerts.alert_time_local": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "rpt network_alerts",
+			          "ConceptualProperty": "alert_time_local"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Processed (Eastern)": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "rpt_network_alerts.observation_context": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "rpt network_alerts",
+			          "ConceptualProperty": "observation_context"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Context": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "rpt_network_alerts.source_ip": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "rpt network_alerts",
+			          "ConceptualProperty": "source_ip"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Source": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "rpt_network_alerts.destination_ip": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "rpt network_alerts",
+			          "ConceptualProperty": "destination_ip"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Destination": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "rpt_network_alerts.protocol": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "rpt network_alerts",
+			          "ConceptualProperty": "protocol"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Protocol": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "rpt_network_alerts.signature_id": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "rpt network_alerts",
+			          "ConceptualProperty": "signature_id"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "SID": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "rpt_network_alerts.signature": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "rpt network_alerts",
+			          "ConceptualProperty": "signature"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Signature": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "rpt_network_alerts.suricata_priority": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "rpt network_alerts",
+			          "ConceptualProperty": "suricata_priority"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "IDS priority": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "rpt_network_alerts.rule_level": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "rpt network_alerts",
+			          "ConceptualProperty": "rule_level"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Wazuh level": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "rpt_network_alerts.eve_timestamp_utc": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "rpt network_alerts",
+			          "ConceptualProperty": "eve_timestamp_utc"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Packet time (UTC)": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "rpt_network_alerts.doc_id": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "rpt network_alerts",
+			          "ConceptualProperty": "doc_id"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Document": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "rpt_network_alerts.unclassified_alerts": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "rpt network_alerts",
+			          "ConceptualProperty": "Unclassified alerts"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Unclassified alerts": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
 			    }
 			  },
 			  "Relationships": {

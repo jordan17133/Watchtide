@@ -4,8 +4,8 @@ Updated October 5, 2026. Status: the existing Wazuh dashboard visibly shows the
 exact controlled Suricata alert; the new SQL reporting view is deployed and
 verified. A sixth Network Detection page is defined in the existing Power BI
 project and passes model/schema checks. The first actual Desktop refresh failed
-with a confirmed SQL read/write deadlock; a guarded fix is tested and awaiting
-the quiet window ([reliability evidence](report-refresh-reliability.md)). Actual
+with a confirmed SQL read/write deadlock; a guarded fix is tested and now applied
+in the quiet window ([reliability evidence](report-refresh-reliability.md)). Actual
 successful refresh and visual rendering remain open. Live capture is still disabled.
 
 ## What Changed And Why
@@ -42,6 +42,8 @@ editing the telemetry or replacing the existing dashboards:
 | Real record comparison | Same document and Wazuh alert matched; controlled-validation context, synthetic addresses, ICMP type/code, SID, processing time and January packet time passed |
 | Reporting access | Existing no-login reporting-user simulation read the view while direct `sg.alerts` SELECT permission remained absent; no user, role or grant changed |
 | Bounded real-view check | One record returned; field/access verification took 0.45 seconds; not a sustained performance benchmark |
+| Post-fix SQL sources | All 18 report views fetched successfully in 1.872 seconds, including one network record; an earlier aggregate timed out and a later repeat passed, so intermittent pressure remains open |
+| Post-fix ingestion | Next automatic loader inserted 91 alerts in 2.537 seconds; no manual loader invocation or forced client disconnect |
 | Regression suite | Initial 153-test run passed; a concurrent repeat timed out creating its test database; subsequent 160-test rerun passed, including four report checks and 11 isolated actual SQL tests |
 | SQL edge cases | Decoded string/native numeric values, IPv6/TCP, large flow/signature IDs, invalid JSON/numbers, duplicate groups, offsets and missing/other labels checked |
 | Model definition | Microsoft Analysis Services 19.114.12 parsed the complete model: 18 tables, 32 network columns and four network measures |

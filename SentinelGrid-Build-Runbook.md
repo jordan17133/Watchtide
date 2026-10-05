@@ -518,8 +518,9 @@ A Power BI visual must trace back to a SQL reporting view, which must trace back
 **October 5 refresh follow-up:** the six-page project definitions pass model and
 new-page schema checks, but the actual Desktop refresh failed with a confirmed
 loader/read deadlock. Guarded committed-snapshot maintenance passed isolated
-tests and awaits its approved quiet window. Successful Desktop refresh and
-sustained host performance remain open; see [diagnosis and retest](docs/report-refresh-reliability.md).
+tests and is applied in the approved quiet window. The next automatic loader
+and all 18 SQL report sources passed bounded checks. Successful Desktop refresh
+and sustained host performance remain open; see [diagnosis and retest](docs/report-refresh-reliability.md).
 
 ## Recommended first milestone
 

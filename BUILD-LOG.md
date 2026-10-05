@@ -46,6 +46,11 @@ Windows host                         |
 
 ## Timeline
 
+### 2026-10-05: Apply the guarded reporting concurrency fix
+- After the owner closed the report, the warehouse preflight found no other connections or transactions. An empty Desktop window remained but held no warehouse connection. Enabled committed-snapshot reads through the tested helper and independently confirmed the live setting. No client kill, forced rollback, service restart or manual loader run was used.
+- The next scheduled loader inserted 91 alerts in 2.537 seconds. A network aggregate initially timed out, then completed in 0.432 seconds; a sequential read of all 18 report sources completed in 1.872 seconds. These bounded results do not close intermittent memory/performance follow-up.
+- Repeated checks passed: 160 publication/setup tests including 11 actual isolated SQL tests, 15 reliability tests, three mocked recovery paths and all 11 new-page Microsoft schema checks. The existing Desktop project was reopened with single-table loading selected; confirmation, successful actual refresh and all-six-page rendering remain open. Live capture and public snapshot remain unchanged. See [deployment evidence](docs/report-refresh-reliability.md).
+
 ### 2026-10-05: Diagnose the actual Power BI refresh failure
 - The owner reported an unresponsive refresh, then supplied SQL deadlock error 1205 on `rpt alerts`, with the other tables cancelled. Read-only inspection of the existing SQL event file confirmed two Power BI reads and a Python writer in a page-lock cycle on `sg.alerts`; committed-snapshot reads were disabled. This is not a Suricata incident.
 - Windows had less than 1 GB available memory, 88% committed memory and substantial paging at a sampled point. Two report reads exceeded seven minutes, while the latest scheduled loader succeeded in 113 seconds versus two seconds on each of the preceding two runs. Memory pressure may contribute; sustained performance is not resolved.

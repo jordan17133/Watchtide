@@ -1,10 +1,12 @@
 # Suricata To Wazuh: Controlled Handoff
 
-Updated October 5, 2026. Status: the first Ubuntu attempt validated the saved
-EVE event and installed Wazuh rule, then stopped at the protected-parent check
-before changing collection or restarting the manager. A corrected one-time job
-is prepared and tested locally; its execution and indexed/dashboard proof remain
-pending. No completed Wazuh collection integration is claimed.
+Updated October 5, 2026. Status: the corrected one-time handoff completed in the
+owner's supplied guest result. An independent TLS-verified, read-only Indexer
+query found exactly one matching labeled alert with the original network fields.
+This proves controlled offline EVE-to-SIEM ingestion, not live network coverage.
+The normal scheduled loader collected the same event, independently verified in
+SQL. The dashboard tab currently requires login; visual confirmation, network
+reporting views and Power BI refresh remain separate gates.
 
 ## Purpose
 
@@ -33,6 +35,47 @@ The corrected activation also pins the stopped attempt's private evidence and
 requires its original configuration and EVE checksums to match current inputs.
 It refuses completed/recovery evidence, old/new pilot directories or an existing
 old/new collector. It is a separately reviewed continuation, not a blind rerun.
+That continuation has now completed; do not run either activation again.
+
+## Completed Handoff
+
+The owner supplied `STOPPED_ATTEMPT_BACKUP_MATCHES_CURRENT_CONFIG`, successful
+EVE/rule preflight, a manager-only restart and
+`SURICATA_WAZUH_LOCAL_ALERT_VERIFIED`. The result reported all five SOC services
+active and live capture still disabled. The configured source is the bounded
+controlled-test log, not the continuously captured Suricata log.
+
+An independent read-only search used the exact reported Wazuh alert ID and
+signature through the existing restricted loader tunnel. It returned one
+matching document from the October 5 alert index, with these verified fields:
+
+| Field | Verified value |
+|---|---|
+| Suricata signature | SID 9000001, revision 1, benign ICMP pilot marker |
+| Wazuh rule / decoder | Rule 86601, level 3 / `json`; groups `ids`, `suricata` |
+| Test context | `controlled-offline-suricata-pilot`, packet source `wire/pcap` |
+| Network | Synthetic `192.0.2.10` to `192.0.2.20`; ICMP echo request type 8, code 0 |
+| Original packet time | January 1, 2026, 00:00:01 UTC; preserved fixture time |
+| Wazuh processing time | October 5, 2026, 12:43:09.941 PM Eastern / 16:43:09.941 UTC |
+| Verdict | Expected controlled offline validation; not an incident |
+
+The two numeric severity fields have different meanings: Suricata priority 3
+is not Wazuh level 3. The indexed result happens to contain both values. This
+test earns no new incident-case or ATT&CK technique credit.
+
+A subsequent independent maintenance status check confirmed the five services
+active. The Indexer query is proof of searchable storage, not proof that the
+alert has been opened in the authenticated dashboard. The browser currently
+shows its login page.
+
+The first bounded SQL lookup preceded the next scheduled load. A later read-only
+query matched the exact Indexer document and Wazuh alert in `sg.alerts`, including
+rule 86601/level 3, the controlled-test label, signature, reserved network
+addresses, ICMP protocol and original packet time in `raw_json`. The existing
+loader's scheduled run succeeded at 16:57 UTC, inserting 67 alerts in 2.576
+seconds. No manual loader run or Power BI refresh was performed. This proves
+warehouse ingestion of this record, not a network-specific reporting view,
+completed Power BI refresh or sustained loader performance.
 
 ## Reviewed Job
 
@@ -77,18 +120,18 @@ tested restore scenario. Any already emitted test alert is retained as evidence.
 - Independent preflight confirmed all five existing SOC services active and a
   working TLS-verified, read-only Indexer search through the existing restricted
   loader tunnel. It found zero SID 9000001 alerts before the proposed handoff.
-- Actual saved EVE and the installed built-in rule passed in the supplied guest
-  preflight result: rule 86601, level 3, decoder `json`. Suricata SID 9000001 and
-  priority 3 are separate fields. A generated local manager alert remains pending.
-- Then verify the same labeled event in the Indexer and authenticated dashboard.
+- Actual saved EVE/installed-rule preflight and local manager alert generation
+  passed in the supplied guest result; the independent Indexer query confirmed
+  the same alert and network fields. Dashboard visual confirmation remains open.
   An alert in the local manager log alone is not dashboard proof. Dashboard
   filter: `rule.groups:suricata AND data.alert.signature_id:9000001`.
-- Packet time is fixed January 1, 2026; the Wazuh processing timestamp must be
-  examined separately. Classify the result as controlled offline validation,
+- Packet time is fixed January 1, 2026; the independently inspected Wazuh
+  processing timestamp is October 5. Classify the result as controlled offline validation,
   not an incident, live traffic observation or new ATT&CK test coverage.
-- SQL ingestion, correct network reporting fields and Power BI refresh remain
-  separate checks. The normal scheduled loader may collect the indexed test;
-  this job neither writes SQL directly nor alters that loader.
+- SQL ingestion and preservation of the network fields passed independently
+  after the normal scheduled load. Network reporting views and Power BI refresh
+  remain separate checks. The guest job neither writes SQL directly nor alters
+  that loader.
 - Limited live capture, capture loss/resource measurement and wider home-network
   visibility remain future gates. This does not inspect personal browsing.
 

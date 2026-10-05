@@ -19,7 +19,7 @@ What actually happened during the build, including every failure and fix, is rec
 | Detection validation | In progress: controlled SSH password-guessing test detected and written up |
 | 4c. Tailscale private remote access | Trusted local HTTPS/dashboard login verified; renewal setup reported successful; phone remains denied and approved off-LAN testing deferred; remaining exposure/reporting/recovery gates open ([results](docs/private-access-validation.md)) |
 | 6. Watchtide API | Planned |
-| 5. Suricata network telemetry | Planned |
+| 5. Suricata network telemetry | Partial: offline marker controls passed; same controlled event independently verified in the Wazuh Indexer and SQL; dashboard/network reporting/live capture pending ([proof](docs/suricata-wazuh-handoff.md)) |
 
 ## Lab facts
 
@@ -55,7 +55,8 @@ Ubuntu Server VM
                                               v
                                       Watchtide Console
 
-Later: Suricata -> eve.json -> Wazuh Agent -> Wazuh Server
+Verified offline: Suricata replay -> controlled EVE -> manager logcollector -> Wazuh Server
+Later live sensor: Suricata -> eve.json -> Wazuh Agent -> Wazuh Server
 ```
 
 The first build loads SQL Server directly from the Wazuh Indexer with a small Python loader, so Power BI gets real data before the Watchtide API exists. When the API is built, it writes incident and analyst-action data into the same warehouse.
@@ -371,8 +372,13 @@ Do this only after Stage 4 works reliably.
 The [pilot guide](docs/suricata-pilot.md) now makes traffic interpretation,
 rules and reporting the next focus. Extra VPN/router work and approved off-LAN
 administration are deferred, not prerequisites. Review resources first, then
-start with a bounded harmless replay before live capture. A sensor in the NAT
-VM does not prove whole-home visibility; browsing-privacy routing is separate.
+start with a bounded harmless replay before live capture. That replay and its
+bounded EVE-to-Wazuh-to-SQL handoff now pass: the same labeled test event and
+network fields were independently verified in the Indexer and warehouse. Five
+SOC services are active; Suricata remains masked. Dashboard visual confirmation,
+network reporting views and Power BI refresh remain open. Do not rerun the
+completed activation jobs. A sensor in the NAT VM does not prove whole-home
+visibility; browsing-privacy routing is separate.
 
 ### Documentation
 

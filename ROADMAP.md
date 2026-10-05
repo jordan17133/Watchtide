@@ -16,7 +16,8 @@ What is built, what comes next, and why. Each chapter ends the same way: build i
 - [x] Least-privilege reporting role, tested
 - [x] Five Power BI dashboards kept as code in Git
 - [x] Public read-only SOC console on a scrubbed snapshot ([console](https://jordan17133.github.io/Watchtide/))
-- [x] Offline Suricata 8.0.7 marker-rule validation: one positive alert, zero alerts on two controls; no live capture or Wazuh ingestion claimed ([evidence](docs/suricata-offline-validation.md))
+- [x] Offline Suricata 8.0.7 marker-rule validation: one positive alert, zero alerts on two controls; that engine-only phase did not enable live capture or Wazuh collection ([evidence](docs/suricata-offline-validation.md))
+- [x] Controlled Suricata EVE-to-Wazuh-to-SQL handoff: local-alert success reported and the same indexed/warehouse record independently verified; visual dashboard, network reporting views and Power BI refresh remain separate ([evidence](docs/suricata-wazuh-handoff.md))
 
 ## Current Execution Order
 
@@ -41,12 +42,15 @@ The separately approved offline job completed with one expected positive alert
 and zero alerts on two controls. The service remains masked; synthetic packets
 do not establish live coverage. Wazuh collection and existing SSH keys were
 unchanged. The owner selected genuine EVE inspection and bounded Wazuh
-integration. The first [handoff](docs/suricata-wazuh-handoff.md) passed actual
-EVE/rule preflight, then stopped at a folder guard before collection changes or
-restart. A corrected input placement and stopped-backup comparison are prepared
-with focused regression checks; the read-only Indexer check passes and finds
-zero pilot alerts. Corrected local execution, a matching manager alert and
-indexed/dashboard proof remain pending, not completed integration.
+integration. The first [handoff](docs/suricata-wazuh-handoff.md) stopped safely
+at a folder guard; the corrected input placement and stopped-backup comparison
+then passed. The owner supplied local-alert success, and an independent
+read-only Indexer search verified exactly one matching labeled alert. The normal
+scheduled loader collected the same record, independently matched in SQL with
+its network fields and fixture time. Five SOC services are active. The dashboard
+currently needs login; visual confirmation, network reporting views and Power BI
+refresh remain open. This is controlled offline ingestion proof, not a live feed
+or completed network/reporting stage.
 No whole-network privacy-egress change has been deployed.
 Permanent phone dashboard access is not required; the phone currently serves
 as a denied off-LAN test client. Other portfolio chapters remain planned work,
@@ -54,7 +58,7 @@ not prerequisites that must all precede the network pilot.
 
 **Reliability checkpoint (October 4, 2026):** the six workspace-review findings have implementation fixes and offline regression checks. The first scheduled reconciliation succeeded in 30 seconds with 96 new alerts. A later incremental run succeeded but took over eight minutes; SQL timeout and host paging evidence make runtime/memory follow-up the next prerequisite. A controlled late-event trace and Power BI refresh remain pending before expanding collection. The public console keeps individual alerts untriaged and historical rule reviews separate. See [validation and limits](docs/reliability-validation.md). This does not close the private-access security gates below.
 
-**Current focus (October 5, 2026):** the owner moved on to Suricata traffic, events, rules and reporting and deferred extra VPN/router work. Offline network-rule validation passed; live capture, Wazuh ingestion and network reporting remain pending. The Windows-only management grant remains unchanged; the phone stays denied and approved off-LAN administration stays deferred/unverified. Local trusted dashboard access and reported renewal setup are retained; automatic renewal and actual replacement remain unproven. Remaining exposure/revocation, recovery, loader-performance and controlled SQL/Power BI checks stay open. The [pilot guide](docs/suricata-pilot.md), [network plan](docs/network-coverage-plan.md) and [access results](docs/private-access-validation.md) keep these gates separate.
+**Current focus (October 5, 2026):** the owner moved on to Suricata traffic, events, rules and reporting and deferred extra VPN/router work. Offline rule controls and bounded EVE-to-Wazuh ingestion passed; the same event was independently verified in the Indexer and SQL. Dashboard visual confirmation, network reporting views, Power BI refresh and live capture remain pending. The Windows-only management grant remains unchanged; the phone stays denied and approved off-LAN administration stays deferred/unverified. Local trusted dashboard access and reported renewal setup are retained; automatic renewal and actual replacement remain unproven. Remaining exposure/revocation, recovery and sustained loader-performance checks stay open. The [pilot guide](docs/suricata-pilot.md), [network plan](docs/network-coverage-plan.md) and [access results](docs/private-access-validation.md) keep these gates separate.
 
 ## Portfolio Chapters
 
@@ -73,7 +77,7 @@ runbook stages or a requirement to delay the network pilot.
 | 8 | **Architecture diagram and demo video** | A 2-minute way in for busy reviewers | Diagram in the README; video showing alert to case to dashboard |
 | 9 | **Active Directory lab** | Most companies run Windows domains | Small domain in Hyper-V; common AD attacks detected and written up |
 | 10 | **EDR** (Microsoft Defender for Endpoint trial) | Endpoint detection and response is standard in SOCs | Defender alerts correlated with Wazuh in a case |
-| 11 | **Network monitoring: Suricata** (runbook Stage 5) | Today the lab is endpoint-only | DNS and HTTP events visible and traced to Wazuh records; VPN visibility limits documented |
+| 11 | **Network monitoring: Suricata** (runbook Stage 5) | Extend live endpoint telemetry with measured network visibility; offline-to-SIEM proof now passes | DNS and HTTP events visible and traced to Wazuh records; VPN visibility limits documented |
 | 12 | **Private live API/console** (runbook Stage 6, second part) | Work cases from the console, not a script | Authenticated analysts open, assign and close cases over private access; public GitHub Pages remains a sanitized snapshot |
 | 13 | **Alert notifications** for level 12 and above | Faster response | Optional; tested so it never floods |
 

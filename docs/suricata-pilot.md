@@ -2,13 +2,12 @@
 
 Updated: October 5, 2026. Status: Suricata 8.0.7 installed and isolated marker-rule
 validation passed in the owner's supplied engine result. A subsequent maintenance
-check confirmed the installed package and five healthy SOC services. Suricata
-remains masked; no live capture feed, Wazuh collection change or network reporting
-view has been deployed. See the [validation evidence](suricata-offline-validation.md).
-The first [controlled Wazuh handoff](suricata-wazuh-handoff.md) passed saved
-EVE/rule preflight, then stopped at a folder guard before collection changes or
-restart. A corrected one-time job is prepared and tested; continuation remains
-pending.
+check confirmed the installed package and five healthy SOC services. The corrected
+[controlled Wazuh handoff](suricata-wazuh-handoff.md) completed in supplied guest
+output, and independent Indexer/SQL queries verified the same labeled alert.
+Suricata remains masked; no live capture feed or network reporting view has been
+deployed. Dashboard visual confirmation and Power BI refresh remain open. See
+the [engine validation evidence](suricata-offline-validation.md).
 
 ## What We Are Adding
 
@@ -167,6 +166,15 @@ over the manager. Verify its local logcollector/configuration if choosing that
 temporary collection path; a future separate sensor would use its own agent.
 Back up and validate any configuration before a separately planned restart.
 
+The bounded local handoff has now passed: the supplied job validated the genuine
+saved EVE, backed up settings, added one controlled-test source and restarted only
+the manager. The independent Indexer lookup verified the same alert with its
+label, signature, original packet timestamp and network fields. The normal
+scheduled loader collected that exact record, verified read-only in SQL. Do not
+rerun the activation or treat this fixed test input as a live sensor feed. The
+existing dashboard needs login for visual confirmation; network reporting views
+and Power BI refresh remain separate.
+
 The current loader already retains each indexed alert's full JSON in
 `sg.alerts.raw_json`, but its extracted process/channel fields and current
 reporting views are Windows-oriented. Inspect the actual decoded network
@@ -186,8 +194,9 @@ increase in collection.
 | Maintenance access | Tested local status allowed; forbidden commands and remote forwarding denied | Other-source, future expiry/revocation and off-LAN tests remain separate |
 | Resource/package review | Installed 8.0.7 verified; ten pinned versions and startup prevention passed in the supplied result | Host/SQL performance follow-up remains open before sustained capture |
 | Rule engine validation | Passed in supplied engine output: one positive alert, zero alerts on two controls | Raw evidence private; no live feed or Wazuh ingestion inferred |
-| Wazuh alert | Saved EVE/rule preflight passed; collector handoff pending after folder-guard correction | Matching generated manager alert and indexed Wazuh record, with test verdict |
-| SQL and Power BI | Pending | Same indexed alert in SQL; correct network fields and successful refresh |
+| Wazuh alert | Local-alert success reported; one exact indexed alert independently verified | Dashboard visual confirmation still requires login; test verdict is controlled offline validation |
+| SQL ingestion | Passed: exact indexed event and preserved network fields independently matched in `sg.alerts.raw_json` after a normal scheduled load | Network-specific reporting view remains separate from raw JSON storage |
+| Power BI network reporting | Pending | Verified network reporting fields and successful refresh in the existing report |
 | Limited live capture | Pending | Verified interface, harmless live test, recorded load/drops and capture gaps |
 | Whole-home coverage | Not verified | Supported capture feed and per-device/segment tests |
 

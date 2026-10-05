@@ -11,7 +11,7 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
 | 2. Sysmon on Windows | Done |
 | 3. Wazuh agent on Windows | Done, agent `jordan-pc` is Active |
 | 4. Prove the event path end to end | Done, traced through every layer (docs/event-trace.md) |
-| 5. Suricata network telemetry | Partial: 8.0.7 installed and offline marker-rule validation passed; service masked; live capture/Wazuh/reporting pending |
+| 5. Suricata network telemetry | Partial: offline marker controls and bounded Wazuh/SQL handoff passed; same event independently verified; service masked; dashboard/network reporting/live capture pending |
 | 6. Watchtide API on live Wazuh data | Private live API not started; public console serves a sanitized snapshot of real lab data |
 | 4b. Posture review | Done: 437 of 447 vulnerability findings resolved (10 open, zero Critical); CIS 27.1% to 37.0% |
 | 7. SQL Server reporting storage | Done: loader every 15 minutes; case log with history (`warehouse/cases.py`) meets the incident gate |
@@ -45,6 +45,11 @@ Windows host                         |
 - The VM is reached by hostname (`soc-vm.mshome.net`) instead of IP, because Hyper-V's Default Switch hands out a new IP on every VM reboot.
 
 ## Timeline
+
+### 2026-10-05: Complete the controlled Wazuh handoff and verify the same alert in SQL
+- The owner supplied the corrected job's success: stopped-backup match, genuine EVE/rule preflight, manager-only restart and `SURICATA_WAZUH_LOCAL_ALERT_VERIFIED`. The measured alert uses Suricata SID 9000001 and Wazuh rule 86601/level 3, with all five SOC services active and live capture disabled.
+- Independently queried the exact reported alert/signature through the existing TLS-verified, read-only Indexer tunnel. Exactly one matching document preserves the controlled-test label, synthetic source/destination, ICMP type/code, JSON decoder and January fixture time. Wazuh processed it October 5 at 12:43:09.941 PM Eastern; it is controlled validation, not an incident or new ATT&CK coverage credit.
+- A subsequent maintenance status confirmed five active SOC services. The browser tab currently needs login, so visual dashboard confirmation remains pending. The first bounded SQL lookup preceded the next scheduled load; a later read-only lookup matched the exact Indexer document, rule/level, test label, network fields and fixture timestamp in `sg.alerts.raw_json`. The successful scheduled run inserted 67 alerts in 2.576 seconds. No manual loader run, Power BI refresh, further guest settings, live capture, blocking or SSH/network permission change was made. One short successful run does not close the sustained-performance gate. All 140 offline regression tests passed; the initial sandbox run was blocked by temporary-folder permissions and passed on rerun with normal filesystem access. See [proof and remaining gates](docs/suricata-wazuh-handoff.md).
 
 ### 2026-10-05: Stop safely at the input-folder guard and prepare a correction
 - The owner supplied actual saved-EVE/installed-rule preflight success, then a protected-parent refusal. In the reviewed job, that refusal occurs before pilot creation, configuration replacement or restart. Independent read-only checks found five active SOC services and zero indexed pilot alerts; the exact rejected parent metadata was not retrieved.

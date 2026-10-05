@@ -1,7 +1,9 @@
 # Suricata Offline Detection Validation
 
 Validated October 5, 2026. Result: the harmless marker rule passed isolated
-engine testing. Live capture, Wazuh ingestion and network reporting remain open.
+engine testing. A later [controlled handoff](suricata-wazuh-handoff.md) verified
+one matching alert in the Wazuh Indexer and SQL. Live capture and network reporting
+remain open; this report records the original isolated engine test.
 
 ## Evidence And Scope
 
@@ -45,12 +47,12 @@ not a confirmed attack, new incident case or additional ATT&CK technique.
 This is a working offline detection proof, not completion of the network SOC:
 
 - No verified live traffic feed or whole-home visibility; the VM still uses Hyper-V NAT.
-- The engine's EVE record has not yet been inspected through the restricted connection, decoded/indexed by Wazuh, or traced into SQL and Power BI.
+- The later approved one-time handoff validated genuine saved EVE and generated a Wazuh alert; independent read-only Indexer and SQL queries verified the same record and its fields. This does not grant arbitrary file access to the restricted maintenance key. Dashboard visual confirmation, network reporting views and Power BI refresh remain pending.
 - Raw package/engine logs, PCAPs, EVE and activation details remain private. No screenshot or reconstructed example is presented as the missing raw event.
 - Host-memory/loader performance, full recovery and remaining private-access tests are still open.
 
-The recommended next gate, subject to owner approval, is to inspect the genuine
-EVE record, test Wazuh decoding, then review a bounded local collection change
-with backup, configuration validation and any necessary manager restart planned
-explicitly. Keep continuous capture disabled while proving that event path.
+The original next gate, bounded EVE-to-Wazuh ingestion, has now passed in the
+later [handoff report](suricata-wazuh-handoff.md). Finish visual dashboard and
+network-reporting/Power BI verification before sustained collection. Keep continuous capture
+disabled while proving that event path.
 See the [pilot guide](suricata-pilot.md) and [network scope](network-coverage-plan.md).

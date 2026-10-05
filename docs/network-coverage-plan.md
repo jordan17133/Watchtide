@@ -1,9 +1,11 @@
 # Network Coverage and Browsing Privacy Plan
 
-Updated: October 5, 2026. Status: Suricata 8.0.7 installed for offline rule
-validation, with no live capture feed, gateway or privacy-VPN deployment.
+Updated: October 5, 2026. Status: Suricata 8.0.7 passed offline rule controls,
+and one controlled event was independently traced through the Wazuh Indexer
+into SQL. No live capture feed, gateway or privacy-VPN deployment is enabled.
 The service remains masked; the [offline proof](suricata-offline-validation.md)
-does not establish whole-home visibility.
+and [controlled handoff](suricata-wazuh-handoff.md) do not establish whole-home
+visibility.
 
 The owner has moved on to traffic interpretation, events, rules and reporting
 and deferred extra VPN/router work. Leave existing Tailscale access unchanged
@@ -16,7 +18,7 @@ complete; it is not a prerequisite for the [Suricata pilot](suricata-pilot.md).
 |---|---|---|
 | Endpoint SOC | Windows/Sysmon to Wazuh, SQL and Power BI is built; the public console uses a sanitized historical snapshot | Recheck loader performance and reporting refresh before adding load |
 | Private SOC administration | Local trusted IPv4 HTTPS/login verified; renewal setup reported successful; management-only Windows grant unchanged; phone remains denied | Automatic renewal check/actual rotation, remaining denied/public-access and recovery checks; approved off-LAN administration deferred |
-| Network IDS | Stage 5 partial: offline 8.0.7 marker test passed; package/health independently checked; service masked | Inspect genuine EVE, approve bounded Wazuh collection, prove reporting path, then measure live capture |
+| Network IDS | Stage 5 partial: offline marker controls and bounded Wazuh handoff passed; same labeled event independently verified in the Indexer and SQL; service masked | Confirm dashboard view, build verified network reporting fields and check Power BI refresh, then measure limited live capture |
 | Whole-network browsing privacy | Extra VPN/router work deferred; not implemented or validated | Separate approval and gateway/client, egress/DNS/IPv6 and failure tests if resumed |
 
 ## Read-Only Baseline: October 5
@@ -44,15 +46,15 @@ audited.
 1. Preserve current private SOC access and the phone denial. Check Ubuntu
    memory/disk/package state and review installation behavior. Follow up host
    memory pressure, SQL runtime and Power BI health before sustained capture.
-2. Use a short, isolated benign replay to syntax-test and validate the prepared
+2. Completed: use a short, isolated benign replay to syntax-test and validate the prepared
    marker rule with positive and negative samples. Start alert-only, without
    packet blocking, a second VM or a large downloaded ruleset. Record actual
    engine/version evidence; prepared files are not proof that the rule works.
-3. Inspect the resulting EVE record and connect a bounded collection path to
-   Wazuh. The existing VM is a manager, so do not install an agent over it;
-   verify local collection or use an agent on a later separate sensor. Trace
-   the indexed alert into SQL and add network reporting fields from observed
-   decoded data. Recheck loader/refresh performance.
+3. The saved-EVE inspection, bounded manager-local collection and exact
+   Indexer-to-SQL trace are complete. The existing VM is a manager; no agent
+   was installed over it. Finish dashboard visual confirmation and add network
+   reporting fields from the observed decoded data, then verify the existing
+   Power BI refresh. Recheck sustained loader/refresh performance.
 4. Verify a limited live interface and harmless live test separately. Then
    design a supported traffic feed for broader coverage; no whole-home mirror
    has been verified on the current NAT/Wi-Fi setup. Record devices/segments,

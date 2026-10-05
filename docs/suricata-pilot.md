@@ -61,6 +61,20 @@ before providing an installation command. Repository metadata can be stale;
 review the actual package version, dependencies and any service auto-start
 behavior before installation. Use documentation matching that version.
 
+**October 5 result:** the owner supplied the read-only guest checks. Available
+memory and disk support attempting a bounded pilot, not an always-on capture or
+resolution of the Windows/SQL performance issue. Suricata is not installed;
+the cached Ubuntu candidate is 7.0.3. Upstream now lists 7.x as end-of-life and
+8.x as stable ([release page](https://suricata.io/download/)). Review the actual
+candidate from the [developer-maintained Ubuntu source](https://docs.suricata.io/en/suricata-8.0.7/install/ubuntu.html)
+and simulate installation before installing anything.
+
+The owner approved preparation of a separate, temporary maintenance connection
+to handle those checks/source setup remotely. Its initial fixed-action scope
+does not authorize package installation or Wazuh changes. Activation, live
+allowed/denied SSH tests and repository setup remain pending; private keys,
+device selectors and the activation payload are not portfolio assets.
+
 ## Step 2: Prove One Harmless Rule
 
 The prepared [starter rule](../suricata/rules/watchtide-pilot.rules) matches an
@@ -85,7 +99,7 @@ controlled test, not an incident or a false positive.
 
 Suricata supports configuration testing (`-T`), isolated rule selection (`-S`)
 and offline packet replay (`-r`); see its
-[command-line reference](https://docs.suricata.io/en/suricata-7.0.15/command-line-options.html).
+[command-line reference](https://docs.suricata.io/en/suricata-8.0.7/command-line-options.html).
 The linked version is a reference, not proof of the deployed version.
 
 ## Step 3: Read The Event Before Tuning
@@ -104,7 +118,7 @@ Read a real EVE alert and answer these questions before changing severity:
 
 Inspect the actual JSON rather than assuming every event has the same fields.
 EVE can contain alerts and other event types; see the
-[EVE reference](https://docs.suricata.io/en/suricata-7.0.15/output/eve/eve-json-output.html).
+[EVE reference](https://docs.suricata.io/en/suricata-8.0.7/output/eve/eve-json-output.html).
 DNS/HTTP/flow records are not automatically security alerts. Keep payloads,
 destinations and private device identifiers out of public examples.
 
@@ -136,7 +150,7 @@ increase in collection.
 
 | Gate | Current status | Required proof |
 |---|---|---|
-| Resource/package review | Awaiting Ubuntu output | Reviewed memory, disk, package/version and installation behavior |
+| Resource/package review | Guest headroom reported; old candidate identified; stable-source/dependency review pending | Actual supported candidate, simulated dependencies and installation behavior reviewed before installation |
 | Rule engine validation | Pending | Engine syntax test; positive match and negative non-match |
 | Wazuh alert | Pending | Matching EVE and decoded/indexed Wazuh record, with test verdict |
 | SQL and Power BI | Pending | Same indexed alert in SQL; correct network fields and successful refresh |

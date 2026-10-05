@@ -46,6 +46,11 @@ Windows host                         |
 
 ## Timeline
 
+### 2026-10-05: Guest preflight and restricted automation preparation
+- The user supplied read-only guest checks showing available memory/disk for a short Suricata pilot, no swap usage and no installed Suricata. The cached Ubuntu candidate is 7.0.3; reviewed upstream guidance now marks 7.x end-of-life and recommends its maintained stable Ubuntu source. This does not close Windows host-memory or SQL-loader performance follow-up.
+- After an administration SSH check failed authentication, the owner explicitly approved preparing a separate restricted automation connection. Prepared a temporary, single-device-bound key and fixed-action maintenance helper for status, approved package-source setup, installation preview and revocation. Package installation, general shells and Wazuh edits are outside this initial scope. The loader key and tailnet policy remain unchanged.
+- Twenty-five new offline access-boundary tests passed, with all 87 project tests passing; Python 3.12 syntax checks and Windows key ACL checks passed. A pre-activation tailnet SSH probe rejected the new key while verifying the existing VM host identity. Ubuntu activation, actual allowed/denied tests and repository setup remain pending; no guest configuration/package change is claimed. Key material, activation payload and raw output remain private.
+
 ### 2026-10-05: Prepare the Suricata traffic/rules/reporting pilot
 - The owner deferred extra VPN/router work and moved on to traffic interpretation, events, rules and reporting. Existing Tailscale permissions remain unchanged and the phone stays denied; broader privacy routing and approved off-LAN administration remain deferred/unverified.
 - Reviewed the loader and reporting views: full indexed-alert JSON is retained in SQL, but extracted process/channel fields are Windows-oriented. Network reporting needs real decoded field validation, not a new public connection to the SOC.

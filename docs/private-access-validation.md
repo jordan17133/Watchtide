@@ -396,16 +396,59 @@ The latest Windows loader task metadata reported result zero for its October 5
 run. That scheduler result is not a new SQL row audit, controlled event trace or
 Power BI refresh, and does not resolve the previously recorded memory pressure.
 
-A separate private renewal helper was prepared, but has not been deployed.
+A separate private renewal helper was prepared; it had not been deployed at this
+installation-verification point.
 Eighteen additional offline tests passed, bringing the suite to sixty including
 sixteen installer and twenty-six publication tests. The helper is designed to
 install root-owned scripts and a daily timer, require an initial successful
 service run before enabling it, validate replacements, skip restart for unchanged
 files, and preserve the existing health/rollback behavior when activating a
 separate certificate version. Network grants and data-service settings are not
-part of this job. Linux schedule/permissions, actual rotation and recovery during
-a real renewal failure remain unverified. Browser login and renewal setup are
-the next user-assisted checks; the overall private-access milestone stays open.
+part of this job. At this point Linux schedule/permissions, actual rotation and
+recovery during a real renewal failure remained unverified. Browser login and
+renewal setup were the next checks; their subsequent results follow below.
+
+### Authenticated Dashboard and Renewal Timer
+
+On October 5 the user reported successful connection after signing into the
+existing private dashboard. The authenticated Wazuh overview was directly
+observed, including its account menu and aggregate summary of one Active agent
+and zero Disconnected agents. No credentials, raw alerts or screenshots were
+published. This establishes an observed local authenticated overview, not an
+individually identified endpoint check, a fresh event trace or off-LAN access.
+
+The user subsequently ran renewal configuration and supplied
+`HTTPS_RENEWAL_SETUP_VERIFIED`. The helper checks the existing managed identity,
+permissions, local HTTPS and five services, installs root-owned helpers and
+units, and requires a successful first service run before enabling the timer.
+The supplied output reports the daily timer enabled and that initial service
+run successful. Its next listed trigger is October 6, 2026 at 00:05:42 UTC
+(October 5 at 8:05:42 PM Eastern). This Linux setup evidence is user-reported;
+the root-owned files and service metadata were not independently inspected.
+
+The first service run was invoked by configuration, not by the daily timer;
+the timer's LAST/PASSED fields were still empty. Neither the first automatic
+trigger nor an actual new certificate replacement is proven by setup success.
+Real replacement and recovery during a live renewal failure remain separate
+operational follow-ups. The existing certificate expires January 3, 2027.
+
+After the supplied setup result, an independent Windows IPv4 HTTPS request
+again returned HTTP 302 and certificate-verification result zero without
+authentication or a warning bypass. Fresh local approved-source TCP probes
+reached 22/443 and did not reach 9200/55000. Latest loader-task metadata reported
+result zero, but its timing relative to renewal setup is not established; this
+does not prove a post-renewal SQL load, new-event path or Power BI refresh, nor
+resolve the previously recorded memory pressure.
+
+The user has only the iPhone available for an off-network test. It remains a
+denied client under the unchanged policy. Temporary phone-only dashboard access
+on TCP 443 is proposed, not deployed: review the current policy and obtain
+separate approval, test trusted login over cellular, remove that permission,
+then confirm denial again. This does not also prove off-LAN SSH, all denied
+services, public exposure or actual device revocation. No Funnel, firewall,
+loader, SQL, Power BI or public-console runtime change was made in this
+follow-up. Local HTTPS/login and renewal setup are complete within these limits;
+the overall private-access milestone remains in progress.
 
 ## Remaining checks
 
@@ -428,10 +471,11 @@ the next user-assisted checks; the overall private-access milestone stays open.
 - [x] Recheck the dashboard's public certificate metadata without accepting it or sending credentials; identify its loopback-only identity and incomplete Windows trust chain.
 - [x] Verify Tailscale HTTPS issuance enabled and record the user's verified certificate-staging marker.
 - [x] Record user-reported dashboard certificate installation/five active services and independently verify trusted Windows IPv4 HTTPS without authentication or validation bypass.
-- [ ] Verify browser login and deploy/test the prepared renewal timer; a future actual certificate replacement is separate evidence.
+- [x] Observe authenticated local dashboard access and record user-reported renewal setup, successful initial service run and enabled daily timer.
+- [ ] Observe the first automatic renewal check and an eventual actual certificate replacement; live rotation/failure recovery remain unproven.
 - [ ] Review backup readers/storage protection before creating fresh sensitive copies; existing backup ACLs were not changed.
 - [ ] Retain exact current configuration backups privately and validate separate backup/restore capability before further VM/firewall changes; a checkpoint and console access are not a tested restore.
-- [ ] Verify SSH login and dashboard login with a trusted HTTPS identity.
+- [ ] Complete authenticated tailnet SSH and approved off-LAN dashboard tests; local trusted dashboard login is verified.
 - [ ] Test approved admin access from another network and the remaining denied services/address families from an unprivileged device.
 - [ ] Check direct public access, device revocation, new-event flow into SQL and Power BI refresh.
 

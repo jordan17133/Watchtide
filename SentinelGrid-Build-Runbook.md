@@ -17,7 +17,7 @@ What actually happened during the build, including every failure and fix, is rec
 | 7. SQL Server warehouse (moved ahead of Stage 6) | Done 2026-09-30; case log added 2026-10-01 (`warehouse/cases.py`) |
 | 8. Power BI report | Done 2026-10-01 (five pages including Cases, kept as a Power BI Project in Git) |
 | Detection validation | In progress: controlled SSH password-guessing test detected and written up |
-| 4c. Tailscale private remote access | Admin/VM/test phone enrolled; narrow Windows TCP 22/443 grant unchanged; local checks and reported phone HTTPS denial over cellular recorded; trusted/authenticated access, approved off-LAN and recovery tests pending ([results](docs/private-access-validation.md)) |
+| 4c. Tailscale private remote access | Narrow Windows TCP 22/443 grant unchanged; trusted local HTTPS/dashboard login verified; renewal setup reported successful; phone remains denied; approved off-LAN, remaining denied-path/reporting and recovery tests pending ([results](docs/private-access-validation.md)) |
 | 6. Watchtide API | Planned |
 | 5. Suricata network telemetry | Planned |
 
@@ -28,12 +28,12 @@ What actually happened during the build, including every failure and fix, is rec
 | Wazuh VM | Hyper-V `SentinelGrid-Wazuh`, Ubuntu Server 24.04.5, 4 vCPU, 8 GB fixed RAM, 150 GB disk, Default Switch |
 | Wazuh version | 4.14.8 all-in-one |
 | Address | `soc-vm.mshome.net` (never the raw IP; it changes on VM reboot) |
-| Dashboard | `https://soc-vm.mshome.net` |
+| Dashboard | Approved private Tailscale certificate hostname; trusted Windows IPv4 HTTPS and local login verified October 5. Legacy Hyper-V hostname is retained for SSH/loader use, not the new browser certificate identity. |
 | SSH | `ssh <ubuntu-user>@soc-vm.mshome.net` |
 | Monitored endpoint | `jordan-pc` (Windows 11, Sysmon64 + Wazuh agent) |
 | Rollback points | Historical checkpoint `sentinelgrid-pre-attack-2026-10-01`; new creation and five active guest services afterward reported October 4 after backup-helper repair under pictured Production-Only settings. New entry metadata and separate restore validation pending ([follow-up](docs/private-access-validation.md#production-checkpoint-recovery-follow-up)); do not apply an older point merely to test availability. |
 | Pre-VPN firewall exceptions | 22, 443, 1514-1515 from private ranges (10/8, 172.16/12, 192.168/16); Tailscale path checked separately below |
-| Tailscale path, rechecked 2026-10-04 | IPv4 admin path reaches TCP 22/443; direct 1514/1515/9200/55000 probes fail. Phone HTTPS denial over cellular reported. IPv6 SSH works; dashboard has no IPv6 listener. Trusted/authenticated and approved off-network access pending; see [validation report](docs/private-access-validation.md). |
+| Tailscale path, rechecked 2026-10-05 | Local IPv4 TCP 22/443 reachable and 9200/55000 unreachable; earlier direct 1514/1515 probes failed. Trusted local HTTPS/login verified, renewal setup reported successful. Phone remains denied; IPv6 dashboard has no listener. Approved off-network and remaining denied-path checks pending; see [validation report](docs/private-access-validation.md). |
 
 ## Target architecture
 
@@ -349,7 +349,7 @@ No Critical vulnerability findings remain unexplained, and the Configuration Ass
 
 ## Stage 4c: Add private remote access with Tailscale
 
-**Status:** Windows admin host, Ubuntu VM and test phone enrolled. The policy still permits only the selected Windows device to reach the VM on TCP 22/443; four policy tests were accepted on save. Local IPv4 management/data-port checks and post-change ingestion passed. A user-confirmed phone HTTPS timeout over cellular records the first off-LAN denial observation, not full service-matrix proof. User-provided listener output explains the IPv6 dashboard gap. Supplied firewall tables were reviewed, the backup-helper startup issue was repaired, and new checkpoint creation was reported after a Production-Only settings screenshot, followed by five active guest services. Checkpoint metadata, protected current backups and separate restore validation remain open, as do trusted authenticated access, approved off-LAN access, remaining denied paths and reporting health. See [docs/private-access-validation.md](docs/private-access-validation.md) for evidence and limits, and [docs/private-access-plan.md](docs/private-access-plan.md) for the remaining gates and rollback.
+**Status:** Windows admin host, Ubuntu VM and test phone enrolled. The policy still permits only Windows-to-VM TCP 22/443, with four accepted policy tests. Local trusted IPv4 HTTPS and authenticated dashboard access are verified; renewal setup, its initial service run and enabled daily timer were reported successful. Automatic execution and actual certificate replacement remain unproven. The phone remains denied, with a prior user-confirmed cellular HTTPS timeout; a temporary dashboard-only test needs fresh policy review and separate approval, followed by removal and a fresh denial test. The dashboard has no IPv6 listener. Reported production-checkpoint creation and VM-local configuration-backup checks do not prove a full SOC restore. Approved off-LAN access, remaining denied paths, exposure/revocation, controlled reporting validation and recovery checks remain open. See [docs/private-access-validation.md](docs/private-access-validation.md) for evidence and limits, and [docs/private-access-plan.md](docs/private-access-plan.md) for remaining gates and rollback.
 
 ### Steps
 

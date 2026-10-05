@@ -2,7 +2,7 @@
 
 A running record of how the Watchtide home SOC lab was built, what broke, and how it was fixed. The step-by-step plan lives in [SentinelGrid-Build-Runbook.md](SentinelGrid-Build-Runbook.md). Alert investigations live in [triage/](triage/).
 
-## Status at a glance (2026-10-04)
+## Status at a glance (2026-10-05)
 
 | Runbook stage | Status |
 |---|---|
@@ -17,7 +17,7 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
 | 7. SQL Server reporting storage | Done: loader every 15 minutes; case log with history (`warehouse/cases.py`) meets the incident gate |
 | 8. Power BI report | Done: five pages (including Cases) built as a Power BI Project (definitions in Git, data cache ignored), ATT&CK catalog loaded |
 | Detection validation | In progress: controlled SSH password-guessing test detected end to end; every Critical alert since tuning explained |
-| 4c. Tailscale private remote access | Devices enrolled; reviewed narrow policy saved; local IPv4 management/data-port checks and post-change SQL ingestion verified; authenticated/off-LAN and Power BI tests pending |
+| 4c. Tailscale private remote access | Narrow policy saved; trusted local HTTPS/dashboard login verified; renewal setup reported successful; approved off-LAN, remaining denied-path and reporting tests pending |
 
 ## What is running
 
@@ -46,12 +46,18 @@ Windows host                         |
 
 ## Timeline
 
+### 2026-10-05: Verify dashboard login and renewal timer setup
+- After the user signed in, the existing private Wazuh overview was directly observed in an authenticated state. Its aggregate summary showed one Active agent and zero Disconnected agents; this is not a newly traced event or independently identified endpoint-health check.
+- The user ran renewal configuration and supplied `HTTPS_RENEWAL_SETUP_VERIFIED`: the first manually invoked service run succeeded and the daily timer is enabled. Its next listed trigger is October 6 at 00:05:42 UTC (October 5 at 8:05:42 PM Eastern). The timer itself has not yet fired; actual replacement and recovery during a real renewal failure remain unproven.
+- Post-setup Windows IPv4 HTTPS still returned HTTP 302 with normal trust verification. Local TCP 22/443 remained reachable and 9200/55000 unreachable. The latest loader task reports result zero, but its timing is not established relative to renewal setup; no post-renewal SQL audit or Power BI refresh is claimed.
+- The phone is the only available off-network client and remains denied. A proposed temporary phone-only TCP 443 test needs current-policy review and separate approval, removal afterward and a fresh denial test. No phone grant, Funnel, firewall, loader, database or public-console runtime change was made in this follow-up. Stage 4c remains in progress. See [login and renewal evidence](docs/private-access-validation.md#authenticated-dashboard-and-renewal-timer).
+
 ### 2026-10-05: Install dashboard HTTPS and verify Windows trust
 - The user ran the private one-time installer and reported both preflight and local HTTPS installation success, a new private rollback copy, and five active services. Only browser-facing certificate paths changed; original certificates and upstream TLS settings were retained, and only the dashboard restarted.
 - Independent Windows checks resolved the expected tailnet IPv4 address, received HTTP 302 with normal HTTPS validation, and passed a separate default-validation TLS handshake. The served Let's Encrypt certificate expires January 3, 2027. No trust import, validation bypass or login credentials were used.
 - A fresh local approved-source TCP check still reaches 22/443 and fails on 9200/55000. The latest scheduled loader task reports result zero; this is metadata, not a controlled event trace, SQL audit or Power BI refresh, and the host memory-pressure follow-up remains open.
-- Prepared a separate root-owned renewal helper and daily timer setup. Eighteen additional offline tests passed; sixty total tests now cover installation, renewal and publication. The helper is not yet deployed, and mocked rotation/rollback tests are not live Linux renewal proof.
-- Browser login and renewal setup are next; approved off-LAN access, denied-path/revocation checks and reporting continuity remain open. No Funnel, network-policy, firewall, loader, SQL, Power BI or public-console change was made in this follow-up. See [installation evidence and limits](docs/private-access-validation.md#dashboard-https-installation-and-windows-verification).
+- Prepared a separate root-owned renewal helper and daily timer setup. Eighteen additional offline tests passed; sixty total tests cover installation, renewal and publication. At this preparation point the helper was not yet deployed, and mocked rotation/rollback tests were not live Linux renewal proof.
+- Browser login and renewal setup were next at this installation point; their subsequent results are recorded above. Approved off-LAN access, denied-path/revocation checks and reporting continuity remain open. No Funnel, network-policy, firewall, loader, SQL, Power BI or public-console change was made in this follow-up. See [installation evidence and limits](docs/private-access-validation.md#dashboard-https-installation-and-windows-verification).
 
 ### 2026-10-05: Stage Tailscale HTTPS and prepare the existing dashboard installation
 - After the public certificate-name disclosure explanation, the user requested the approved certificate. The first attempt failed while HTTPS issuance was disabled; authenticated DNS settings subsequently confirmed it enabled, with MagicDNS already on.
@@ -320,12 +326,13 @@ Windows host                         |
 - [x] Inspect dashboard certificate metadata without accepting it or sending credentials; record loopback-only identity and incomplete Windows trust chain.
 - [x] Enable the selected Tailscale HTTPS issuance route after public-name disclosure and record user-reported verified certificate staging.
 - [x] Record reported certificate installation/five active services and independently verify trusted Windows IPv4 HTTPS with no credentials or validation bypass.
-- [ ] Complete the Tailscale-issued HTTPS route: verify trusted browser login and deploy/test the prepared renewal timer ([installation results](docs/private-access-validation.md#dashboard-https-installation-and-windows-verification)).
+- [x] Verify trusted local dashboard login and record successful renewal setup/initial service run and enabled daily timer ([results](docs/private-access-validation.md#authenticated-dashboard-and-renewal-timer)).
+- [ ] Observe the first automatic renewal check and, when due, actual certificate replacement; setup success is not evidence of a real rotation or live failure recovery.
 - [ ] Confirm the new checkpoint metadata; review backup readers/storage protection, retain exact current configuration backups and validate separate backup/restore before further VM/firewall changes.
 - [ ] Diagnose local enrollment TCP 1515 unreachability before new agent enrollment; do not open it automatically.
-- [ ] Verify authenticated SSH/dashboard access and HTTPS trust; record the intended supported address families.
+- [ ] Complete authenticated tailnet SSH and approved off-LAN dashboard tests; local dashboard login/trusted IPv4 HTTPS now pass, and IPv6 dashboard support is absent.
 - [ ] Test approved off-LAN access and the remaining denied-service paths, direct public access and device revocation.
-- [ ] Confirm manager-side agent Active status, a controlled event trace and Power BI refresh ([plan](docs/private-access-plan.md)).
+- [ ] Confirm individual agent identity/health, a controlled event trace and Power BI refresh; the authenticated overview showed one Active and zero Disconnected agents ([plan](docs/private-access-plan.md)).
 - [ ] Enroll one remote endpoint and publish a benign event trace through Wazuh, SQL and Power BI.
 
 ### Detection work

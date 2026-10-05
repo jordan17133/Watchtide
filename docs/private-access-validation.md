@@ -337,16 +337,34 @@ sent. This identifies the outstanding HTTPS configuration issues, not evidence
 of compromise or authenticated access.
 
 The user selected Tailscale-issued HTTPS rather than importing a new private
-CA into Windows. The authenticated DNS settings show MagicDNS already enabled
-and HTTPS certificates disabled. The enablement notice was opened for review;
-the exact device-name disclosure still awaits confirmation. Issuance,
-installation, renewal automation and trusted dashboard login are not complete.
+CA into Windows. After the public-name disclosure explanation, the user ran
+the approved hostname-specific certificate request. The first attempt failed
+because HTTPS issuance was not yet enabled. The authenticated DNS settings
+subsequently showed HTTPS enabled, with MagicDNS already on. On October 5 the
+user reported `CERTIFICATE_READY` from the reviewed staging block, which checks
+the certificate chain, hostname and matching private key before reporting success.
+Only that marker was supplied; the issued certificate's dates and files have
+not been independently inspected. No certificate has yet been installed into
+the running dashboard, and renewal and trusted browser login remain pending.
 [Tailscale's HTTPS guidance](https://tailscale.com/docs/how-to/set-up-https-certificates)
 explains permanent public certificate-name disclosure and the renewal
 responsibility for certificates installed as files. No Funnel, device rename,
 access-rule change, Windows trust-store change or Wazuh certificate change has
-been made in this preparation. Real names, addresses, certificate fingerprints
+been made in this preparation. HTTPS issuance enablement is the only verified
+tailnet setting change in this certificate follow-up; existing grants remain
+unchanged. Real names, addresses, certificate fingerprints
 and backup inventory remain outside publication.
+
+A private one-time installer was prepared for the existing Wazuh dashboard,
+not a replacement console. Sixteen offline tests passed for two-key YAML edit
+scope, duplicate/invalid configuration rejection, certificate-check arguments,
+all-five-service checks, strict TLS probing and rollback. The twenty-six
+publication-privacy tests also passed. The installer preserves the original
+certificate files and all upstream TLS settings, prepares a root-only rollback
+copy, restarts only the dashboard, and checks locally trusted HTTPS with the
+expected hostname and exact staged leaf. It does not alter network access or
+schedule renewal. These are offline, partly mocked tests, not evidence of a VM
+installation, Linux permissions, browser login or pipeline continuity.
 
 ## Remaining checks
 
@@ -367,6 +385,7 @@ and backup inventory remain outside publication.
 - [x] Review the documented Windows installer-backup metadata and local ACLs without reading secret contents; record additional local-group read access.
 - [x] Record the user's successful dashboard/UFW configuration-backup checks; the copy is local to the VM, not a full SOC backup or tested restore.
 - [x] Recheck the dashboard's public certificate metadata without accepting it or sending credentials; identify its loopback-only identity and incomplete Windows trust chain.
+- [x] Verify Tailscale HTTPS issuance enabled and record the user's verified certificate-staging marker; installation, renewal and browser trust remain pending.
 - [ ] Review backup readers/storage protection before creating fresh sensitive copies; existing backup ACLs were not changed.
 - [ ] Retain exact current configuration backups privately and validate separate backup/restore capability before further VM/firewall changes; a checkpoint and console access are not a tested restore.
 - [ ] Verify SSH login and dashboard login with a trusted HTTPS identity.

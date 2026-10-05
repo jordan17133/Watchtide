@@ -46,6 +46,12 @@ Windows host                         |
 
 ## Timeline
 
+### 2026-10-05: Stage Tailscale HTTPS and prepare the existing dashboard installation
+- After the public certificate-name disclosure explanation, the user requested the approved certificate. The first attempt failed while HTTPS issuance was disabled; authenticated DNS settings subsequently confirmed it enabled, with MagicDNS already on.
+- The user reported `CERTIFICATE_READY` from the block that verifies the chain, hostname and matching key. This is user-reported staging, not independently inspected certificate files, a dashboard installation or a trusted login.
+- Prepared a private installer that changes only the two browser-facing TLS paths, retains original certificates and upstream TLS settings, keeps a root-only rollback copy, and restarts/checks only the existing dashboard. Sixteen offline installer tests and twenty-six publication-privacy tests passed; Linux installation and permissions remain unverified.
+- Installation, browser login and scheduled renewal are next. No Funnel, access-rule, firewall, loader, SQL, Power BI or public-console runtime change was made. The private-access milestone remains in progress. See [HTTPS preparation and limits](docs/private-access-validation.md#current-configuration-backup-and-https-preparation).
+
 ### 2026-10-04: Repair Hyper-V backup helper and create a recovery baseline
 - A user-provided checkpoint list showed an October 1 recovery point predating VPN work. An initial production-only checkpoint attempt failed with "The operation is not supported"; no old checkpoint was applied or deleted and standard fallback remained disabled.
 - Guest diagnostics found the backup device but no VSS helper unit/process. The user installed three kernel-matched Ubuntu cloud-tools packages after a no-upgrade/no-removal preview. The installed helper then stopped immediately while its device dependency lacked the expected systemd tag; reloading installed udev rules and issuing a targeted device change event resolved the observed startup issue.
@@ -305,7 +311,8 @@ Windows host                         |
 - [x] Record the user's reported five active guest services after checkpoint creation.
 - [x] Record the user's `BACKUP_CHECK_PASSED` result for a root-only, VM-local dashboard/UFW configuration copy; full recovery remains separate.
 - [x] Inspect dashboard certificate metadata without accepting it or sending credentials; record loopback-only identity and incomplete Windows trust chain.
-- [ ] Complete the selected Tailscale-issued HTTPS route: confirm public certificate-name disclosure, enable issuance, install and renew the certificate, and verify trusted dashboard login ([preparation](docs/private-access-validation.md#current-configuration-backup-and-https-preparation)).
+- [x] Enable the selected Tailscale HTTPS issuance route after public-name disclosure and record user-reported verified certificate staging.
+- [ ] Complete the Tailscale-issued HTTPS route: install the staged certificate in the existing dashboard, verify trusted browser login, and configure/test renewal ([preparation](docs/private-access-validation.md#current-configuration-backup-and-https-preparation)).
 - [ ] Confirm the new checkpoint metadata; review backup readers/storage protection, retain exact current configuration backups and validate separate backup/restore before further VM/firewall changes.
 - [ ] Diagnose local enrollment TCP 1515 unreachability before new agent enrollment; do not open it automatically.
 - [ ] Verify authenticated SSH/dashboard access and HTTPS trust; record the intended supported address families.

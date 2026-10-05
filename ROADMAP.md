@@ -40,8 +40,11 @@ ten new packages, no upgrades/removals, and all five SOC services still active.
 The separately approved offline job completed with one expected positive alert
 and zero alerts on two controls. The service remains masked; synthetic packets
 do not establish live coverage. Wazuh collection and existing SSH keys were
-unchanged. Genuine EVE inspection and bounded Wazuh integration are the
-recommended next gate, subject to owner approval.
+unchanged. The owner selected genuine EVE inspection and bounded Wazuh
+integration. The [one-time handoff](docs/suricata-wazuh-handoff.md) is prepared
+with focused regression checks; the read-only Indexer preflight passes and
+finds zero pilot alerts. Local authentication/execution, a matching manager
+alert and indexed/dashboard proof remain pending, not completed integration.
 No whole-network privacy-egress change has been deployed.
 Permanent phone dashboard access is not required; the phone currently serves
 as a denied off-LAN test client. Other portfolio chapters remain planned work,

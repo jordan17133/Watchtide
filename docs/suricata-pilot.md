@@ -5,6 +5,8 @@ validation passed in the owner's supplied engine result. A subsequent maintenanc
 check confirmed the installed package and five healthy SOC services. Suricata
 remains masked; no live capture feed, Wazuh collection change or network reporting
 view has been deployed. See the [validation evidence](suricata-offline-validation.md).
+The owner selected the [controlled Wazuh handoff](suricata-wazuh-handoff.md);
+its one-time job is prepared and tested but not yet executed on Ubuntu.
 
 ## What We Are Adding
 

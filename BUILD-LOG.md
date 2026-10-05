@@ -46,6 +46,11 @@ Windows host                         |
 
 ## Timeline
 
+### 2026-10-05: Prepare the selected Suricata-to-Wazuh handoff
+- The owner selected getting the validated alert into the existing Wazuh dashboard. Prepared one password-authenticated job to inspect genuine saved EVE, test the installed decoder/rule, back up settings and add a protected controlled-test log source. A brief manager-only restart and one preserved historical EVE append are included; live capture, blocking and new SSH/network permissions are not.
+- All 134 project tests pass, including 27 focused handoff checks for preservation, event matching, duplicate refusal, automatic-response safety, configuration replacement and recovery. Python 3.12 syntax and private artifact-directory permissions pass. These are preparation checks, not Ubuntu deployment proof.
+- Independent maintenance status confirmed five active SOC services and installed Suricata 8.0.7. The existing TLS-verified, read-only Indexer connection worked and returned zero pilot alerts. The guest handoff, indexed record, dashboard and SQL/Power BI trace remain pending. See [handoff scope and gates](docs/suricata-wazuh-handoff.md).
+
 ### 2026-10-05: Complete the isolated Suricata rule test
 - The owner supplied `OFFLINE_SURICATA_VALIDATION_PASSED`: one positive packet produced one SID 9000001 alert, and two negative controls produced zero alerts. The job's syntax and exact ten-package checks passed; the result reported a masked Suricata service and all five existing SOC services active. No live capture, Wazuh collection change or extra SSH key was included.
 - A subsequent read-only maintenance check independently confirmed installed package `1:8.0.7-0ubuntu0`, all five services active, unused guest swap and available guest memory/disk. This does not independently retrieve the raw engine logs, close host/SQL performance follow-up, or prove recovery.

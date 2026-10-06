@@ -46,6 +46,12 @@ Windows host                         |
 
 ## Timeline
 
+### 2026-10-05: Verify effective firewall logging and identify disk/boot gaps
+- The owner's administrator run returned `FIREWALL_BLOCKED_LOGGING_VERIFIED`. Independent readback confirmed blocked logging enabled with a 16 MB limit on all three enabled profiles; incoming/outgoing defaults and allowed-traffic logging remained unchanged. The saved metadata and protected evidence-directory permissions passed review. Sysmon, Wazuh and Tailscale remained running; no rule changes or service restarts were performed by the helper.
+- The first real scheduled loader run afterward succeeded with 144 alerts inserted in 2.788 seconds. No manual ingestion was needed; this confirms immediate pipeline continuity, not sustained performance or a new Power BI refresh.
+- Reading the actual firewall log was denied to the normal automation account. Its ACL was left intact, and actual new-drop output/collection remain unverified. This closes the configuration check, not the end-to-end firewall telemetry gate.
+- Elevated owner output reported the system drive fully decrypted with BitLocker protection off and Secure Boot disabled. Independent Windows state confirmed Secure Boot off; firmware mode is UEFI. No encryption/firmware change, TPM clearing, recovery-key disclosure or reboot occurred. Readiness and recovery-key custody must be reviewed before any approved boot/encryption change. See [hardening results](docs/hardening-validation.md).
+
 ### 2026-10-05: Close the reviewed private-file hardening check
 - The owner deferred recovery work and selected hardening. No SQL backup or restore drill ran; recovery remains open.
 - Reviewed private evidence, installer backups, loader credentials and the loader SSH key without reading secret contents. Three targets had extra local allow entries; their ACLs were restricted to the owner, SYSTEM and Administrators. The already protected loader key was left unchanged. All four target audits passed, with prior permission metadata retained privately and a guarded rollback helper.

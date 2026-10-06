@@ -299,13 +299,20 @@ restored. Its presence does not establish a fresh current configuration backup
 or a SQL/database recovery point. The [Wazuh backup guide](https://documentation.wazuh.com/current/migration-guide/creating/wazuh-central-components.html)
 lists current configuration, certificate and data backup requirements separately.
 
-The backup folder and archive both inherit read/execute permission for an
+At that review, the backup folder and archive both inherited read/execute permission for an
 additional local group containing two local accounts, besides the user's
 account, SYSTEM and administrators. This is a local access-control finding, not proof
 of internet exposure, credential use or compromise. No ACL or group membership
 was changed, and no secret contents were read. Review the intended backup
 readers and storage/encryption before placing a new sensitive backup there.
 Raw account identities, paths and ACL output remain private.
+
+October 5 follow-up: the reviewed Windows installer-backup directory and private
+evidence/credentials had their local readers restricted and passed a separate
+metadata audit without opening the archive. The next scheduled load still
+succeeded. That closes the reviewed local-reader finding, not storage encryption
+or restoration: elevated output later reported the system drive unencrypted.
+Recovery remains owner-deferred. See [hardening evidence](hardening-validation.md).
 
 ### Current Configuration Backup and HTTPS Preparation
 
@@ -487,7 +494,7 @@ validation remain open; no browsing-privacy or Suricata deployment is claimed.
 - [x] Record user-reported dashboard certificate installation/five active services and independently verify trusted Windows IPv4 HTTPS without authentication or validation bypass.
 - [x] Observe authenticated local dashboard access and record user-reported renewal setup, successful initial service run and enabled daily timer.
 - [ ] Observe the first automatic renewal check and an eventual actual certificate replacement; live rotation/failure recovery remain unproven.
-- [ ] Review backup readers/storage protection before creating fresh sensitive copies; existing backup ACLs were not changed.
+- [x] Close the reviewed local backup-reader finding with restricted permissions and post-change metadata checks ([hardening evidence](hardening-validation.md)); storage encryption remains open.
 - [ ] Retain exact current configuration backups privately and validate separate backup/restore capability before further VM/firewall changes; a checkpoint and console access are not a tested restore.
 - [ ] Complete authenticated tailnet SSH and approved off-LAN dashboard tests; local trusted dashboard login is verified.
 - [ ] Deferred: approved admin access from another network; phone access was declined. Remaining denied services/address families still need independent testing.

@@ -36,8 +36,11 @@ prerequisite for this pilot. See the [pilot guide](docs/suricata-pilot.md) and
 **Owner-selected focus:** finish bounded hardening checks before adding capture.
 Recovery was deferred, not passed; no database backup or restore drill ran.
 Reviewed private-file permissions passed, with the next automatic ingestion
-still successful. The administrator firewall-logging helper is tested but its
-live apply remains pending. See [hardening results and gates](docs/hardening-validation.md).
+still successful. The administrator firewall-logging helper now passed, with
+independent effective-policy readback. Actual log-output verification and
+disk/boot protections remain open; an unencrypted system drive and disabled
+Secure Boot were identified, without changing either. See
+[hardening results and gates](docs/hardening-validation.md).
 The following sequence describes the network work after these checks.
 
 1. Preserve working Tailscale access and leave the phone denied. Check Ubuntu resources/package state; follow up recorded host memory pressure and loader/reporting health before adding sustained load.

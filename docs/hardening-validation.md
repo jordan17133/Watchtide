@@ -1,8 +1,9 @@
 # Hardening Validation
 
-Updated October 5, 2026. This closes the reviewed private-file permissions check,
-not the entire hardening stage. Recovery work was deferred by the owner; no
-database backup or restore drill was performed during this check.
+Updated October 5, 2026. This closes the reviewed private-file permissions and
+firewall-logging configuration checks, not the entire hardening stage. Recovery
+work was deferred by the owner; no database backup or restore drill was performed
+during this check.
 
 ## What This Means
 
@@ -62,11 +63,12 @@ Local ACLs do not protect against malware running as the owner, an administrator
 or physical access to an unencrypted drive. Future secret files need their own
 permission checks.
 
-## Firewall Logging: Prepared, Apply Pending
+## Firewall Logging Configuration: Verified
 
-All three effective firewall profiles were enabled, with incoming connections
-blocked by default and outgoing connections allowed. `ActiveStore` reported
-blocked logging off and a 4 MB log limit. Earlier registry settings recorded
+Before the change, all three effective firewall profiles were enabled, with
+incoming connections blocked by default and outgoing connections allowed.
+`ActiveStore` reported blocked logging off and a 4 MB log limit. Earlier registry
+settings recorded
 logging on and 16 MB, but effective policy did not match. The cause has not been
 established; no new CIS score is inferred from either observation.
 
@@ -79,11 +81,45 @@ traffic logging, routing, VPN permissions or services.
 - [x] Read-only effective-policy baseline captured.
 - [x] Eight mocked assertions passed, including policy-override failure and restoration.
 - [x] Non-elevated apply refused before changes.
-- [ ] Administrator-run apply and independent effective-policy readback.
+- [x] Administrator-run apply and independent effective-policy readback.
 - [ ] Verify actual log output without opening ports or disrupting the SOC.
 
-The helper also reads disk-encryption and Secure Boot status if available. It
-does not enable encryption, print recovery keys or reboot Windows.
+The owner's administrator-run helper reported `FIREWALL_BLOCKED_LOGGING_VERIFIED`.
+Independent effective-policy readback confirmed all three profiles still enabled,
+blocked logging on and a 16 MB limit, with incoming/outgoing defaults and allowed-
+traffic logging unchanged. The saved before/after metadata matched that result;
+its private evidence directory passed the restricted-permissions audit. Sysmon,
+the Wazuh agent and Tailscale remained running. The script does not modify rules
+or restart services; this is not a full before/after audit of every firewall rule.
+
+The first scheduled loader run after the logging change succeeded: 144 alerts
+inserted in 2.788 seconds. This independently checks immediate ingestion
+continuity, not sustained performance or a new Power BI refresh.
+
+Reading the actual firewall log was denied to the normal automation account.
+Its permissions were not weakened to bypass that restriction. A read-only check
+from the owner's administrator window remains necessary; configuration readback
+alone does not prove that a new dropped packet was written or collected in Wazuh.
+
+## Disk And Boot Findings: Open
+
+The owner's administrator output reported the Windows system drive fully
+decrypted with BitLocker protection off, and Secure Boot disabled. Independent
+Windows registry readback also showed Secure Boot off; firmware inventory
+reported UEFI and the installed Windows edition supports BitLocker. Disk state
+is based on the owner's elevated output, not an independent encryption scan.
+
+In simple terms, drive encryption protects stored files if the computer or drive
+is accessed offline; Secure Boot checks trusted software during startup. Neither
+finding establishes compromise. These protections do not replace monitoring,
+patching, account security or backups.
+
+TPM readiness, recovery-key custody, firmware compatibility/current boot
+certificates and a planned restart still need review. Do not enable encryption,
+clear the TPM, reset boot keys or change firmware settings as an automatic next
+step. On eligible systems, enabling Secure Boot may also make automatic device
+encryption eligible; recovery arrangements should precede that change. No
+encryption/boot change or restart was performed in this follow-up.
 
 ## Publication Safeguard
 
@@ -107,7 +143,10 @@ runtime environment.
 - [ ] Verify current vulnerability findings against the actual installed products
   and authoritative affected-version ranges before patching or suppressing them.
 - [ ] Review account MFA, unused access and remaining host/guest exposure privately.
-- [ ] Independently verify disk encryption, recovery-key custody and Secure Boot.
+- [x] Record owner-reported unencrypted system drive and disabled Secure Boot;
+  independently verify Secure Boot's Windows state and UEFI firmware mode.
+- [ ] Check TPM and firmware readiness, establish recovery-key custody and schedule
+  any separately approved disk-encryption/boot changes; verify their result afterward.
 - [ ] Validate additional compatible controls in small batches, with analyst
   visibility and rollback. Use audit before blocking for new ASR restrictions.
 - [ ] Refresh Wazuh posture evidence and document accepted exceptions.
@@ -123,3 +162,5 @@ coverage remain separate work; the existing service stays masked.
 - [Microsoft inherited-permissions caveat](https://learn.microsoft.com/en-us/troubleshoot/windows-server/windows-security/inherited-permissions-not-automatically-update)
 - [Microsoft .NET file-permission API](https://learn.microsoft.com/en-us/dotnet/api/system.io.filesystemaclextensions.setaccesscontrol)
 - [Microsoft ASR deployment FAQ](https://learn.microsoft.com/en-us/defender-endpoint/attack-surface-reduction-faq)
+- [Microsoft BitLocker overview and automatic-encryption behavior](https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/)
+- [Microsoft Secure Boot explanation and firmware guidance](https://support.microsoft.com/en-gb/windows/security/devicesecurity/windows-11-and-secure-boot)

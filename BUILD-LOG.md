@@ -2,7 +2,7 @@
 
 A running record of how the Watchtide home SOC lab was built, what broke, and how it was fixed. The step-by-step plan lives in [SentinelGrid-Build-Runbook.md](SentinelGrid-Build-Runbook.md). Alert investigations live in [triage/](triage/).
 
-## Status at a glance (2026-10-05)
+## Status at a glance (2026-10-06)
 
 | Runbook stage | Status |
 |---|---|
@@ -13,7 +13,7 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
 | 4. Prove the event path end to end | Done, traced through every layer (docs/event-trace.md) |
 | 5. Suricata network telemetry | Partial: controlled offline event verified through dashboard/Indexer/SQL/Power BI; live capture and whole-home coverage pending |
 | 6. Watchtide API on live Wazuh data | Private live API not started; public console serves a sanitized snapshot of real lab data |
-| 4b. Posture review | Done: 437 of 447 vulnerability findings resolved (10 open, zero Critical); CIS 27.1% to 37.0% |
+| 4b. Posture review | Historical baseline: 437 of 447 findings resolved, CIS 27.1% to 37.0%; reviewed file/logging, SOC runtime patch and Steam access checks pass; remaining hardening and fresh posture scan open |
 | 7. SQL Server reporting storage | Done: loader every 15 minutes; case log with history (`warehouse/cases.py`) meets the incident gate |
 | 8. Power BI report | All six pages rendered after refresh; network fields/metrics/filter verified; saved model parsed, available-schema checks passed with one unpublished schema; imported cache ignored |
 | Detection validation | In progress: controlled SSH password-guessing test detected end to end; every Critical alert since tuning explained |
@@ -45,6 +45,14 @@ Windows host                         |
 - The VM is reached by hostname (`soc-vm.mshome.net`) instead of IP, because Hyper-V's Default Switch hands out a new IP on every VM reboot.
 
 ## Timeline
+
+### 2026-10-06: Finish the bounded software-hardening batch
+- Applied the SOC's Python 3.14.7-to-3.14.8 security update on October 5 after authenticating official installers and testing an isolated candidate. Preserved the existing environment/PATH, copied the prior runtime privately, temporarily paused only the Ready loader schedule and restored it; no reboot or unrelated process termination.
+- Candidate and installed-runtime regressions passed: 168 Python tests, eleven opt-in SQL skips. Post-patch automatic ingestion inserted 66 alerts in 2.633 seconds; an additional scheduled-task check inserted 187 in 3.748 seconds. Runtime file copies are not a tested system backup or installer rollback.
+- Kept Steam installed. The first elevated attempt stopped at a registry lookup before changes; explicit 64-bit registry APIs corrected the lookup. October 6 apply and independent readback verified two restricted roots, owner preservation and five unchanged signed client/service-source binaries. Isolated unelevated file/registry write probes passed and were removed; actual login/game/updater use remains untested.
+- A fresh post-Steam task run inserted 102 alerts in 26.622 seconds, and trusted dashboard HTTPS returned HTTP 200 without bypass. Two preceding automatic runs took 1.791 and 1.920 seconds; variable timing does not close sustained performance/resource follow-up. Sysmon, Wazuh agent and Tailscale remain running; Steam's service remains stopped/Manual.
+- The owner requested keeping six unrelated Python workloads running. Downloaded/authenticated the 3.13.16 installer but did not execute it. All twelve SOC distribution versions returned zero listed advisories in release-specific PyPI queries; source/provenance/native-component limits remain explicit. Selected libraries in the other environments were inventoried read-only; their advisory and workload compatibility checks remain open.
+- All four PowerShell suites passed in 5.1 and 7: 57 assertions per runtime, including guarded rollback readback/concurrent-edit refusal. No new scanner-resolution credit, CIS score, Power BI refresh, boot/encryption action, network-policy change or Suricata live capture is claimed. See [software evidence and remaining gates](docs/software-hardening-validation.md).
 
 ### 2026-10-05: Assess all ten remaining scanner findings without suppressing them
 - Compared the October 5 warehouse snapshot with actual installed runtimes, package manifests, signed Steam components and primary CVE/vendor records. Counts remain ten: seven High, three Medium, zero Critical; no new resolved-finding credit.

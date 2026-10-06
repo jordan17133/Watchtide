@@ -44,10 +44,14 @@ custody and remaining firmware checks precede any separately approved change.
 The system drive is still unencrypted and host Secure Boot remains off. See
 [hardening results and gates](docs/hardening-validation.md).
 The [ten-finding software assessment](docs/vulnerability-applicability-review.md)
-is now complete as a read-only review, not remediation. Newer Python security
-releases, Steam permission concerns and uncertain app/component mappings remain
-open. Preserve current workloads; verify changes and fresh inventory before
-closing these gates. No findings were suppressed or credited as newly resolved.
+is complete as a dated read-only review. The subsequent
+[October 5-6 software batch](docs/software-hardening-validation.md) applied the
+SOC Python 3.14.8 patch and reviewed Steam access restrictions, with regression,
+owner-compatibility, fresh-ingestion and trusted-HTTPS checks. The owner asked
+to preserve six other Python workloads; their authenticated 3.13 installer is
+staged only. Actual Steam game/update tests, dependency review, uncertain
+app/component mappings and fresh inventory remain open. No findings were
+suppressed or credited as newly resolved.
 The following sequence describes the network work after these checks.
 
 1. Preserve working Tailscale access and leave the phone denied. Check Ubuntu resources/package state; follow up recorded host memory pressure and loader/reporting health before adding sustained load.

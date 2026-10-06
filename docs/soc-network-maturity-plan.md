@@ -1,6 +1,6 @@
 # Watchtide Network SOC Maturity Plan
 
-Updated October 5, 2026. This is the expanded target and acceptance checklist,
+Updated October 6, 2026. This is the expanded target and acceptance checklist,
 not a claim that the planned controls are deployed. The target is a dependable,
 private home SOC that explains observed device activity, detects suspicious
 behavior and supports evidence-based investigation and recovery.
@@ -18,7 +18,7 @@ Power BI report. Live capture and whole-home coverage are not yet established.
 | 2 Sysmon | Windows endpoint telemetry established | Do not assume every desired event type is collected |
 | 3 Agent | Existing Windows agent/log collection established | Every additional endpoint needs its own health and event-path proof |
 | 4 Event path | Existing Windows event trace completed | New devices and new telemetry types require separate traces |
-| 4b Posture | Documented remediation and CIS improvement from 27.1% to 37.0% | A baseline score is not complete hardening; exceptions and new findings need review |
+| 4b Posture | Historical CIS improvement from 27.1% to 37.0%; file/logging checks, SOC Python security patch and reviewed Steam access restrictions verified | Other Python workloads, dependency/CVE review, fresh posture inventory, disk/boot and account/exposure gates remain open |
 | 4c Private access | Device-scoped Tailscale SSH/HTTPS grant and trusted local dashboard access verified | Off-network administration deferred; renewal replacement, revocation and other access/recovery gates remain open |
 | 5 Network detection | Suricata 8.0.7 offline positive/negative controls and full reporting trace pass | Live capture, routine network telemetry and wider coverage remain open |
 | 6 Console | Public sanitized snapshot deployed | Private live analyst API/console not deployed |
@@ -34,6 +34,9 @@ Power BI import has its own October 5, 6:20 PM Eastern snapshot time.
 The [report validation](network-reporting-validation.md),
 [refresh diagnosis](report-refresh-reliability.md) and
 [access results](private-access-validation.md) retain their detailed limits.
+The [applied software batch](software-hardening-validation.md) records the
+October 5-6 patch/access results and preserved workload boundaries; it does not
+replace those earlier reporting snapshots with a new refresh or posture scan.
 
 ## Questions The Finished SOC Should Answer
 

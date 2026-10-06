@@ -1,7 +1,7 @@
 # Hardening Validation
 
-Updated October 5, 2026. This closes the reviewed private-file permissions and
-firewall-logging configuration checks, not the entire hardening stage. Recovery
+Updated October 6, 2026. This closes the reviewed private-file permissions,
+firewall-logging and bounded software checks, not the entire hardening stage. Recovery
 work was deferred by the owner; no database backup or restore drill was performed
 during this check.
 
@@ -156,11 +156,19 @@ runtime environment.
 - [x] Complete a read-only assessment of all ten current vulnerability findings,
   with installed-product evidence, primary advisories and bounded dispositions
   ([review](vulnerability-applicability-review.md)). The verified Python interpreter
-  is outside its flagged CVE's affected range; Steam permission concerns and
+  is outside its flagged CVE's affected range; full Steam CVE mitigation and
   uncertain mappings remain open. Detector findings were not suppressed.
-- [ ] Apply compatible Python security updates in a controlled maintenance window;
-  separately review active environment dependencies, Steam permissions/retention
-  and uncertain product mappings. Verify health and fresh inventory afterward.
+- [x] Apply/test the SOC runtime security update to Python 3.14.8; verify restored
+  scheduling, fresh SQL ingestion and trusted dashboard HTTPS.
+- [x] Preserve Steam and restrict the reviewed broad Users folder/registry write
+  grants; independently verify owners, five unchanged binaries and unelevated
+  owner write compatibility ([software batch](software-hardening-validation.md)).
+- [x] Check release-specific PyPI advisory records for all twelve installed SOC
+  distributions; zero listed advisories at this bounded check, not proof of safety.
+- [ ] Complete actual Steam login/game/update checks, remaining Python 3.13
+  workload maintenance, dependency review and uncertain product mappings.
+  The 3.13 installer is authenticated and staged only; owner requested that
+  six unrelated workloads stay running. Fresh posture inventory remains separate.
 - [ ] Review account MFA, unused access and remaining host/guest exposure privately.
 - [x] Record owner-reported unencrypted system drive and disabled Secure Boot;
   independently verify Secure Boot's Windows state and UEFI firmware mode.

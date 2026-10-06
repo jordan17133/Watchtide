@@ -10,11 +10,11 @@ Watchtide is a working security operations lab: a Windows endpoint instrumented 
 
 ## What is coming next
 
-Updated October 5, 2026. The pipeline and investigations below are built; these next milestones have their own validation gates.
+Updated October 6, 2026. The pipeline and investigations below are built; these next milestones have their own validation gates.
 
 | Priority | Work | Status | Evidence to publish |
 |---|---|---|---|
-| Current | **Bounded hardening checks** | Private-file and logging checks verified; ten-finding applicability assessment completed; Python patch gaps and Steam permission concerns open; disk/boot protection open; recovery deferred | [Hardening gates](docs/hardening-validation.md), [vulnerability review](docs/vulnerability-applicability-review.md) |
+| Current | **Bounded hardening checks** | Private-file/logging checks, SOC Python 3.14.8 patch and reviewed Steam access restrictions verified; other Python workloads kept running; disk/boot and recovery gates remain open | [Hardening gates](docs/hardening-validation.md), [applied software evidence](docs/software-hardening-validation.md), [dated vulnerability assessment](docs/vulnerability-applicability-review.md) |
 | Next | **Suricata traffic, rules and reporting pilot** | Controlled alert verified through dashboard/Indexer/SQL and Power BI; all six report pages render; live capture still disabled and service masked | [Engine validation](docs/suricata-offline-validation.md), [SIEM/SQL handoff](docs/suricata-wazuh-handoff.md), [six-page reporting proof and limits](docs/network-reporting-validation.md), then measured live capture |
 | Retained | **Private SOC access with Tailscale** | Local trusted HTTPS/login verified; renewal setup reported successful; phone remains denied; approved off-LAN testing deferred | [Recorded access results and open gates](docs/private-access-validation.md), renewal upkeep and remaining recovery/reporting checks |
 | Deferred | **Whole-home browsing-privacy routing** | Extra VPN/router work declined for now; no privacy-egress change deployed | A separately approved design and per-device routing/DNS/IPv6/failure tests before any coverage claim |
@@ -27,9 +27,18 @@ The [private-access plan](docs/private-access-plan.md) explains the VPN decision
 [applicability assessment](docs/vulnerability-applicability-review.md). The flagged
 Python CVE does not apply to the verified interpreter, but newer security releases
 are available for both runtime lines. Steam's client is newer than its uninstall
-version, yet broad local permissions remain; a blanket false-positive or reinstall
+version, yet broad local permissions were present; a blanket false-positive or reinstall
 claim is not justified. Desktop-app advisory scope also needs validation. Nothing
 was suppressed, patched or newly credited as resolved in this read-only pass.
+
+**Applied software batch (October 5-6):** the SOC's existing environment now uses
+Python 3.14.8; candidate and installed-runtime tests passed, and fresh ingestion
+and trusted HTTPS remain successful. Steam stays installed with the reviewed
+broad Users folder/registry write grants removed; owners and five binary hashes
+are unchanged, and unelevated owner write probes pass. Actual Steam gameplay and
+updater checks are not claimed. The other Python installer is verified/staged,
+not run: six unrelated workloads remain active at the owner's request. No new
+vulnerability-resolution count or CIS score is inferred ([evidence and limits](docs/software-hardening-validation.md)).
 
 **Network pilot status:** the bounded Suricata pilot has a working offline rule test: one marked packet alerted, two controls did not. The corrected [Wazuh handoff](docs/suricata-wazuh-handoff.md) completed; the same labeled alert was verified in the authenticated dashboard, Indexer and SQL. A deployed read-only network view preserves its fields, timestamps and controlled-test context. The existing Power BI project refreshed and all six pages rendered; Network Detection shows one controlled validation and matching event fields, with its filter tested back to All ([reporting evidence and schema limit](docs/network-reporting-validation.md)). Suricata stays masked. The next network step is a separately reviewed limited live capture point, after resource checks, not whole-home monitoring. Keep existing Tailscale access; extra VPN/router work and phone dashboard access remain deferred. The [engine validation](docs/suricata-offline-validation.md), [pilot guide](docs/suricata-pilot.md) and [network plan](docs/network-coverage-plan.md) separate proof from remaining scope. Private-access, recovery and sustained loader-performance checks stay open. Tailscale enrollment is not ordinary browsing-privacy protection.
 

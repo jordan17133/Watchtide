@@ -1,7 +1,7 @@
 # Hardening Validation
 
 Updated October 6, 2026. This closes the reviewed private-file permissions,
-firewall-logging and bounded software checks, not the entire hardening stage. Recovery
+firewall-logging, bounded software and loader SSH checks, not the entire hardening stage. Recovery
 work was deferred by the owner; no database backup or restore drill was performed
 during this check.
 
@@ -83,8 +83,10 @@ traffic logging, routing, VPN permissions or services.
 - [x] Administrator-run apply and independent effective-policy readback.
 - [x] Record owner-performed administrator read of actual log output without
   opening ports or disrupting the SOC.
-- [ ] Interpret selected packet records and verify firewall-log collection into
-  Wazuh separately before claiming end-to-end firewall telemetry.
+- [x] Independently interpret a bounded packet-log sample and inspect actual
+  local/shared agent sources and Windows audit policy.
+- [ ] Configure and end-to-end test bounded blocked-traffic collection before
+  claiming firewall visibility in Wazuh.
 
 The owner's administrator-run helper reported `FIREWALL_BLOCKED_LOGGING_VERIFIED`.
 Independent effective-policy readback confirmed all three profiles still enabled,
@@ -107,6 +109,14 @@ log-output check based on owner-supplied output, not independent inspection of
 the raw records. It does not mean 163 attackers or confirmed attacks, identify
 each packet's origin, or prove collection in Wazuh. Counts are from a bounded
 sample, not an incident metric or a complete network-traffic inventory.
+
+The October 6 independent administrator audit subsequently parsed 2,000 valid
+`DROP` records, of which 1,978 were UDP 5353 multicast, consistent with local
+device discovery. It confirmed there is no packet-log source in the actual
+local/shared agent settings; Security events 5152/5157 are excluded and the
+associated Windows packet-drop/connection auditing is off. Thus interpretation
+is now checked, but SIEM collection remains open. No firewall/audit/agent setting
+was changed by that read-only audit. See [host evidence and limits](host-exposure-validation.md).
 
 ## Disk And Boot Findings: Open
 
@@ -170,6 +180,12 @@ runtime environment.
   The 3.13 installer is authenticated and staged only; owner requested that
   six unrelated workloads stay running. Fresh posture inventory remains separate.
 - [ ] Review account MFA, unused access and remaining host/guest exposure privately.
+- [x] Explicitly bind the loader SSH forward to loopback, require verified host-key
+  checking and test actual listener/search/cleanup plus subsequent scheduled ingestion.
+- [x] Read-only review of current listeners, effective inbound exceptions and the
+  specific blocked-traffic collection gap; publish only bounded aggregates.
+- [ ] Confirm remote Hyper-V management usage before restricting its broad rules;
+  preserve working local VM access and test allowed/denied behavior afterward.
 - [x] Record owner-reported unencrypted system drive and disabled Secure Boot;
   independently verify Secure Boot's Windows state and UEFI firmware mode.
 - [x] Record owner-performed basic TPM readiness: present, ready, enabled and activated.

@@ -25,6 +25,13 @@ Power BI report. Live capture and whole-home coverage are not yet established.
 | 7 Warehouse | Scheduled ingestion and read-only report views work; guarded SQL snapshot-read fix enabled | Sustained performance, late-event proof, backup/restore and actual reporting-account review remain open |
 | 8 Power BI | All six existing pages rendered after refresh; network fields/metrics/filter checked | Refresh-duration benchmark and one unpublished visual-schema check remain open |
 
+The October 6 [host exposure audit](host-exposure-validation.md) verified strict,
+loopback-bound loader SSH and subsequent automatic ingestion, interpreted a
+bounded blocked-packet sample and confirmed a Windows blocked-traffic collection
+gap. It also identified broad Hyper-V management exceptions for workflow review.
+This is partial host-level coverage evidence, not an inventory or packet feed for
+every device in the home. Firewall, audit and agent settings were unchanged.
+
 A fresh read-only warehouse check found 27,994 accumulated alerts and exactly
 one controlled-validation network record. Three recent automatic loads succeeded
 in 3.891, 2.398 and 3.257 seconds. These are point-in-time observations, not a

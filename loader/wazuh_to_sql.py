@@ -53,13 +53,16 @@ def ssh_tunnel(settings: dict):
     proc = subprocess.Popen(
         [
             "ssh", "-N",
-            "-L", f"{local_port}:127.0.0.1:9200",
+            "-L", f"127.0.0.1:{local_port}:127.0.0.1:9200",
             "-i", settings["SSH_KEY_FILE"],
             "-o", "BatchMode=yes",
+            "-o", "IdentitiesOnly=yes",
+            "-o", "GatewayPorts=no",
             "-o", "ExitOnForwardFailure=yes",
-            "-o", "StrictHostKeyChecking=accept-new",
+            "-o", "StrictHostKeyChecking=yes",
             target,
         ],
+        stdin=subprocess.DEVNULL,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.PIPE,
         creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),

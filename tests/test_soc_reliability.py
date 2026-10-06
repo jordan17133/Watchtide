@@ -27,6 +27,84 @@ def indexer_response(status=200, body=None):
     return indexer
 
 
+class TunnelTests(unittest.TestCase):
+    settings = {"SSH_TUNNEL_TARGET": "soc-user@soc.example.test",
+                "SSH_KEY_FILE": "fixture-key", "SSH_TUNNEL_LOCAL_PORT": "19201"}
+
+    def test_tunnel_pins_loopback_known_host_and_noninteractive_authentication(self):
+        process = Mock()
+        process.poll.return_value = None
+        connection = Mock()
+        with patch.object(loader.subprocess, "Popen", return_value=process) as spawn, \
+             patch.object(loader.socket, "create_connection", return_value=connection) as connect:
+            with loader.ssh_tunnel(self.settings):
+                process.terminate.assert_not_called()
+            args = spawn.call_args.args[0]
+            self.assertEqual(args[args.index("-L") + 1], "127.0.0.1:19201:127.0.0.1:9200")
+            for option in ("StrictHostKeyChecking=yes", "GatewayPorts=no", "IdentitiesOnly=yes",
+                           "BatchMode=yes", "ExitOnForwardFailure=yes"):
+                self.assertIn(option, args)
+            self.assertNotIn("StrictHostKeyChecking=accept-new", args)
+            self.assertEqual(spawn.call_args.kwargs["stdin"], loader.subprocess.DEVNULL)
+            connect.assert_called_once_with(("127.0.0.1", 19201), timeout=1)
+            connection.close.assert_called_once()
+            process.terminate.assert_called_once()
+            process.wait.assert_called_once_with(timeout=10)
+
+    def test_default_tunnel_port_is_also_loopback_only(self):
+        process = Mock()
+        process.poll.return_value = None
+        settings = {k: v for k, v in self.settings.items() if k != "SSH_TUNNEL_LOCAL_PORT"}
+        with patch.object(loader.subprocess, "Popen", return_value=process) as spawn, \
+             patch.object(loader.socket, "create_connection", return_value=Mock()):
+            with loader.ssh_tunnel(settings):
+                pass
+            args = spawn.call_args.args[0]
+            self.assertEqual(args[args.index("-L") + 1], "127.0.0.1:19200:127.0.0.1:9200")
+
+    def test_ssh_refusal_fails_closed_and_cleans_up(self):
+        process = Mock()
+        process.poll.return_value = 1
+        process.stderr.read.return_value = b"Host key verification failed."
+        with patch.object(loader.subprocess, "Popen", return_value=process), \
+             patch.object(loader.socket, "create_connection") as connect:
+            with self.assertRaisesRegex(RuntimeError, "SSH tunnel failed"):
+                with loader.ssh_tunnel(self.settings):
+                    self.fail("A refused connection must not yield.")
+            connect.assert_not_called()
+            process.terminate.assert_called_once()
+            process.wait.assert_called_once_with(timeout=10)
+
+    def test_tunnel_readiness_timeout_cleans_up(self):
+        process = Mock()
+        process.poll.return_value = None
+        with patch.object(loader.subprocess, "Popen", return_value=process), \
+             patch.object(loader.socket, "create_connection", side_effect=OSError("not ready")), \
+             patch.object(loader.time, "monotonic", side_effect=(0, 21)):
+            with self.assertRaisesRegex(RuntimeError, "did not open"):
+                with loader.ssh_tunnel(self.settings):
+                    self.fail("An unopened tunnel must not yield.")
+            process.terminate.assert_called_once()
+            process.wait.assert_called_once_with(timeout=10)
+
+    def test_downstream_failure_also_closes_tunnel(self):
+        process = Mock()
+        process.poll.return_value = None
+        with patch.object(loader.subprocess, "Popen", return_value=process), \
+             patch.object(loader.socket, "create_connection", return_value=Mock()):
+            with self.assertRaisesRegex(ValueError, "downstream"):
+                with loader.ssh_tunnel(self.settings):
+                    raise ValueError("downstream")
+            process.terminate.assert_called_once()
+            process.wait.assert_called_once_with(timeout=10)
+
+    def test_direct_mode_does_not_spawn_an_ssh_process(self):
+        with patch.object(loader.subprocess, "Popen") as spawn:
+            with loader.ssh_tunnel({}):
+                pass
+            spawn.assert_not_called()
+
+
 class IndexerTests(unittest.TestCase):
     def test_missing_and_failed_indices_raise_instead_of_empty_success(self):
         for status in (404, 403, 500):

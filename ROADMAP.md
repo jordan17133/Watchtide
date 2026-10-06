@@ -38,8 +38,13 @@ Recovery was deferred, not passed; no database backup or restore drill ran.
 Reviewed private-file permissions passed, with the next automatic ingestion
 still successful. The administrator firewall-logging helper now passed, with
 independent effective-policy readback. Owner-performed read-only checks also
-confirmed actual dropped-packet log output and basic TPM readiness. Log
-interpretation/SIEM collection and disk/boot protection remain open; recovery-key
+confirmed actual dropped-packet log output and basic TPM readiness. The October 6
+independent packet/audit/agent review now closes bounded log interpretation, but
+confirms blocked-traffic SIEM collection is absent. The loader's explicit loopback
+bind and strict host-key checking passed actual socket/search/cleanup and scheduled
+ingestion checks. Hyper-V management exceptions remain unchanged pending usage
+details ([host evidence](docs/host-exposure-validation.md)). SIEM collection,
+account/exposure follow-up and disk/boot protection remain open; recovery-key
 custody and remaining firmware checks precede any separately approved change.
 The system drive is still unencrypted and host Secure Boot remains off. See
 [hardening results and gates](docs/hardening-validation.md).

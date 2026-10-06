@@ -22,6 +22,11 @@ What is built, what comes next, and why. Each chapter ends the same way: build i
 
 ## Current Execution Order
 
+The expanded [network SOC maturity plan](docs/soc-network-maturity-plan.md)
+defines the device-coverage, routine-telemetry, correlation, analyst workflow,
+monitoring and recovery checklist. These are evidence-gated targets, not newly
+deployed features. Its phases extend, rather than renumber, the runbook stages.
+
 The immediate goal is a bounded Suricata pilot for traffic interpretation,
 rules and reporting. Whole-home SOC coverage remains the longer-term goal.
 The owner deferred extra VPN/router work; browsing-privacy routing is not a

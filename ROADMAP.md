@@ -37,9 +37,11 @@ prerequisite for this pilot. See the [pilot guide](docs/suricata-pilot.md) and
 Recovery was deferred, not passed; no database backup or restore drill ran.
 Reviewed private-file permissions passed, with the next automatic ingestion
 still successful. The administrator firewall-logging helper now passed, with
-independent effective-policy readback. Actual log-output verification and
-disk/boot protections remain open; an unencrypted system drive and disabled
-Secure Boot were identified, without changing either. See
+independent effective-policy readback. Owner-performed read-only checks also
+confirmed actual dropped-packet log output and basic TPM readiness. Log
+interpretation/SIEM collection and disk/boot protection remain open; recovery-key
+custody and remaining firmware checks precede any separately approved change.
+The system drive is still unencrypted and host Secure Boot remains off. See
 [hardening results and gates](docs/hardening-validation.md).
 The following sequence describes the network work after these checks.
 

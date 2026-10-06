@@ -68,8 +68,7 @@ permission checks.
 Before the change, all three effective firewall profiles were enabled, with
 incoming connections blocked by default and outgoing connections allowed.
 `ActiveStore` reported blocked logging off and a 4 MB log limit. Earlier registry
-settings recorded
-logging on and 16 MB, but effective policy did not match. The cause has not been
+settings recorded logging on and 16 MB, but effective policy did not match. The cause has not been
 established; no new CIS score is inferred from either observation.
 
 `windows/Set-WatchtideFirewallLogging.ps1` changes only local blocked-traffic
@@ -82,7 +81,10 @@ traffic logging, routing, VPN permissions or services.
 - [x] Eight mocked assertions passed, including policy-override failure and restoration.
 - [x] Non-elevated apply refused before changes.
 - [x] Administrator-run apply and independent effective-policy readback.
-- [ ] Verify actual log output without opening ports or disrupting the SOC.
+- [x] Record owner-performed administrator read of actual log output without
+  opening ports or disrupting the SOC.
+- [ ] Interpret selected packet records and verify firewall-log collection into
+  Wazuh separately before claiming end-to-end firewall telemetry.
 
 The owner's administrator-run helper reported `FIREWALL_BLOCKED_LOGGING_VERIFIED`.
 Independent effective-policy readback confirmed all three profiles still enabled,
@@ -97,9 +99,14 @@ inserted in 2.788 seconds. This independently checks immediate ingestion
 continuity, not sustained performance or a new Power BI refresh.
 
 Reading the actual firewall log was denied to the normal automation account.
-Its permissions were not weakened to bypass that restriction. A read-only check
-from the owner's administrator window remains necessary; configuration readback
-alone does not prove that a new dropped packet was written or collected in Wazuh.
+Its permissions were not weakened to bypass that restriction. The owner then
+performed the read-only check from the administrator window. Reported evidence:
+a 16,412-byte log, last written October 5 at 9:42:17 PM Eastern (after the apply),
+and 163 `DROP` lines in the last 200 lines sampled. This closes the basic local
+log-output check based on owner-supplied output, not independent inspection of
+the raw records. It does not mean 163 attackers or confirmed attacks, identify
+each packet's origin, or prove collection in Wazuh. Counts are from a bounded
+sample, not an incident metric or a complete network-traffic inventory.
 
 ## Disk And Boot Findings: Open
 
@@ -109,12 +116,18 @@ Windows registry readback also showed Secure Boot off; firmware inventory
 reported UEFI and the installed Windows edition supports BitLocker. Disk state
 is based on the owner's elevated output, not an independent encryption scan.
 
+The owner's subsequent read-only `Get-Tpm` output reported `TpmPresent`,
+`TpmReady`, `TpmEnabled` and `TpmActivated` all true. This passes basic TPM
+readiness; it does not verify TPM version, attestation, encryption protectors
+or complete firmware compatibility. These findings concern the Windows host,
+not the Ubuntu VM's separate Hyper-V Secure Boot setting.
+
 In simple terms, drive encryption protects stored files if the computer or drive
 is accessed offline; Secure Boot checks trusted software during startup. Neither
 finding establishes compromise. These protections do not replace monitoring,
 patching, account security or backups.
 
-TPM readiness, recovery-key custody, firmware compatibility/current boot
+Recovery-key custody, remaining firmware compatibility/current boot
 certificates and a planned restart still need review. Do not enable encryption,
 clear the TPM, reset boot keys or change firmware settings as an automatic next
 step. On eligible systems, enabling Secure Boot may also make automatic device
@@ -145,8 +158,10 @@ runtime environment.
 - [ ] Review account MFA, unused access and remaining host/guest exposure privately.
 - [x] Record owner-reported unencrypted system drive and disabled Secure Boot;
   independently verify Secure Boot's Windows state and UEFI firmware mode.
-- [ ] Check TPM and firmware readiness, establish recovery-key custody and schedule
-  any separately approved disk-encryption/boot changes; verify their result afterward.
+- [x] Record owner-performed basic TPM readiness: present, ready, enabled and activated.
+- [ ] Review remaining firmware/TPM details, establish independent recovery-key
+  custody and schedule any separately approved disk-encryption/boot changes;
+  verify their result afterward.
 - [ ] Validate additional compatible controls in small batches, with analyst
   visibility and rollback. Use audit before blocking for new ASR restrictions.
 - [ ] Refresh Wazuh posture evidence and document accepted exceptions.
@@ -164,3 +179,5 @@ coverage remain separate work; the existing service stays masked.
 - [Microsoft ASR deployment FAQ](https://learn.microsoft.com/en-us/defender-endpoint/attack-surface-reduction-faq)
 - [Microsoft BitLocker overview and automatic-encryption behavior](https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/)
 - [Microsoft Secure Boot explanation and firmware guidance](https://support.microsoft.com/en-gb/windows/security/devicesecurity/windows-11-and-secure-boot)
+- [Microsoft read-only TPM status command](https://learn.microsoft.com/en-us/powershell/module/trustedplatformmodule/get-tpm)
+- [Microsoft recovery-key storage guidance](https://support.microsoft.com/en-us/windows/security/encryption/back-up-your-bitlocker-recovery-key)

@@ -46,6 +46,10 @@ Windows host                         |
 
 ## Timeline
 
+### 2026-10-05: Confirm local firewall log output and basic TPM readiness
+- Owner-performed read-only checks in administrator PowerShell reported a 16,412-byte firewall log, updated at 9:42:17 PM Eastern after the logging change, with 163 `DROP` records in the last 200 lines. This passes the basic local output check based on supplied results; raw records, exact packet timestamps and sources were not independently inspected. Packet counts are not confirmed attack or attacker counts. Interpretation and Wazuh collection remain separate gates.
+- `Get-Tpm` reported present, ready, enabled and activated. Basic TPM readiness passed, not disk encryption or complete firmware compatibility. The Windows system drive remains unencrypted and host Secure Boot remains off. Recovery-key custody and remaining firmware checks precede any separately approved change; no boot setting, TPM state, encryption, log permissions or service was changed by these read-only checks. See [hardening validation](docs/hardening-validation.md).
+
 ### 2026-10-05: Verify effective firewall logging and identify disk/boot gaps
 - The owner's administrator run returned `FIREWALL_BLOCKED_LOGGING_VERIFIED`. Independent readback confirmed blocked logging enabled with a 16 MB limit on all three enabled profiles; incoming/outgoing defaults and allowed-traffic logging remained unchanged. The saved metadata and protected evidence-directory permissions passed review. Sysmon, Wazuh and Tailscale remained running; no rule changes or service restarts were performed by the helper.
 - The first real scheduled loader run afterward succeeded with 144 alerts inserted in 2.788 seconds. No manual ingestion was needed; this confirms immediate pipeline continuity, not sustained performance or a new Power BI refresh.

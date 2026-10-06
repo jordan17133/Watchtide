@@ -46,6 +46,12 @@ Windows host                         |
 
 ## Timeline
 
+### 2026-10-05: Assess all ten remaining scanner findings without suppressing them
+- Compared the October 5 warehouse snapshot with actual installed runtimes, package manifests, signed Steam components and primary CVE/vendor records. Counts remain ten: seven High, three Medium, zero Critical; no new resolved-finding credit.
+- Verified Python 3.13.15 is outside CVE-2026-3087's affected range and contains the fixed extraction path. Separately identified September 30 security releases 3.13.16 and 3.14.8 as newer than the active workload/SOC runtimes; controlled patching and environment dependency review remain pending.
+- Steam's signed components report 10.96.30.42 rather than the uninstall entry's 2.10.91.91. Selected installation and registry ACLs still grant ordinary Users FullControl, so the eight findings cannot all be dismissed as inventory limitations. Confirmed permissions do not prove exploitability; no exploit, reinstall or ACL change was performed.
+- The installed OpenAI.Codex package still displays ChatGPT in its manifest at the detected version. The CVE describes browser rendering without a desktop affected-version range, so applicability remains unproven. Corrected older blanket reinstall/clearance advice below. Sysmon, Wazuh and Tailscale remain running; the latest three automatic loads succeeded. See [per-finding evidence, limits and patch checklist](docs/vulnerability-applicability-review.md).
+
 ### 2026-10-05: Confirm local firewall log output and basic TPM readiness
 - Owner-performed read-only checks in administrator PowerShell reported a 16,412-byte firewall log, updated at 9:42:17 PM Eastern after the logging change, with 163 `DROP` records in the last 200 lines. This passes the basic local output check based on supplied results; raw records, exact packet timestamps and sources were not independently inspected. Packet counts are not confirmed attack or attacker counts. Interpretation and Wazuh collection remain separate gates.
 - `Get-Tpm` reported present, ready, enabled and activated. Basic TPM readiness passed, not disk encryption or complete firmware compatibility. The Windows system drive remains unencrypted and host Secure Boot remains off. Recovery-key custody and remaining firmware checks precede any separately approved change; no boot setting, TPM state, encryption, log permissions or service was changed by these read-only checks. See [hardening validation](docs/hardening-validation.md).
@@ -284,7 +290,7 @@ Windows host                         |
 ### 2026-10-02 (evening): Vulnerability rescan after the Python retirement
 
 - Wazuh's next inventory scan confirmed the result: open findings fell from 39 to 10 (zero Critical). Retiring Python 3.11 cleared its 16 interpreter findings and the 14 findings in libraries installed in it (cryptography, PyJWT, urllib3, setuptools). Two new findings appeared (Python 3.13.15, a newer ChatGPT build), so 447 have been found in total and 437 resolved.
-- Remaining: Steam 8 (its Windows uninstall entry never updates, so a reinstall is needed), Python 3.13.15 1, ChatGPT 1.
+- Remaining at that scan: Steam 8, Python 3.13.15 1, ChatGPT 1. The initial interpretation was that Steam needed a reinstall because its uninstall version had not changed; the October 5 [applicability review](docs/vulnerability-applicability-review.md) supersedes that blanket advice with component and permission evidence.
 - Caveat: Wazuh's vulnerability detection reads the system-wide Python, not virtual environments. The migrated workload's virtual environment still carries the older cryptography, PyJWT and urllib3, so patching them there stays on the list even though the scanner cannot see them.
 - The console gained link-preview tags and a preview image, so shared links (LinkedIn, chat apps) show a card.
 
@@ -426,9 +432,12 @@ Windows host                         |
 - [x] Tuned only after a baseline existed: rules 100100 and 100101 were replayed against 674 stored alerts before deployment.
 
 ### Posture
-- [x] Updated Steam and the ChatGPT app (2026-10-02). ChatGPT should clear on the next inventory scan; Steam's 8 findings persist because Steam never updates its Windows uninstall version (2.10.91.91), so they need a reinstall from the current installer or acceptance as an inventory limitation.
+- [x] Recorded Steam and desktop-app updates on October 2; that update action did not prove all findings cleared. October 5 review confirms newer Steam components but broad local permissions, and uncertain desktop-advisory scope. No blanket reinstall, acceptance or automatic-clearance claim is retained ([assessment](docs/vulnerability-applicability-review.md)).
+- [x] Read-only applicability assessment of all ten October 5 scanner findings, with per-finding uncertainty retained; detector status and historical remediation counts unchanged.
+- [x] Owner selected keeping Steam installed; retain its normal use rather than uninstalling it.
+- [ ] Review supported Steam maintenance and bounded permission remediation; test and apply same-series Python security updates in a controlled window, then verify workload/loader health and fresh Wazuh inventory.
 - [x] Python 3.11 retired 2026-10-02, after the automation workload that depended on it moved to 3.13 (see the timeline).
-- [ ] Patch cryptography, PyJWT, urllib3 and setuptools inside Python 3.11 (14 findings) with a saved rollback, then verify the workload's health check.
+- [ ] Review cryptography, PyJWT, urllib3 and setuptools in the active workload environment; retiring global Python 3.11 does not prove these dependencies were patched. Preserve compatibility/rollback and verify workload health after any approved changes.
 - [x] CIS baseline recorded and hardened: 27.1% to 37.0% (docs/cis-baseline.md).
 - [ ] Review the remaining Administrative Templates failures in smaller batches; test Credential Guard and SmartScreen prevent-bypass.
 

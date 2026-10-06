@@ -43,6 +43,11 @@ interpretation/SIEM collection and disk/boot protection remain open; recovery-ke
 custody and remaining firmware checks precede any separately approved change.
 The system drive is still unencrypted and host Secure Boot remains off. See
 [hardening results and gates](docs/hardening-validation.md).
+The [ten-finding software assessment](docs/vulnerability-applicability-review.md)
+is now complete as a read-only review, not remediation. Newer Python security
+releases, Steam permission concerns and uncertain app/component mappings remain
+open. Preserve current workloads; verify changes and fresh inventory before
+closing these gates. No findings were suppressed or credited as newly resolved.
 The following sequence describes the network work after these checks.
 
 1. Preserve working Tailscale access and leave the phone denied. Check Ubuntu resources/package state; follow up recorded host memory pressure and loader/reporting health before adding sustained load.

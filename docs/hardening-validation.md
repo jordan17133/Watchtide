@@ -153,8 +153,14 @@ runtime environment.
 
 ## Remaining Hardening Gates
 
-- [ ] Verify current vulnerability findings against the actual installed products
-  and authoritative affected-version ranges before patching or suppressing them.
+- [x] Complete a read-only assessment of all ten current vulnerability findings,
+  with installed-product evidence, primary advisories and bounded dispositions
+  ([review](vulnerability-applicability-review.md)). The verified Python interpreter
+  is outside its flagged CVE's affected range; Steam permission concerns and
+  uncertain mappings remain open. Detector findings were not suppressed.
+- [ ] Apply compatible Python security updates in a controlled maintenance window;
+  separately review active environment dependencies, Steam permissions/retention
+  and uncertain product mappings. Verify health and fresh inventory afterward.
 - [ ] Review account MFA, unused access and remaining host/guest exposure privately.
 - [x] Record owner-reported unencrypted system drive and disabled Secure Boot;
   independently verify Secure Boot's Windows state and UEFI firmware mode.

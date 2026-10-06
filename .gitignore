@@ -19,3 +19,13 @@ warehouse/data/
 *.pcap
 *.pcapng
 /suricata/data/
+
+# Database backups, database files and private-key containers stay local.
+*.bak
+*.mdf
+*.ndf
+*.ldf
+*.pfx
+*.p12
+*.key
+*-key.pem

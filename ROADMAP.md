@@ -27,11 +27,18 @@ defines the device-coverage, routine-telemetry, correlation, analyst workflow,
 monitoring and recovery checklist. These are evidence-gated targets, not newly
 deployed features. Its phases extend, rather than renumber, the runbook stages.
 
-The immediate goal is a bounded Suricata pilot for traffic interpretation,
+The next network goal is a bounded Suricata pilot for traffic interpretation,
 rules and reporting. Whole-home SOC coverage remains the longer-term goal.
 The owner deferred extra VPN/router work; browsing-privacy routing is not a
 prerequisite for this pilot. See the [pilot guide](docs/suricata-pilot.md) and
 [network coverage plan](docs/network-coverage-plan.md).
+
+**Owner-selected focus:** finish bounded hardening checks before adding capture.
+Recovery was deferred, not passed; no database backup or restore drill ran.
+Reviewed private-file permissions passed, with the next automatic ingestion
+still successful. The administrator firewall-logging helper is tested but its
+live apply remains pending. See [hardening results and gates](docs/hardening-validation.md).
+The following sequence describes the network work after these checks.
 
 1. Preserve working Tailscale access and leave the phone denied. Check Ubuntu resources/package state; follow up recorded host memory pressure and loader/reporting health before adding sustained load.
 2. Completed: test the alert-only marker rule with a short, isolated benign positive/negative replay. Offline success is not live capture proof.
@@ -68,7 +75,7 @@ not prerequisites that must all precede the network pilot.
 
 **Refresh follow-up (October 5):** an actual Power BI attempt failed with a confirmed loader/read deadlock. Guarded committed-snapshot maintenance and isolated concurrency tests passed, and the approved quiet-window change is applied. All 18 report views passed a bounded read; the subsequent Desktop retest rendered all six pages, with single-table refresh persisted. Three recent automatic loads succeeded in 2.4-3.3 seconds. Sustained performance and refresh duration remain unproven: successful rendering and short loader runs are not a stable-load benchmark ([evidence](docs/report-refresh-reliability.md)).
 
-**Current focus (October 5, 2026):** the controlled offline event is verified through the existing dashboard, Indexer, SQL and Power BI. All six report pages render, and the new context filter resets to All ([reporting proof and schema limit](docs/network-reporting-validation.md)). Next: resource checks and a separately reviewed limited live capture point. Extra VPN/router work remains deferred. The Windows-only management grant remains unchanged; the phone stays denied and approved off-LAN administration stays deferred/unverified. Local trusted dashboard access and reported renewal setup are retained; automatic renewal and actual replacement remain unproven. Remaining exposure/revocation, recovery and sustained loader-performance checks stay open. The [pilot guide](docs/suricata-pilot.md), [network plan](docs/network-coverage-plan.md) and [access results](docs/private-access-validation.md) keep these gates separate.
+**Network checkpoint (October 5, 2026):** the controlled offline event is verified through the existing dashboard, Indexer, SQL and Power BI. All six report pages render, and the new context filter resets to All ([reporting proof and schema limit](docs/network-reporting-validation.md)). After bounded hardening: resource checks and a separately reviewed limited live capture point. Extra VPN/router work remains deferred. The Windows-only management grant remains unchanged; the phone stays denied and approved off-LAN administration stays deferred/unverified. Local trusted dashboard access and reported renewal setup are retained; automatic renewal and actual replacement remain unproven. Remaining exposure/revocation, recovery and sustained loader-performance checks stay open. The [pilot guide](docs/suricata-pilot.md), [network plan](docs/network-coverage-plan.md) and [access results](docs/private-access-validation.md) keep these gates separate.
 
 ## Portfolio Chapters
 

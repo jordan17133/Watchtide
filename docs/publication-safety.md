@@ -1,6 +1,6 @@
 # Publication Safety
 
-Updated: 2026-10-04. The public console remains a static, historical snapshot
+Updated: 2026-10-05. The public console remains a static, historical snapshot
 with no live connection to Wazuh or the SQL warehouse.
 
 ## Publication Controls
@@ -25,6 +25,12 @@ with no live connection to Wazuh or the SQL warehouse.
   before use. The private deployed configuration retains its actual paths.
 - The generated FIM rules and agent XML are parsed and checked against every
   rewritten monitored path, including personal-profile secret and startup paths.
+- Database backup/files, private-key containers and packet captures have Git
+  exclusions. The publisher separately rejects tracked artifacts with the
+  reviewed extensions before replacing public files, including force-added ones.
+  Three regression tests cover rejected artifacts, public CA/source files and
+  preservation of the previous public checkout. These are filename guards,
+  not detection of every possible secret format ([hardening validation](hardening-validation.md)).
 
 ## Evidence And Limits
 

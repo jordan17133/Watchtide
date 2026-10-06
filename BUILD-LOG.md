@@ -46,6 +46,13 @@ Windows host                         |
 
 ## Timeline
 
+### 2026-10-05: Close the reviewed private-file hardening check
+- The owner deferred recovery work and selected hardening. No SQL backup or restore drill ran; recovery remains open.
+- Reviewed private evidence, installer backups, loader credentials and the loader SSH key without reading secret contents. Three targets had extra local allow entries; their ACLs were restricted to the owner, SYSTEM and Administrators. The already protected loader key was left unchanged. All four target audits passed, with prior permission metadata retained privately and a guarded rollback helper.
+- Reviewed descendant permission metadata separately; nonsecret tool-library and public-key exceptions were retained. Thirteen real dummy-file assertions passed, including restoration after a forced post-write verification failure. The next real automatic load succeeded with 102 inserted alerts in 2.895 seconds, the existing restricted maintenance connection still worked, and five guest services remained active. No manual load, service restart or network change was needed.
+- Effective Windows firewall policy showed blocked-traffic logging off with a 4 MB limit despite earlier registry settings. Prepared a helper that changes only logging and verifies effective policy, with eight mocked assertions. The first non-elevated attempt refused before changes; administrator apply and actual log output remain pending. No new CIS score is claimed.
+- Added publication rejection for tracked backup/database/private-key-container/capture artifacts before public replacement, plus Git exclusions and regression coverage. See [hardening validation and remaining gates](docs/hardening-validation.md). Live capture remains disabled.
+
 ### 2026-10-05: Verify the six-page report and resettable network filter
 - Inspected all six pages in the existing Desktop project after refresh. SOC Overview showed 27,327 alerts; Endpoint Posture, ATT&CK Coverage, Cases and Pipeline Health rendered populated charts/tables. Pipeline Health's imported data timestamp was 6:20 PM Eastern, not a live connection or a measured refresh duration.
 - Network Detection displayed one record, one controlled validation, zero unclassified and one signature. Its register matched SID 9000001, reserved addresses, ICMP, both severity scales, the document reference and both processing/fixture timestamps. This is the same offline validation event, not an incident or new attack-test credit.

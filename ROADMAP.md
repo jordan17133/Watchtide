@@ -11,14 +11,14 @@ What is built, what comes next, and why. Each chapter ends the same way: build i
 - [x] Detection tuning with tested custom rules (100100, 100101) and FIM severity rules (100110-100113)
 - [x] SQL Server warehouse with a scheduled loader (every 15 minutes, 99% success) and data lifecycle rules
 - [x] Case log with history; nine investigations closed, one open ([triage/](triage/))
-- [x] Every fired MITRE ATT&CK technique triaged to a verdict
+- [x] Documented baseline's 38 fired MITRE ATT&CK techniques triaged; later observations require fresh review
 - [x] First controlled attack test: SSH password guessing, detected end to end
 - [x] Least-privilege reporting role, tested
-- [x] Original five Power BI pages kept as code in Git; sixth Network Detection definition added, with actual refresh still open
+- [x] All six existing Power BI pages rendered after refresh; definitions and single-table refresh setting kept in Git, imported data excluded
 - [x] Public read-only SOC console on a scrubbed snapshot ([console](https://jordan17133.github.io/Watchtide/))
 - [x] Offline Suricata 8.0.7 marker-rule validation: one positive alert, zero alerts on two controls; that engine-only phase did not enable live capture or Wazuh collection ([evidence](docs/suricata-offline-validation.md))
-- [x] Controlled Suricata EVE-to-Wazuh-to-SQL handoff: local-alert success reported and the same dashboard/indexed/warehouse record independently verified; actual Power BI refresh and live coverage remain separate ([evidence](docs/suricata-wazuh-handoff.md))
-- [x] Same controlled alert opened in the existing Wazuh dashboard; read-only network reporting view deployed and verified. Sixth Power BI page defined and Microsoft model/schema checked; actual Desktop refresh remains open ([evidence](docs/network-reporting-validation.md))
+- [x] Controlled Suricata EVE-to-Wazuh-to-SQL-to-Power BI trace: same labeled event and network fields verified; live coverage remains separate ([evidence](docs/suricata-wazuh-handoff.md))
+- [x] Read-only network reporting view and existing sixth Power BI page verified; four metrics, event fields and context-filter reset checked. Saved model and available schemas checked with an explicit unpublished-schema limit ([evidence](docs/network-reporting-validation.md))
 
 ## Current Execution Order
 
@@ -29,8 +29,8 @@ prerequisite for this pilot. See the [pilot guide](docs/suricata-pilot.md) and
 [network coverage plan](docs/network-coverage-plan.md).
 
 1. Preserve working Tailscale access and leave the phone denied. Check Ubuntu resources/package state; follow up recorded host memory pressure and loader/reporting health before adding sustained load.
-2. Test the prepared alert-only marker rule with a short, isolated benign positive/negative replay. Record engine version and results; offline success is not live capture proof.
-3. Collect a genuine EVE alert into Wazuh, inspect its decoded fields, and trace the same record into SQL and Power BI. Keep raw network logs private and collection bounded.
+2. Completed: test the alert-only marker rule with a short, isolated benign positive/negative replay. Offline success is not live capture proof.
+3. Completed: collect a genuine saved EVE alert into Wazuh and trace the same record into SQL and the existing Power BI report. Keep raw network logs private and collection bounded.
 4. Validate a limited live capture point, then plan a supported feed for wider coverage. Record each observed device/segment and gaps rather than assuming the NAT VM sees the whole home.
 
 Suricata 8.0.7 is installed, and the starter rule passed isolated engine
@@ -50,20 +50,20 @@ read-only Indexer search verified exactly one matching labeled alert. The normal
 scheduled loader collected the same record, independently matched in SQL with
 its network fields and fixture time. Five SOC services are active. The dashboard
 now visibly shows the exact alert-index record. The read-only network view is
-deployed and verified; a sixth Power BI page is defined and Microsoft
-model/schema checked. Actual Desktop refresh/rendering remain open. This is
-controlled offline ingestion/report-definition proof, not a live feed or
-completed network/reporting stage.
+deployed and verified; the sixth Power BI page now displays the matching record
+and all four metrics. All six existing pages rendered after refresh, and the
+new context filter was tested and saved back at All. This is controlled offline
+end-to-end reporting proof, not a live feed or completed network-capture stage.
 No whole-network privacy-egress change has been deployed.
 Permanent phone dashboard access is not required; the phone currently serves
 as a denied off-LAN test client. Other portfolio chapters remain planned work,
 not prerequisites that must all precede the network pilot.
 
-**Reliability checkpoint (October 4, 2026):** the six workspace-review findings have implementation fixes and offline regression checks. The first scheduled reconciliation succeeded in 30 seconds with 96 new alerts. A later incremental run succeeded but took over eight minutes; SQL timeout and host paging evidence make runtime/memory follow-up the next prerequisite. A controlled late-event trace and Power BI refresh remain pending before expanding collection. The public console keeps individual alerts untriaged and historical rule reviews separate. See [validation and limits](docs/reliability-validation.md). This does not close the private-access security gates below.
+**Reliability checkpoint (October 4, 2026):** the six workspace-review findings have implementation fixes and offline regression checks. The first scheduled reconciliation succeeded in 30 seconds with 96 new alerts. A later incremental run succeeded but took over eight minutes; SQL timeout and host paging evidence make runtime/memory follow-up a prerequisite before sustained capture. A controlled late-event trace remains pending; the October 5 report retest is recorded below. The public console keeps individual alerts untriaged and historical rule reviews separate. See [validation and limits](docs/reliability-validation.md). This does not close the private-access security gates below.
 
-**Refresh follow-up (October 5):** an actual Power BI attempt failed with a confirmed loader/read deadlock. Guarded committed-snapshot maintenance and isolated concurrency tests passed, and the approved quiet-window change is applied. The next automatic loader inserted 91 alerts in 2.537 seconds; all 18 report views passed a bounded read. Successful Desktop retest and sustained performance remain open: an intermittent aggregate timeout followed by a fast repeat is not a stable-load benchmark ([evidence](docs/report-refresh-reliability.md)).
+**Refresh follow-up (October 5):** an actual Power BI attempt failed with a confirmed loader/read deadlock. Guarded committed-snapshot maintenance and isolated concurrency tests passed, and the approved quiet-window change is applied. All 18 report views passed a bounded read; the subsequent Desktop retest rendered all six pages, with single-table refresh persisted. Three recent automatic loads succeeded in 2.4-3.3 seconds. Sustained performance and refresh duration remain unproven: successful rendering and short loader runs are not a stable-load benchmark ([evidence](docs/report-refresh-reliability.md)).
 
-**Current focus (October 5, 2026):** offline rule controls and bounded EVE-to-Wazuh ingestion passed; the same event was verified in the authenticated dashboard, Indexer and SQL. A deployed network view and sixth Power BI page now expose its fields with test/replay context; model/schema checks passed, while actual refresh/rendering and live capture remain pending ([reporting evidence](docs/network-reporting-validation.md)). Extra VPN/router work remains deferred. The Windows-only management grant remains unchanged; the phone stays denied and approved off-LAN administration stays deferred/unverified. Local trusted dashboard access and reported renewal setup are retained; automatic renewal and actual replacement remain unproven. Remaining exposure/revocation, recovery and sustained loader-performance checks stay open. The [pilot guide](docs/suricata-pilot.md), [network plan](docs/network-coverage-plan.md) and [access results](docs/private-access-validation.md) keep these gates separate.
+**Current focus (October 5, 2026):** the controlled offline event is verified through the existing dashboard, Indexer, SQL and Power BI. All six report pages render, and the new context filter resets to All ([reporting proof and schema limit](docs/network-reporting-validation.md)). Next: resource checks and a separately reviewed limited live capture point. Extra VPN/router work remains deferred. The Windows-only management grant remains unchanged; the phone stays denied and approved off-LAN administration stays deferred/unverified. Local trusted dashboard access and reported renewal setup are retained; automatic renewal and actual replacement remain unproven. Remaining exposure/revocation, recovery and sustained loader-performance checks stay open. The [pilot guide](docs/suricata-pilot.md), [network plan](docs/network-coverage-plan.md) and [access results](docs/private-access-validation.md) keep these gates separate.
 
 ## Portfolio Chapters
 

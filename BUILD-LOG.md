@@ -11,11 +11,11 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
 | 2. Sysmon on Windows | Done |
 | 3. Wazuh agent on Windows | Done, agent `jordan-pc` is Active |
 | 4. Prove the event path end to end | Done, traced through every layer (docs/event-trace.md) |
-| 5. Suricata network telemetry | Partial: controlled event verified in dashboard/Indexer/SQL; network view deployed; sixth Power BI page defined and parsed/schema checked; actual refresh/live capture pending |
+| 5. Suricata network telemetry | Partial: controlled offline event verified through dashboard/Indexer/SQL/Power BI; live capture and whole-home coverage pending |
 | 6. Watchtide API on live Wazuh data | Private live API not started; public console serves a sanitized snapshot of real lab data |
 | 4b. Posture review | Done: 437 of 447 vulnerability findings resolved (10 open, zero Critical); CIS 27.1% to 37.0% |
 | 7. SQL Server reporting storage | Done: loader every 15 minutes; case log with history (`warehouse/cases.py`) meets the incident gate |
-| 8. Power BI report | Original five pages built, ATT&CK catalog loaded; sixth Network Detection definition added and model/schema checked, actual refresh/rendering pending; imported cache ignored |
+| 8. Power BI report | All six pages rendered after refresh; network fields/metrics/filter verified; saved model parsed, available-schema checks passed with one unpublished schema; imported cache ignored |
 | Detection validation | In progress: controlled SSH password-guessing test detected end to end; every Critical alert since tuning explained |
 | 4c. Tailscale private remote access | Trusted local HTTPS/dashboard login verified; renewal setup reported successful; phone test declined and approved off-LAN access deferred; remaining exposure/recovery/reporting gates open |
 
@@ -45,6 +45,13 @@ Windows host                         |
 - The VM is reached by hostname (`soc-vm.mshome.net`) instead of IP, because Hyper-V's Default Switch hands out a new IP on every VM reboot.
 
 ## Timeline
+
+### 2026-10-05: Verify the six-page report and resettable network filter
+- Inspected all six pages in the existing Desktop project after refresh. SOC Overview showed 27,327 alerts; Endpoint Posture, ATT&CK Coverage, Cases and Pipeline Health rendered populated charts/tables. Pipeline Health's imported data timestamp was 6:20 PM Eastern, not a live connection or a measured refresh duration.
+- Network Detection displayed one record, one controlled validation, zero unclassified and one signature. Its register matched SID 9000001, reserved addresses, ICMP, both severity scales, the document reference and both processing/fixture timestamps. This is the same offline validation event, not an incident or new attack-test credit.
+- Corrected only the new context selector so it can clear back to All, tested selection/reset and saved the existing PBIP at 8:17 PM Eastern. Updated the generator and added a regression test that leaves the Endpoint Posture selector unchanged. The saved model persists single-table refresh (`maxParallelismPerRefresh: 1`); no original page was regenerated.
+- Rechecked the saved model with Microsoft's parser: 18 tables, 32 network columns and four measures. All 161 publication/setup tests passed, including 11 actual isolated SQL checks; another 15 reliability tests and three mocked recovery paths passed. Ten saved network definitions passed available Microsoft schemas; Desktop upgraded the edited slicer to 2.13.0, which returned 404 from both official schema sources. No complete current-page/full-report schema pass is claimed.
+- A read-only check confirmed snapshot reads still enabled; three recent automatic loader runs succeeded in 2.398, 3.257 and 2.435 seconds. Sustained memory/performance remains open. No live capture, guest restart, network/SSH change, manual load or public snapshot refresh was performed. See [report proof](docs/network-reporting-validation.md) and [reliability limits](docs/report-refresh-reliability.md).
 
 ### 2026-10-05: Apply the guarded reporting concurrency fix
 - After the owner closed the report, the warehouse preflight found no other connections or transactions. An empty Desktop window remained but held no warehouse connection. Enabled committed-snapshot reads through the tested helper and independently confirmed the live setting. No client kill, forced rollback, service restart or manual loader run was used.
@@ -392,7 +399,7 @@ Windows host                         |
 - [ ] Diagnose local enrollment TCP 1515 unreachability before new agent enrollment; do not open it automatically.
 - [ ] Complete authenticated tailnet SSH and approved off-LAN dashboard tests; local dashboard login/trusted IPv4 HTTPS now pass, and IPv6 dashboard support is absent.
 - [ ] Approved off-LAN administration deferred after the phone test was declined; remaining denied-service/public-access and device-revocation checks stay open.
-- [ ] Confirm individual agent identity/health, a controlled event trace and Power BI refresh; the authenticated overview showed one Active and zero Disconnected agents ([plan](docs/private-access-plan.md)).
+- [ ] Confirm individual agent identity/health and a remote controlled event trace; the local six-page Power BI retest passes, but does not prove remote access ([plan](docs/private-access-plan.md)).
 - [ ] Enroll one remote endpoint and publish a benign event trace through Wazuh, SQL and Power BI.
 
 ### Detection work

@@ -7,8 +7,9 @@ This proves controlled offline EVE-to-SIEM ingestion, not live network coverage.
 The normal scheduled loader collected the same event, independently verified in
 SQL. A subsequent [reporting check](network-reporting-validation.md) opened the
 exact alert in the authenticated dashboard and deployed a verified network view.
-The sixth Power BI page is defined and model/schema checked; actual Desktop
-refresh/rendering remain separate gates.
+The subsequent six-page Desktop retest rendered the matching event and all four
+network metrics; the new context filter also resets to All. The controlled
+offline reporting trace passes; live coverage remains a separate gate.
 
 ## Purpose
 
@@ -134,8 +135,9 @@ tested restore scenario. Any already emitted test alert is retained as evidence.
   not an incident, live traffic observation or new ATT&CK test coverage.
 - SQL ingestion and preservation of the network fields passed independently
   after the normal scheduled load. A later read-only network view deployment and
-  report-definition validation passed; actual Power BI refresh/rendering remain
-  separate ([report](network-reporting-validation.md)). The guest job neither
+  report-definition validation passed; a subsequent actual Desktop retest
+  verified the matching event in the existing sixth page
+  ([report and limits](network-reporting-validation.md)). The guest job neither
   writes SQL directly nor alters that loader.
 - Limited live capture, capture loss/resource measurement and wider home-network
   visibility remain future gates. This does not inspect personal browsing.

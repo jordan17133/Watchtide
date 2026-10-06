@@ -376,9 +376,10 @@ start with a bounded harmless replay before live capture. That replay and its
 bounded EVE-to-Wazuh-to-SQL handoff now pass: the same labeled test event and
 network fields were independently verified in the Indexer and warehouse. Five
 SOC services were active after ingestion; Suricata remains masked. The dashboard
-event and read-only network view are now verified; a sixth Power BI page is
-defined and Microsoft model/schema checked. Actual Desktop refresh/rendering
-remain open ([reporting evidence](docs/network-reporting-validation.md)). Do not rerun the
+event and read-only network view are now verified; the existing six-page Power BI
+report refreshed and rendered with the same controlled record. Model and
+available-schema checks passed with an explicit unpublished-schema limit
+([reporting evidence](docs/network-reporting-validation.md)). Do not rerun the
 completed activation jobs. A sensor in the NAT VM does not prove whole-home
 visibility; browsing-privacy routing is separate.
 
@@ -515,12 +516,15 @@ Closing or assigning an incident in Watchtide must persist in SQL, and a reporti
 
 A Power BI visual must trace back to a SQL reporting view, which must trace back to a Watchtide incident or Wazuh alert ID.
 
-**October 5 refresh follow-up:** the six-page project definitions pass model and
-new-page schema checks, but the actual Desktop refresh failed with a confirmed
-loader/read deadlock. Guarded committed-snapshot maintenance passed isolated
-tests and is applied in the approved quiet window. The next automatic loader
-and all 18 SQL report sources passed bounded checks. Successful Desktop refresh
-and sustained host performance remain open; see [diagnosis and retest](docs/report-refresh-reliability.md).
+**October 5 refresh follow-up:** the first actual Desktop refresh failed with a
+confirmed loader/read deadlock. Guarded committed-snapshot maintenance passed
+isolated tests and is applied in the approved quiet window. All 18 SQL report
+sources passed bounded checks, and the subsequent Desktop retest rendered all
+six pages, including matching network fields and four metrics. Single-table
+refresh and the resettable network filter are saved in Git. Saved model and ten
+available-schema network definitions passed; the edited slicer's 2.13.0 schema
+is unpublished. Sustained host performance and refresh duration remain open;
+see [diagnosis and retest](docs/report-refresh-reliability.md).
 
 ## Recommended first milestone
 

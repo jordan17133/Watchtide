@@ -2,7 +2,8 @@
 
 Updated: October 5, 2026. Status: Suricata 8.0.7 passed offline rule controls,
 and one controlled event was independently traced through the Wazuh Indexer
-into SQL. No live capture feed, gateway or privacy-VPN deployment is enabled.
+into SQL and the existing Power BI report. All six pages rendered after refresh.
+No live capture feed, gateway or privacy-VPN deployment is enabled.
 The service remains masked; the [offline proof](suricata-offline-validation.md)
 and [controlled handoff](suricata-wazuh-handoff.md) do not establish whole-home
 visibility.
@@ -16,9 +17,9 @@ complete; it is not a prerequisite for the [Suricata pilot](suricata-pilot.md).
 
 | Layer | Current state | Next evidence |
 |---|---|---|
-| Endpoint SOC | Windows/Sysmon to Wazuh, SQL and Power BI is built; the public console uses a sanitized historical snapshot | Recheck loader performance and reporting refresh before adding load |
+| Endpoint SOC | Windows/Sysmon to Wazuh, SQL and Power BI is built; six-page report retest passes; public console uses a sanitized historical snapshot | Recheck sustained loader/refresh performance before adding load |
 | Private SOC administration | Local trusted IPv4 HTTPS/login verified; renewal setup reported successful; management-only Windows grant unchanged; phone remains denied | Automatic renewal check/actual rotation, remaining denied/public-access and recovery checks; approved off-LAN administration deferred |
-| Network IDS | Stage 5 partial: controlled event verified in dashboard/Indexer/SQL; network view deployed and sixth Power BI page defined/checked; service masked | Verify actual Desktop refresh/rendering, then measure limited live capture |
+| Network IDS | Stage 5 partial: controlled offline event verified through dashboard/Indexer/SQL/Power BI; service masked | Recheck resources and separately measure limited live capture; no whole-home feed verified |
 | Whole-network browsing privacy | Extra VPN/router work deferred; not implemented or validated | Separate approval and gateway/client, egress/DNS/IPv6 and failure tests if resumed |
 
 ## Read-Only Baseline: October 5
@@ -53,9 +54,10 @@ audited.
 3. The saved-EVE inspection, bounded manager-local collection and exact
    Indexer-to-SQL trace are complete. The existing VM is a manager; no agent
    was installed over it. Dashboard visual confirmation and read-only network
-   fields now pass; the sixth Power BI page is defined and Microsoft
-   model/schema checked ([report](network-reporting-validation.md)). Verify
-   actual Desktop refresh/rendering and recheck sustained loader performance.
+   fields now pass; the existing six-page Power BI report refreshed and rendered,
+   with the same network event and a tested resettable filter
+   ([report and schema limit](network-reporting-validation.md)). Recheck sustained
+   loader/refresh performance before expanding collection.
 4. Verify a limited live interface and harmless live test separately. Then
    design a supported traffic feed for broader coverage; no whole-home mirror
    has been verified on the current NAT/Wi-Fi setup. Record devices/segments,

@@ -273,10 +273,10 @@ def table(page, key, x, y, w, h, columns, title, subtitle=None, sort_by=None, so
     return container(page, key, x, y, w, h, visual, objs=frame(title, subtitle), filters=filters)
 
 
-def slicer(page, key, x, y, w, h, field, title, default=None):
+def slicer(page, key, x, y, w, h, field, title, default=None, strict_single_select=True):
     objects = {
         "data": [{"properties": {"mode": lit("'Dropdown'")}}],
-        "selection": [{"properties": {"singleSelect": b(True), "strictSingleSelect": b(True)}}],
+        "selection": [{"properties": {"singleSelect": b(True), "strictSingleSelect": b(strict_single_select)}}],
         "header": [{"properties": {"show": b(True), "text": txt(title), "fontColor": color(INK2), "textSize": num(9)}}],
         "items": [{"properties": {"textSize": num(10), "fontColor": color(INK)}}],
     }
@@ -507,7 +507,7 @@ def network_page():
     p = "network"
     v = [header(p, "Network Detection", "Suricata alert records | US Eastern processing time"),
          slicer(p, "context", W - M - 200, 18, 200, 56,
-                col(NETWORK, "observation_context"), "Observation context")]
+                col(NETWORK, "observation_context"), "Observation context", strict_single_select=False)]
     v += kpi_row(p, [
         (mea(NETWORK, "Network records"), "Network records"),
         (mea(NETWORK, "Controlled tests"), "Controlled validation", NOW),

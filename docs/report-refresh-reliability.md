@@ -5,7 +5,9 @@ project failed. The existing alert table was the SQL deadlock victim; other
 tables, including the new network view, were cancelled afterward. A guarded
 committed-snapshot fix passed isolated tests and was applied during the approved
 quiet window. The next scheduled loader and all 18 SQL report sources passed
-bounded checks. Actual successful Desktop refresh/rendering remain open.
+bounded checks. The subsequent Desktop retest completed: all six existing report
+pages rendered, and the controlled network record matched. Sustained host/load
+performance remains open.
 
 ## What Happened
 
@@ -95,12 +97,30 @@ including 11 actual isolated SQL checks, another 15 reliability tests and three
 mocked PowerShell recovery paths. The new page's 11 definitions again passed
 published Microsoft schemas.
 
-The existing PBIP is reopened. Power BI's Current File / Data Load option
-`One (disable parallel loading)` is selected, but confirmation and a completed
-refresh still require verification. Check the original five pages and
-[Network Detection](network-reporting-validation.md) after one refresh. Do not
-claim Desktop/DAX/rendering success from the SQL reads alone. Keep live capture
-disabled and the sustained performance gate open.
+The existing PBIP's Current File / Data Load option
+`One (disable parallel loading)` was confirmed and is persisted as
+`maxParallelismPerRefresh: 1` in the parsed saved model. The later Desktop check
+found all six pages populated with no observed visual errors. SOC Overview
+showed 27,327 alerts, and Network Detection showed the expected one controlled
+record with matching fields and all four metrics. Its context filter was tested
+and corrected to allow clearing back to All. The existing project was saved at
+8:17 PM Eastern; no original page was regenerated.
+
+Pipeline Health's imported data time was 6:20 PM Eastern. The retry also
+encountered host pressure, including a sample below 700 MB available memory and
+91% committed memory. A reliable refresh completion time was not captured;
+later successful rendering is not proof of a fast refresh or resolved memory
+pressure. A subsequent sample had about 2.5 GB available. Three recent automatic
+loader runs succeeded in 2.398, 3.257 and 2.435 seconds, and a fresh read-only
+check confirmed snapshot reads still enabled. These remain bounded observations.
+
+The saved model parsed again with 18 tables, 32 network columns and four measures.
+The latest rerun passed 161 publication/setup tests (11 actual isolated SQL
+checks), another 15 reliability tests and three mocked recovery paths. Ten
+available-schema network definitions passed; Desktop upgraded the edited slicer
+to an unpublished 2.13.0 schema, so no complete current-page schema pass is
+claimed. See [report evidence](network-reporting-validation.md) for this limit.
+Keep live capture disabled and the sustained performance gate open.
 
 Raw deadlock XML, session identifiers, client account/host information and memory
 diagnostics are not published. The public console snapshot was not refreshed.

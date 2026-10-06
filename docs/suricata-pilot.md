@@ -7,8 +7,9 @@ check confirmed the installed package and five healthy SOC services. The correct
 output, and independent Indexer/SQL queries verified the same labeled alert.
 Suricata remains masked; no live capture feed is enabled. The exact alert is now
 verified in the existing dashboard and a deployed read-only network reporting
-view. A sixth Power BI page is defined and model/schema checked; actual Desktop
-refresh/rendering remain open ([reporting proof](network-reporting-validation.md)). See
+view. The existing six-page Power BI report refreshed and rendered, including
+the matching event and network metrics; live capture remains separate
+([reporting proof and limits](network-reporting-validation.md)). See
 the [engine validation evidence](suricata-offline-validation.md).
 
 ## What We Are Adding
@@ -175,12 +176,13 @@ label, signature, original packet timestamp and network fields. The normal
 scheduled loader collected that exact record, verified read-only in SQL. Do not
 rerun the activation or treat this fixed test input as a live sensor feed. The
 existing dashboard now visibly shows the exact alert-index record. The network
-view is deployed; actual Power BI refresh/rendering remain separate.
+view is deployed and the existing Power BI page now displays the same event.
+All six pages rendered, and the new context selector was tested back to All.
 
 The current loader already retains each indexed alert's full JSON in
 `sg.alerts.raw_json`, but its extracted process/channel fields and current
-reporting views are Windows-oriented. Inspect the actual decoded network
-fields, then add a focused reporting view and report changes. Do not change the
+original reporting views are Windows-oriented. The focused `rpt.network_alerts`
+view now exposes the verified network fields in the sixth page. Do not change the
 loader's restricted tunnel or expose the indexer/API for this integration.
 
 Wazuh alerts are the loader's input, not every EVE flow or every archive event.
@@ -198,7 +200,7 @@ increase in collection.
 | Rule engine validation | Passed in supplied engine output: one positive alert, zero alerts on two controls | Raw evidence private; no live feed or Wazuh ingestion inferred |
 | Wazuh alert | Same exact alert verified in the Indexer and existing authenticated dashboard | Verdict remains controlled offline validation, not an incident |
 | SQL ingestion/reporting | Exact indexed event and network fields independently matched; read-only `rpt.network_alerts` deployed and verified | Sustained performance and actual reporting-account review remain separate |
-| Power BI network reporting | Sixth page defined; complete model and new-page schemas checked | Actual Desktop refresh, DAX evaluation and visual rendering pending |
+| Power BI network reporting | Passed: all six pages rendered; same record, four metrics and context reset verified; saved model/available schemas checked | Sustained refresh performance and actual reporting-account review remain separate; one Desktop schema is unpublished |
 | Limited live capture | Pending | Verified interface, harmless live test, recorded load/drops and capture gaps |
 | Whole-home coverage | Not verified | Supported capture feed and per-device/segment tests |
 

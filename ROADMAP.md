@@ -42,10 +42,14 @@ learning checks. A tool installation is not a detection-validation milestone.
 | L7 | Metasploit: one selected test against the separate test VM | Detection validation | Data prerequisites, detection/miss, cleanup and case verified |
 
 **October 7 execution:** L3 has a [bounded live activation](docs/suricata-live-trial.md)
-prepared with 25 local safety checks. The first attempt stopped before capture;
+prepared with 29 local safety checks. The first attempt stopped before capture;
 the second confirmed the package-directory guard but stopped after staging.
 The revised builder handles an empty optional YAML section reproduced from the
 actual package, and requires review of that stopped attempt before capture.
+The third attempt confirmed that review and built the configuration, then failed
+its engine identity transition in test mode, before capture. The revised check
+lets Suricata perform its own configured privilege drop and requires matching
+protected syntax-failure evidence before retrying. Guest verification is pending.
 Ubuntu capture and independent packet inspection are still pending.
 The current scope is the Windows PC and iPhone;
 the VM is inside the PC. No browsing or phone network coverage is claimed.

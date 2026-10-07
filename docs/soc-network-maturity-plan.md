@@ -145,7 +145,7 @@ explained, with capture/resource limits recorded. This is not yet whole-home
 visibility, packet blocking or permission to leave capture running indefinitely.
 
 October 7 preparation: the [bounded live trial](suricata-live-trial.md) has
-25 local regression checks, a direct-route gate, narrow test-packet filter,
+29 local regression checks, a direct-route gate, narrow test-packet filter,
 resource guards and per-capture watchdogs. Guest interface verification and
 actual capture still require execution. Current scope is the Windows PC and
 iPhone; the VM is inside the PC. No browsing or phone packet coverage is claimed.
@@ -154,6 +154,9 @@ directory-owner guard. The second attempt confirmed the exact package-managed
 directory facts without permission changes, then stopped after staging. An
 empty optional YAML section reproduced from the reviewed package is now handled
 correctly. Protected prior-attempt review must pass before another capture.
+The third attempt passed that review but its configuration-test identity change
+failed before capture. The corrected test lets Suricata drop privileges itself;
+the live non-root UID check remains required. Guest verification is pending.
 
 ### D Live Alert Reporting
 

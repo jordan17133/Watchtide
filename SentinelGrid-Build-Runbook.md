@@ -369,11 +369,15 @@ Approved remote SSH/dashboard access succeeds; unauthorized tailnet access and d
 ## Stage 5: Add Suricata network telemetry
 
 **October 7 preparation:** the [first live trial](docs/suricata-live-trial.md)
-is prepared with 25 local safety checks. The first attempt stopped at directory
+is prepared with 29 local safety checks. The first attempt stopped at directory
 preflight before capture; the second confirmed the package-managed directory
 facts and stopped after staging. The revised builder handles an empty optional
 YAML section, reproduced from the actual package, and checks the prior protected
-evidence before starting another capture. No permissions are relaxed. The planned
+evidence before starting another capture. The third attempt confirmed that review
+and failed an identity transition in configuration-test mode, before capture.
+The corrected test starts as root and lets the engine drop to its configured
+service account; it does not select live capture. Exact protected syntax-stop
+evidence must match before retrying. No permissions are relaxed. The planned
 trial observes only two harmless VM-to-Windows echo requests in bounded windows. Guest execution and
 independent packet inspection remain pending; browsing and phone visibility
 are not implied. The permanent Suricata service stays masked.

@@ -1,11 +1,13 @@
 # First Live Suricata Trial
 
-Updated: October 7, 2026. Status: revised bounded activation prepared and 25 local
+Updated: October 7, 2026. Status: revised bounded activation prepared and 29 local
 regression tests pass. **No successful live capture is verified.** The first
 authenticated attempt stopped during parent-directory preflight. The second
 passed that guard, created private staging evidence and stopped with a generic
-failure. Existing detection proof still consists of the offline marker test and
-its exact reporting trace.
+failure. The third confirmed that earlier stop, built the configuration and
+failed during the engine's identity transition in configuration-test mode.
+No capture started. Existing detection proof still consists of the offline
+marker test and its exact reporting trace.
 
 The first guard incorrectly required root ownership of the configuration
 directory. The hash-verified reviewed package's installation script intentionally
@@ -24,10 +26,23 @@ handles empty sections, preserves other security settings and rejects malformed
 non-mapping sections. The full packaged YAML now builds and round-trips locally;
 the guest's Suricata syntax test and actual capture remain separate gates.
 
-Before another capture, the revised activation reviews the specified second
-attempt's protected evidence directory. It proceeds only if the exact three
-pre-configuration artifacts remain and their route, directory facts and rule
-match the current preflight. Later-stage files or changed settings stop the job.
+The owner read the third attempt's protected engine log: the main-thread
+`capng_change_id` call failed. The test subprocess had already been started as
+the service account, but the exact live configuration requested another
+privilege transition. The revised `-T` check starts as root with no supplementary
+groups and lets the engine perform its configured identity drop. It tests the
+same file/rule used for capture, with fatal rule-initialization errors and a
+30-second timeout. It does not select a capture interface or run packet capture.
+The live sensor's service-account setting and observed non-root UID gate stay
+unchanged. Guest verification of the corrected check is still pending.
+
+Before another capture, the revised activation reviews the specified stopped
+attempt's protected evidence directory. It accepts either the exact three
+pre-configuration artifacts or the now-reviewed privilege-failed syntax stage.
+For the latter, it requires the exact root-protected diagnostic/config files,
+the specific two-line engine failure, matching phase/type, an empty service-owned
+syntax directory and the unchanged trial configuration, route and rule. Capture
+artifacts, other errors or changed settings stop the job.
 Failures now report the phase and exception type without printing private
 details; a root-protected diagnostic file retains the traceback for review.
 
@@ -97,16 +112,19 @@ the launcher. The preparation-only SSH key is not broadened into shell access.
 ## Acceptance Checklist
 
 - [x] Prepare bounded activation without executing capture.
-- [x] Pass 25 local checks covering route restrictions, capture configuration,
+- [x] Pass 29 local checks covering route restrictions, capture configuration,
   fixed pings, watchdog cleanup, resource checks, result validation and launcher.
   Checks include the exact package-managed directory exception, empty YAML
   sections, prior-attempt review and safe failure diagnostics. Capture failure
   still checks service health and unchanged installed configuration, without
   losing the failed phase.
 - [x] Confirm the installed configuration-directory facts from guest preflight.
-- [ ] Confirm the specified prior attempt stopped before configuration/capture
+- [x] Confirm the specified second attempt stopped before configuration/capture
   using its protected artifacts, not only the generic console message.
-- [ ] Run guest preflight and validate the live configuration with Suricata.
+- [x] Read the third attempt's engine error and identify the identity-transition
+  failure in configuration-test mode, before capture.
+- [ ] Review that exact protected syntax-failure stage during revised activation.
+- [ ] Validate the live configuration with the corrected Suricata `-T` check.
 - [ ] Observe exactly one request in each test window, with matching flow fields.
 - [ ] Verify explicit zero kernel drops; absent counters must not count as zero.
 - [ ] Verify one marker alert and zero control alerts, with current timestamps.
@@ -144,3 +162,7 @@ See the [learning runbook](analyst-toolkit-runbook.md) and
   describe exclusive rule loading, foreground capture and single runmode.
 - [Suricata 8.0.7 configuration](https://docs.suricata.io/en/suricata-8.0.7/configuration/suricata-yaml.html)
   documents privilege dropping, statistics and bounded PCAP logging.
+- [Suricata 8.0.7 initialization](https://github.com/OISF/suricata/blob/suricata-8.0.7/src/suricata.c)
+  performs the configured privilege transition in test mode, then exits before
+  dispatching capture threads; [privilege implementation](https://github.com/OISF/suricata/blob/suricata-8.0.7/src/util-privs.c)
+  identifies the failing main-thread capability/identity transition.

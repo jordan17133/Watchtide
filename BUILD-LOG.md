@@ -69,6 +69,20 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
   capture unless the specified stopped attempt's exact protected artifacts
   establish a pre-configuration stop. Guest execution remains pending; no live
   detection, browsing visibility or phone coverage is claimed.
+- The third authenticated attempt confirmed that the second had stopped before
+  configuration/capture, built the corrected YAML and reached the engine's `-T`
+  check. It stopped before capture. The owner read its protected engine log,
+  which showed a failed main-thread `capng_change_id` transition. The subprocess
+  was already non-root while the live configuration requested a privilege drop.
+- Corrected the exact-config test to start as root, with no supplementary groups,
+  and let Suricata perform its configured identity transition. `-T` captures
+  nothing, uses a 30-second timeout and treats rule-initialization errors as
+  fatal. The live UID/resource/watchdog gates are unchanged. Added four regression
+  checks (29 live-trial tests) for the test command and exact protected syntax-stop
+  evidence, including rejection of capture artifacts, changed settings, other
+  errors and unsafe output directories. Prepared a fresh activation requiring
+  the reviewed stopped stage to match before retrying; corrected guest execution
+  remains pending. No key, firewall, collection or installed configuration change.
 
 ## What is running
 

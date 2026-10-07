@@ -32,6 +32,7 @@ The roadmap is an execution order, not a newly scheduled automation.
 
 | Order | Bounded work | Existing stage | Completion gate |
 |---|---|---|---|
+| 0 | Restore Windows collection and review loss reports | 2, 3, 4 / reliability | Protected settings/log review, necessary bounded repair, authenticated reconnection and a new Windows event traced through normal ingestion; [current outage evidence](docs/collection-health-validation.md) |
 | 1 | Reconcile drafts and status; add the [L0 explanation](docs/L0-event-to-report-trace.md) | 4, 7, 8 | Current evidence and limits agree; owner explanation not auto-credited |
 | 2 | Review the proposed [PowerShell tune](docs/powershell-policy-probe-tuning-review.md) | Detection maintenance / 4b | Writer/path evidence, installed-engine matches/nonmatches, protected deployment and measured future results; unsafe filename-only draft stays undeployed |
 | 3 | Harmless offline TCP fixtures and a rule/control lesson | 5, L1/L2 | Actual installed-engine validation; distinguish SYN burst from proven malicious scanning |
@@ -58,6 +59,15 @@ agent queue pressure/error warnings require follow-up before sustained load;
 the historical recovery message does not recover any lost events. Sigma remains
 a later, separately mapped log-detection gap analysis, not a plug-in install.
 Do not repeat completed ICMP tests or enable the full feed by default.
+
+**Current prerequisite:** independent October 7 SQL/Indexer checks show a Windows
+disconnection cutoff, and its service process is attempting a stale VM address.
+The current LAN data port is reachable, but protected agent configuration/log
+review and repair remain open. Historical Sysmon drops are separately confirmed.
+Successful loader runs and running services do not close this gate. Restore and
+verify source collection before progressing the TCP lesson or loading rules;
+leave firewall/Tailscale permissions unchanged unless evidence warrants a
+separately reviewed change.
 
 ### Learn And Operate The SOC
 

@@ -6,9 +6,10 @@ how each step happened; the [roadmap](ROADMAP.md) lists what comes next.
 
 ## Active Work
 
-No active file or live-deployment claim. October 7 alert inventory and ET Open
-staging review are complete; detailed inventories and downloaded rules stay
-private. No new rules are deployed or engine-validated by this preparation.
+No active file or live-deployment claim. October 7 collection diagnosis and the
+read-only administrator helper are prepared. Awaiting the owner's elevated
+diagnostic result before a scoped repair; Windows collection is not marked
+healthy. No new rules, live repair or capture were deployed in this review.
 
 ## Pickup And Execution Order
 
@@ -18,6 +19,7 @@ this file remains the authoritative status, not the older side-workspace map.
 
 | Order | Work | State / finish line |
 |---|---|---|
+| 0 | Restore current Windows collection | October 7 SQL/Indexer cutoff and stale agent connection attempt independently checked; [read-only administrator diagnostic](docs/collection-health-validation.md) prepared; actual configuration/log review and bounded repair remain open |
 | 1 | Handoff and L0 explanation | Scannable README, private coordination agreement and corrected [packet-to-report lesson](docs/L0-event-to-report-trace.md) applied; 235 selected checks passed; owner explanation stays open |
 | 2 | PowerShell noise review | Existing rule 100100 works within its scope; proposed filename-only expansion is held for a [writer/path and negative-control review](docs/powershell-policy-probe-tuning-review.md), not deployed |
 | 3 | Resume TCP/Nmap learning | Build a harmless offline TCP rule/control test, then a separate bounded owned-VM exercise on a verified capture path; [existing baseline](docs/nmap-exposure-baseline.md) is already complete |
@@ -28,8 +30,13 @@ The owner's maintained-library request now has a [separate inventory and rollout
 guide](docs/detection-library-plan.md). All 147 observed alert types are indexed
 privately; 40 have historical rule reviews and 107 do not, without inheriting
 old verdicts. ET Open is downloaded and field-reviewed only, not deployed.
-Collection pressure recorded earlier on October 7 needs fresh health/cause
-review before sustained load; TCP/Nmap remains the selected learning track.
+Current collection takes priority: SQL and the Indexer agree that the newest
+Windows record is a disconnection alert at 10:49:46.056 UTC, despite running
+services and successful loader outcomes. The agent is attempting an old VM
+address; the current LAN data port is reachable. The protected configuration/log
+review and authenticated reconnection are still unverified. Earlier explicit
+Sysmon drops also need a separate cause/health review. TCP/Nmap remains the
+selected learning track, paused at this prerequisite rather than abandoned.
 
 Off-LAN administration, additional routers/VPN egress and separate web/test VMs
 remain deferred or planned. They do not displace the owner's TCP/Nmap learning
@@ -62,6 +69,27 @@ All ten current scanner findings have a documented [applicability assessment](do
 The SOC's existing environment now uses Python 3.14.8; candidate and installed-runtime tests passed, and fresh ingestion and trusted HTTPS remain successful. Steam stays installed with the reviewed broad Users folder/registry write grants removed; owners and five binary hashes are unchanged, and unelevated owner write probes pass. Actual Steam gameplay and updater checks are not claimed. The other Python installer is verified/staged, not run: six unrelated workloads remain active at the owner's request. No new vulnerability-resolution count or CIS score is inferred ([evidence and limits](docs/software-hardening-validation.md)).
 
 ## Network pilot (Suricata)
+
+### Windows Collection Gate (October 7)
+
+At approximately 20:55-21:01 UTC, read-only SQL and TLS-verified Indexer checks
+found the same Windows cutoff at 10:49:46.056 UTC, with 34,124 retained Windows
+alerts; its latest rule 504 reports disconnection. New manager records continue
+arriving and the latest twelve loader outcomes succeeded. The running Windows
+Wazuh process owns a SYN-sent connection toward a stale VM address, while one
+bounded handshake to the current LAN data port passed. Manager-name resolution
+has both current-subnet and stale results. Protected agent files cannot be read
+by the unelevated tool process; no permissions were bypassed.
+
+A new administrator diagnostic is prepared with 17 synthetic checks, not yet
+executed against protected inputs. It saves selected settings/state/log/network
+metadata privately without changing services or settings. Historical Sysmon
+Event 255 text explicitly reports dropped registry events; do not sum counters
+or assume a shared cause with this outage. No live repair, new rules, scan or
+capture was performed. See [actual checks and completion gates](docs/collection-health-validation.md).
+Verification: 17 helper, 43 reliability/library and 33 publication-privacy
+checks passed (93 total); all 336 checked local documentation links resolve.
+Private health evidence reader permissions and snapshot hashes were checked.
 
 ### Maintained Rule Library Preparation (October 7)
 

@@ -9,8 +9,8 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
 | 0. Prepare the lab (Hyper-V, Ubuntu VM) | Done |
 | 1. Wazuh all-in-one stack | Done and hardened |
 | 2. Sysmon on Windows | Done |
-| 3. Wazuh agent on Windows | Done, agent `jordan-pc` is Active |
-| 4. Prove the event path end to end | Done, traced through every layer (docs/event-trace.md) |
+| 3. Wazuh agent on Windows | Installed; October 7 current collection gate open: latest Windows record reports disconnection, service attempting a stale VM address |
+| 4. Prove the event path end to end | Historical trace done (docs/event-trace.md); new Windows event trace required after collection repair |
 | 5. Suricata network telemetry | Partial: offline reporting, bounded live VM-to-host controls and independent packet review pass; saved-live alert verified in Wazuh dashboard, Indexer and normal-loader SQL; fresh Power BI check deferred, sustained/broader coverage pending |
 | 6. Watchtide API on live Wazuh data | Private live API not started; public console serves a sanitized snapshot of real lab data |
 | 4b. Posture review | Historical baseline: 437 of 447 findings resolved, CIS 27.1% to 37.0%; reviewed file/logging, SOC runtime patch and Steam access checks pass; remaining hardening and fresh posture scan open |
@@ -18,6 +18,29 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
 | 8. Power BI report | October 5: all six pages rendered, offline network fields/metrics/filter verified; October 7 live-context definitions updated, fresh Desktop verification deferred; imported cache ignored |
 | Detection validation | In progress: controlled SSH password-guessing test detected end to end; historical post-tuning clusters reviewed, later alerts need fresh verdicts |
 | 4c. Tailscale private remote access | Trusted local HTTPS/dashboard login verified; renewal setup reported successful; phone test declined and approved off-LAN access deferred; remaining exposure/recovery/reporting gates open |
+
+## October 7: Collection Health Before Rule Expansion
+
+- SQL and the TLS-verified Indexer independently agree on the Windows cutoff:
+  10:49:46.056 UTC, latest rule 504 (disconnection), 34,124 retained Windows
+  alerts. New manager records continue arriving; latest twelve loader outcomes
+  succeeded. That does not prove current Windows collection.
+- Attributed a SYN-sent stale-destination connection to the Windows Wazuh service
+  process. Manager-name resolution has current and stale addresses. One bounded
+  current-LAN data-port handshake passed; authentication is not implied.
+- Retained Sysmon Event 255 text explicitly reports dropped registry events
+  earlier that morning. Historical queue loss and current disconnection remain
+  separate findings; no common cause or compromise is inferred.
+- Unelevated agent configuration/log reads were denied. Prepared a read-only
+  administrator diagnostic with owner-protected output and 17 synthetic checks.
+  Actual elevated evidence, necessary bounded repair and fresh event flow remain
+  open. No live settings, service, network, rules or capture changed.
+- Added [collection findings and finish gates](docs/collection-health-validation.md)
+  and inserted this prerequisite into the existing TCP/Nmap sequence.
+- Verification: 93 focused checks passed (17 administrator-helper synthetic,
+  43 reliability/library, 33 publication-privacy); all 336 checked local
+  documentation links resolve. Private health evidence permissions and hashes
+  pass. These are preparation checks, not proof of a repaired agent.
 
 ## October 7: Inventory Alerts And Stage A Maintained Detection Library
 

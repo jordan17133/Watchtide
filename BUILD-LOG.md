@@ -11,7 +11,7 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
 | 2. Sysmon on Windows | Done |
 | 3. Wazuh agent on Windows | Done, agent `jordan-pc` is Active |
 | 4. Prove the event path end to end | Done, traced through every layer (docs/event-trace.md) |
-| 5. Suricata network telemetry | Partial: controlled offline event verified through dashboard/Indexer/SQL/Power BI; live capture and whole-home coverage pending |
+| 5. Suricata network telemetry | Partial: controlled offline event verified through reporting; bounded live VM-to-host controls pass; independent packet review, live reporting and broader coverage pending |
 | 6. Watchtide API on live Wazuh data | Private live API not started; public console serves a sanitized snapshot of real lab data |
 | 4b. Posture review | Historical baseline: 437 of 447 findings resolved, CIS 27.1% to 37.0%; reviewed file/logging, SOC runtime patch and Steam access checks pass; remaining hardening and fresh posture scan open |
 | 7. SQL Server reporting storage | Done: loader every 15 minutes; case log with history (`warehouse/cases.py`) meets the incident gate |
@@ -83,6 +83,24 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
   errors and unsafe output directories. Prepared a fresh activation requiring
   the reviewed stopped stage to match before retrying; corrected guest execution
   remains pending. No key, firewall, collection or installed configuration change.
+- The owner supplied the fourth activation's `BOUNDED_LIVE_SURICATA_TRIAL_PASSED`
+  result, completed October 7 at 14:35:52 UTC. Prior-stop review and corrected
+  engine test passed. Both capture windows decoded exactly one outgoing request
+  with explicit zero kernel drops; only the marked request alerted (SID 9000001).
+  Each window took 7.141 seconds, sampled sensor RSS was about 50 MiB, and child
+  CPU time was 0.436/0.474 seconds, including ping/watchdog. No echo reply was
+  received; the requests themselves were observed. Five SOC services stayed
+  active, installed settings were unchanged and the sensor stopped cleanly.
+  The permanent service remains masked; no live reporting, browsing or phone
+  coverage is claimed. Raw captures, hashes and staging details stay private.
+- Prepared a read-only transfer/review helper pinned to those two reported
+  packet hashes. Twelve local checks pass, including real TShark decoding of
+  synthetic request-shaped controls, failed-transfer cleanup and rejection of
+  mismatched alert timestamps. All 173 selected Suricata, loader and publication
+  privacy tests pass. Actual capture retrieval and independent
+  review still require local SSH/sudo authentication. The helper changes no
+  guest files, services, policies or collection settings; it stores evidence
+  outside Git and compares the positive alert's time with the captured packet.
 
 ## What is running
 

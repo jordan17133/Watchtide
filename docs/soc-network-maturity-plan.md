@@ -131,14 +131,15 @@ or untested status. Absence of records is never automatically marked safe.
 
 ### C Bounded Live Suricata Trial
 
-- [ ] Review current guest interfaces, permissions, service state and resources.
+- [x] Review current guest interfaces, permissions, service state and resources
+  through the bounded activation's reported prerequisite checks.
 - [x] Prepare a separately approved, time-limited passive trial for one candidate
   interface, requiring guest route verification before capture and preserving
   the masked always-on service with a clear stop path.
-- [ ] Use harmless owned traffic and the proven marker rule; record packet
+- [x] Use harmless owned traffic and the proven marker rule; record packet
   counts, capture drops, alerts, CPU/memory and SOC/loader health before/after.
-- [ ] Include a visible positive and negative control, with a test label and
-  actual timestamps, and verify the exact sensor scope.
+- [ ] Independently inspect the saved positive and negative packets and explain
+  their test labels, actual timestamps and the exact observed sensor scope.
 
 Acceptance: a real live packet is observed and the expected rule result is
 explained, with capture/resource limits recorded. This is not yet whole-home
@@ -146,9 +147,10 @@ visibility, packet blocking or permission to leave capture running indefinitely.
 
 October 7 preparation: the [bounded live trial](suricata-live-trial.md) has
 29 local regression checks, a direct-route gate, narrow test-packet filter,
-resource guards and per-capture watchdogs. Guest interface verification and
-actual capture still require execution. Current scope is the Windows PC and
-iPhone; the VM is inside the PC. No browsing or phone packet coverage is claimed.
+resource guards and per-capture watchdogs. The fourth activation subsequently
+passed its guest route/prerequisite gates and actual capture. Current device
+scope is the Windows PC and iPhone; the VM is inside the PC. No browsing or phone
+packet coverage is claimed.
 The first authenticated attempt stopped before capture at an over-strict
 directory-owner guard. The second attempt confirmed the exact package-managed
 directory facts without permission changes, then stopped after staging. An
@@ -156,7 +158,13 @@ empty optional YAML section reproduced from the reviewed package is now handled
 correctly. Protected prior-attempt review must pass before another capture.
 The third attempt passed that review but its configuration-test identity change
 failed before capture. The corrected test lets Suricata drop privileges itself;
-the live non-root UID check remains required. Guest verification is pending.
+the live non-root UID check remains required. The owner supplied the fourth
+activation's pass: one captured/decoded request in each control, explicit zero
+drops, one marker alert and no control alert, resource measurements and five
+active SOC services. No sensor process survived. Independent packet inspection
+and the owner's explanation are still open, so Phase C is not fully closed.
+A read-only review helper is prepared with twelve local checks; actual capture
+transfer and TShark review are pending. Phase D live reporting is unchanged.
 
 ### D Live Alert Reporting
 

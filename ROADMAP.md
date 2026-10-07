@@ -49,8 +49,12 @@ actual package, and requires review of that stopped attempt before capture.
 The third attempt confirmed that review and built the configuration, then failed
 its engine identity transition in test mode, before capture. The revised check
 lets Suricata perform its own configured privilege drop and requires matching
-protected syntax-failure evidence before retrying. Guest verification is pending.
-Ubuntu capture and independent packet inspection are still pending.
+protected syntax-failure evidence before retrying. The fourth activation passed:
+one real request per control, zero drops, one marker alert, no control alert,
+approximately 50 MiB sampled sensor RSS, five healthy SOC services and clean
+shutdown. Independent packet inspection and owner explanation remain open;
+a read-only review helper is prepared with twelve local checks, not yet executed
+against the actual captures. Live reporting remains L4, not completed by this test.
 The current scope is the Windows PC and iPhone;
 the VM is inside the PC. No browsing or phone network coverage is claimed.
 

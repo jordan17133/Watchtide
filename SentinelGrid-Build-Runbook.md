@@ -378,9 +378,13 @@ and failed an identity transition in configuration-test mode, before capture.
 The corrected test starts as root and lets the engine drop to its configured
 service account; it does not select live capture. Exact protected syntax-stop
 evidence must match before retrying. No permissions are relaxed. The planned
-trial observes only two harmless VM-to-Windows echo requests in bounded windows. Guest execution and
-independent packet inspection remain pending; browsing and phone visibility
-are not implied. The permanent Suricata service stays masked.
+trial observes only two harmless VM-to-Windows echo requests in bounded windows.
+The fourth activation passed: one request per control, zero drops, marker alert
+only, five healthy SOC services and clean shutdown. Independent packet review
+and owner explanation remain pending; the read-only TShark review helper is
+prepared with twelve local checks but has not read the actual captures. Live
+reporting, browsing and phone visibility are not implied. The permanent
+Suricata service stays masked.
 
 Do this only after Stage 4 works reliably.
 

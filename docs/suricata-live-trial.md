@@ -1,13 +1,35 @@
 # First Live Suricata Trial
 
-Updated: October 7, 2026. Status: revised bounded activation prepared and 29 local
-regression tests pass. **No successful live capture is verified.** The first
-authenticated attempt stopped during parent-directory preflight. The second
-passed that guard, created private staging evidence and stopped with a generic
-failure. The third confirmed that earlier stop, built the configuration and
-failed during the engine's identity transition in configuration-test mode.
-No capture started. Existing detection proof still consists of the offline
-marker test and its exact reporting trace.
+Updated: October 7, 2026. **The bounded live trial passed**, based on the owner's
+fourth activation output, completed at 14:35:52 UTC. The corrected configuration
+check passed, both real test requests were captured/decoded, and the positive
+and negative controls behaved as expected. The five SOC services remained active
+and the permanent sensor stayed masked with no surviving capture process.
+Independent review of the saved packets, owner explanation and live reporting
+are still open. This is not continuous browsing or whole-home coverage.
+
+| Measurement | Unmarked control | Marked request |
+|---|---|---|
+| Captured and decoded requests | 1 | 1 |
+| Kernel capture drops | 0 | 0 |
+| Alerts, SID 9000001 | 0 | 1 |
+| Capture-window wall time | 7.141 s | 7.141 s |
+| Sampled peak sensor RSS | 50.0 MiB | 50.3 MiB |
+| Child CPU time | 0.436 s | 0.474 s |
+| Echo reply received | No | No |
+
+These are measurements of two controlled requests, not a throughput, long-term
+resource or availability benchmark. Child CPU includes the ping/watchdog and
+sampled RSS may miss brief peaks. Actual packet hashes and raw evidence remain
+private. No incident, case-count or ATT&CK coverage credit is added for the benign
+marker test.
+
+## Setup Corrections
+
+The first authenticated attempt stopped during directory preflight, the second
+during configuration construction, and the third during the engine's identity
+transition in test mode. None reached capture. The fourth reviewed the third's
+protected failure evidence before the successful corrected trial.
 
 The first guard incorrectly required root ownership of the configuration
 directory. The hash-verified reviewed package's installation script intentionally
@@ -24,7 +46,7 @@ YAML: the optional `security.lua` section is empty, parsed as `None`, and the
 old configuration builder tried to edit it as a mapping. The revised builder
 handles empty sections, preserves other security settings and rejects malformed
 non-mapping sections. The full packaged YAML now builds and round-trips locally;
-the guest's Suricata syntax test and actual capture remain separate gates.
+the fourth guest activation then passed the engine check and actual capture.
 
 The owner read the third attempt's protected engine log: the main-thread
 `capng_change_id` call failed. The test subprocess had already been started as
@@ -34,7 +56,8 @@ groups and lets the engine perform its configured identity drop. It tests the
 same file/rule used for capture, with fatal rule-initialization errors and a
 30-second timeout. It does not select a capture interface or run packet capture.
 The live sensor's service-account setting and observed non-root UID gate stay
-unchanged. Guest verification of the corrected check is still pending.
+unchanged. The fourth activation reported `SYNTAX_CHECK_EXIT_CODE: 0` and passed
+both capture windows with those gates intact.
 
 Before another capture, the revised activation reviews the specified stopped
 attempt's protected evidence directory. It accepts either the exact three
@@ -78,7 +101,7 @@ device. Broader guest/IoT expansion is a future option, not current coverage.
 | Source | Evidence so far | Important gap |
 |---|---|---|
 | Windows endpoint | Sysmon/Wazuh alerts and existing SQL/Power BI reporting | Stored alerts are not a complete connection, DNS or browser-history archive |
-| Ubuntu sensor | Offline marker detection and controlled reporting trace | Live interface/packet/drop evidence remains pending this trial |
+| Ubuntu sensor | Bounded live VM-to-host marker/control test passed, including packet/drop/resource checks | Independent packet review, live reporting and sustained coverage remain open |
 | Windows Internet traffic | No live Suricata feed verified | The NAT VM does not automatically observe the host's browsing |
 | iPhone | Tailscale enrollment reported; SOC access remains denied | No packet feed or endpoint telemetry into the SOC verified |
 
@@ -123,18 +146,31 @@ the launcher. The preparation-only SSH key is not broadened into shell access.
   using its protected artifacts, not only the generic console message.
 - [x] Read the third attempt's engine error and identify the identity-transition
   failure in configuration-test mode, before capture.
-- [ ] Review that exact protected syntax-failure stage during revised activation.
-- [ ] Validate the live configuration with the corrected Suricata `-T` check.
-- [ ] Observe exactly one request in each test window, with matching flow fields.
-- [ ] Verify explicit zero kernel drops; absent counters must not count as zero.
-- [ ] Verify one marker alert and zero control alerts, with current timestamps.
-- [ ] Record private PCAP hashes, wall time, sampled peak RSS and child CPU time.
+- [x] Review that exact protected syntax-failure stage during revised activation.
+- [x] Validate the live configuration with the corrected Suricata `-T` check.
+- [x] Observe exactly one request in each test window, with matching flow fields.
+- [x] Verify explicit zero kernel drops; absent counters must not count as zero.
+- [x] Verify one marker alert and zero control alerts, with current timestamps.
+- [x] Record private PCAP hashes, wall time, sampled peak RSS and child CPU time.
   Child CPU includes the ping/watchdog, not just the Suricata process. Sampled
   peak RSS is not a guarantee that no higher transient peak occurred.
-- [ ] Confirm five SOC services remain active, installed configuration matches
+- [x] Confirm five SOC services remain active, installed configuration matches
   its preflight bytes, and no Suricata process survives the trial.
 - [ ] Independently inspect the saved packets with Wireshark/TShark.
 - [ ] Explain the result and the unobserved paths in the owner's own words.
+
+The completed boxes above describe the bounded activation's reported checks.
+The read-only packet-review helper is prepared with twelve local tests, including
+decoding synthetic request-shaped packets using the existing Windows TShark,
+failed-transfer cleanup and rejection of mismatched alert timestamps.
+It requires the exact completed stage and both reported PCAP hashes, reads only
+two small captures plus their path/result and positive alert, and saves them
+outside Git in the protected private workspace. SSH/sudo prompts remain local;
+the capture bytes are not printed in the console. TShark then reads the saved
+files with name resolution disabled and no live-capture options. It checks the
+request addresses/type/code, marker/control and positive alert's packet time.
+Actual transfer and packet review have not run; this helper changes no guest
+file, collection, rule, permissions, key or network settings.
 
 A missing ping reply is not automatically a detection failure: the Windows
 firewall may decline echo replies. The test instead requires evidence that

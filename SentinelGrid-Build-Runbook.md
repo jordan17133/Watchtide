@@ -383,9 +383,12 @@ The fourth activation passed: one request per control, zero drops, marker alert
 only, five healthy SOC services and clean shutdown. Independent TShark review
 of both actual captures passed, including hashes, packet fields, marker/control
 and positive alert time. Owner explanation remains pending. A
-[separate saved-live handoff](docs/suricata-live-reporting-handoff.md) is prepared,
-not run; its SQL context is deployed and Power BI definitions updated. Actual
-live-event reporting, browsing and phone visibility are not implied. The
+[separate saved-live handoff](docs/suricata-live-reporting-handoff.md) completed.
+The same live-test document is verified in the authenticated Wazuh dashboard,
+Indexer and SQL via the normal loader; one offline and one saved-live record
+remain distinct. Existing Power BI definitions are updated, with fresh Desktop
+verification deferred while the owner uses the PC. Browsing and phone visibility
+are not implied. The
 permanent Suricata service stays masked.
 
 Do this only after Stage 4 works reliably.

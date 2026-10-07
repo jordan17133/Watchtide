@@ -189,11 +189,14 @@ This trial saves private evidence; it does not append live EVE to Wazuh or
 change the existing offline-only collection label. Do not relabel a live
 event as the historical synthetic fixture just to reuse that source.
 
-A [one-time saved-live handoff](suricata-live-reporting-handoff.md) is now prepared
-with a separate controlled-live label, pinned evidence, existing Wazuh rule test,
-private backup and manager-only restart. It has not run. The SQL context branch
-is deployed and the existing Power BI definitions count both known controlled
-contexts, but live-event ingestion and actual Desktop refresh remain unverified.
+A [one-time saved-live handoff](suricata-live-reporting-handoff.md) subsequently
+completed with a separate controlled-live label, pinned evidence, installed
+Wazuh rule test, private backup and manager-only restart. The exact saved-live
+document is verified in the authenticated Wazuh dashboard, Indexer and SQL via
+the normal scheduled loader. Original packet time remains separate from later
+processing/load times. The warehouse contains one offline and one saved-live
+record; existing Power BI definitions count both. Fresh Desktop verification is
+deferred while the owner uses the PC, not implied by the SQL proof.
 Routine DNS/flow coverage and the iPhone need their own supported feeds,
 retention budgets and health checks.
 

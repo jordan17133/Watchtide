@@ -1,6 +1,6 @@
 # Suricata Pilot: Traffic, Rules and Reporting
 
-Updated: October 5, 2026. Status: Suricata 8.0.7 installed and isolated marker-rule
+Updated: October 7, 2026. October 5 baseline: Suricata 8.0.7 installed and isolated marker-rule
 validation passed in the owner's supplied engine result. A subsequent maintenance
 check confirmed the installed package and five healthy SOC services. The corrected
 [controlled Wazuh handoff](suricata-wazuh-handoff.md) completed in supplied guest
@@ -8,14 +8,19 @@ output, and independent Indexer/SQL queries verified the same labeled alert.
 Suricata remains masked; no live capture feed is enabled. The exact alert is now
 verified in the existing dashboard and a deployed read-only network reporting
 view. The existing six-page Power BI report refreshed and rendered, including
-the matching event and network metrics; live capture remains separate
+the matching offline event and network metrics; that Desktop check is historical
 ([reporting proof and limits](network-reporting-validation.md)). See
 the [engine validation evidence](suricata-offline-validation.md).
 
-October 7: a [bounded live VM-to-host trial](suricata-live-trial.md) is prepared
-with local safety tests. It has not run on Ubuntu; the masked service and
-offline-only reporting proof remain unchanged. The current device scope is
-the Windows PC and iPhone, with the SOC VM inside the PC.
+October 7: the [bounded live VM-to-host trial](suricata-live-trial.md) and independent
+inspection of its actual packets passed. One marked request alerted; one unmarked
+request did not. The [saved-live handoff](suricata-live-reporting-handoff.md) then
+completed: the exact document is verified in the authenticated Wazuh dashboard,
+TLS-verified Indexer and normal-loader SQL. There is one offline and one saved-live
+validation record. Fresh Power BI verification is deferred while the owner uses
+the PC. Suricata remains masked; no continuous feed is enabled. The current
+device scope is the Windows PC and iPhone, with the SOC VM inside the PC, but
+this trial observes only the controlled VM-to-host requests, not their browsing.
 
 ## What We Are Adding
 

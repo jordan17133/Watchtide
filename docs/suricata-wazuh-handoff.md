@@ -141,8 +141,10 @@ tested restore scenario. Any already emitted test alert is retained as evidence.
   writes SQL directly nor alters that loader.
 - The later October 7 [bounded live capture](suricata-live-trial.md) passed its
   packet/drop/resource checks and independent inspection. Its
-  [separate reporting handoff](suricata-live-reporting-handoff.md) is prepared,
-  not executed. Wider home-network visibility remains open; neither test
+  [separate reporting handoff](suricata-live-reporting-handoff.md) completed;
+  the exact saved-live alert is verified in the Wazuh dashboard, Indexer and
+  normal-loader SQL. Fresh Power BI verification remains deferred. Wider
+  home-network visibility remains open; neither test
   inspects personal browsing.
 
 References: [Wazuh Suricata integration](https://documentation.wazuh.com/current/proof-of-concept-guide/integrate-network-ids-suricata.html),

@@ -11,13 +11,41 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
 | 2. Sysmon on Windows | Done |
 | 3. Wazuh agent on Windows | Done, agent `jordan-pc` is Active |
 | 4. Prove the event path end to end | Done, traced through every layer (docs/event-trace.md) |
-| 5. Suricata network telemetry | Partial: offline reporting, bounded live VM-to-host controls and independent packet review pass; live reporting handoff prepared; actual ingestion/refresh and broader coverage pending |
+| 5. Suricata network telemetry | Partial: offline reporting, bounded live VM-to-host controls and independent packet review pass; saved-live alert verified in Wazuh dashboard, Indexer and normal-loader SQL; fresh Power BI check deferred, sustained/broader coverage pending |
 | 6. Watchtide API on live Wazuh data | Private live API not started; public console serves a sanitized snapshot of real lab data |
 | 4b. Posture review | Historical baseline: 437 of 447 findings resolved, CIS 27.1% to 37.0%; reviewed file/logging, SOC runtime patch and Steam access checks pass; remaining hardening and fresh posture scan open |
 | 7. SQL Server reporting storage | Done: loader every 15 minutes; case log with history (`warehouse/cases.py`) meets the incident gate |
-| 8. Power BI report | All six pages rendered after refresh; network fields/metrics/filter verified; saved model parsed, available-schema checks passed with one unpublished schema; imported cache ignored |
+| 8. Power BI report | October 5: all six pages rendered, offline network fields/metrics/filter verified; October 7 live-context definitions updated, fresh Desktop verification deferred; imported cache ignored |
 | Detection validation | In progress: controlled SSH password-guessing test detected end to end; every Critical alert since tuning explained |
 | 4c. Tailscale private remote access | Trusted local HTTPS/dashboard login verified; renewal setup reported successful; phone test declined and approved off-LAN access deferred; remaining exposure/recovery/reporting gates open |
+
+## October 7: Verify The Saved-Live Reporting Handoff
+
+- The owner supplied `SURICATA_LIVE_WAZUH_LOCAL_ALERT_VERIFIED`: actual EVE/rule
+  preflight passed, only the manager restarted, and all five guest SOC services
+  were active afterward. No new capture, blocking, firewall, VPN, SSH-key or
+  loader change. The same completed one-time job was not rerun.
+- Independent read-only Indexer search over the existing restricted tunnel and
+  pinned TLS trust found the exact alert once. Its controlled-live label is
+  unique. SQL's full raw event equals the Indexer source; identity, network
+  fields, original timestamp, distinct context and both severity scales match.
+  The authenticated in-app Wazuh dashboard displays that same document.
+- Packet time is 14:35:45.491168 UTC, Wazuh processing 15:51:26.552 UTC and SQL
+  load 15:57:43.530 UTC. The earlier interval includes a deliberate saved-event
+  delay, not measured streaming latency. Wazuh formats the flow integer with
+  six decimal places; exact decimal comparison proves unchanged numeric value.
+- The normal scheduled loader returned 0 and its successful run covers this
+  SQL load time. The warehouse now contains one offline and one controlled-live
+  validation record. All four Windows SOC services were running. Five focused
+  read-only verifier tests cover identity, uniqueness, timestamps and formatting.
+- Power BI definitions were already updated; fresh Desktop refresh/rendering
+  remains deferred at the owner's request to keep work in the app while gaming.
+  No desktop control continued after that request. Private proof stays outside
+  GitHub. No incident, ATT&CK credit, sustained capture or browsing/phone coverage
+  is claimed. See [recorded proof and checklist](docs/suricata-live-reporting-handoff.md).
+- All 209 selected regression checks passed: 136 Suricata, 23 loader reliability,
+  31 publication privacy and 19 network reporting, including 11 actual isolated
+  SQL tests. No disposable network/committed-snapshot test database remained.
 
 ## October 7: Bounded Live Trial Preparation And Loader Address Review
 

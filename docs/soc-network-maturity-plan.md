@@ -174,17 +174,24 @@ The owner's explanation remains open, so Phase C's learning gate is not closed.
   bounded retention before changing Wazuh collection.
 - [ ] Trace the same harmless live alert through the manager, Indexer, scheduled
   loader, SQL and Power BI without confusing it with the historical fixture.
+- [x] Verify the saved-live pilot through the authenticated Wazuh dashboard,
+  TLS-verified Indexer and normal-loader SQL, preserving original packet time.
+- [ ] Refresh the existing Power BI project with both controlled contexts;
+  deferred while the owner uses the PC, not treated as a failed refresh.
 - [ ] Test collector/file rotation and service restart recovery without duplicate
   ingestion or interruption to existing endpoint logs.
 
 Acceptance: the exact live document and original fields agree across layers;
 freshness, duplicates, rotation and rollback are checked.
 
-October 7: a [one-time saved-live handoff](suricata-live-reporting-handoff.md) is
-prepared with 12 focused checks, a separate protected source/label and guarded
-manager-only restart. It has not run. The SQL live-context branch is deployed,
-preserving 32 columns and the original offline record, and the existing Power BI
-definitions are updated. Actual live-event ingestion and refresh are pending.
+October 7: the [one-time saved-live handoff](suricata-live-reporting-handoff.md)
+completed with a separate protected source/label and manager-only restart. All
+five guest services were active afterward. Independent Indexer and SQL checks
+found the exact document once; its original fields and packet time agree with
+the reviewed capture. The authenticated Wazuh dashboard shows the same document.
+The normal scheduled loader succeeded and now stores one offline and one
+saved-live validation record. Existing Power BI definitions are updated, but
+fresh Desktop verification is deferred while the owner uses the PC.
 This bounded pilot does not close routine collection/rotation or recovery gates.
 
 ### E Routine Network Activity

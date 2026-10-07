@@ -1,11 +1,12 @@
 # Saved Live Suricata Alert: Reporting Handoff
 
-Updated October 7, 2026. **Prepared, not executed on Ubuntu.** The bounded live
-capture and independent TShark inspection pass. The SQL reporting view's new
-live-validation context is deployed; the existing Power BI definitions are
-updated. No live-test alert has yet been verified in Wazuh, the Indexer, SQL or
-refreshed Power BI. The current warehouse still contains the original one
-offline validation record.
+Updated October 7, 2026. **Handoff executed; Wazuh dashboard, Indexer and SQL
+verified.** The bounded live capture and independent TShark inspection pass.
+Exactly one saved-live document reached the TLS-verified Indexer and SQL through
+the normal scheduled loader. The existing warehouse now contains one offline
+and one controlled-live validation record. The existing Power BI definitions
+are updated; its fresh Desktop refresh/rendering is deferred while the owner
+uses the PC. No continuous capture or browsing/phone coverage is claimed.
 
 ## Plain-English Purpose
 
@@ -26,7 +27,7 @@ This is a delayed handoff of a verified live-capture test, not a new capture,
 real-time monitoring or an incident. Its original packet time must stay intact;
 Wazuh's later processing time and SQL's load time are different facts.
 
-## Prepared Change
+## Executed Change
 
 1. Require the reviewed Ubuntu manager, five healthy SOC services, active
    Filebeat and a masked/inactive Suricata with no sensor process.
@@ -78,6 +79,41 @@ controlled-test measure now includes both known contexts; its Network Detection
 chart has a separate live-test color. The original five pages were not regenerated.
 Definitions and SQL tests pass; Desktop refresh/rendering is still a separate gate.
 
+## Observed Proof
+
+The owner's one-time activation returned `SURICATA_LIVE_WAZUH_LOCAL_ALERT_VERIFIED`:
+the installed rule test passed, only the manager restarted, and all five guest
+SOC services were active afterward. Independent read-only checks then matched
+the exact Indexer document, raw SQL event and all report identity/network fields.
+The controlled-live label occurs exactly once in the Indexer and SQL. The same
+document was opened in the existing authenticated in-app Wazuh dashboard.
+
+| Time (UTC, October 7) | Meaning |
+|---|---|
+| 14:35:45.491168 | Suricata observed the marked packet during the earlier trial |
+| 15:51:26.552 | Wazuh processed the saved alert after the manual handoff |
+| 15:57:43.530 | The normal scheduled loader stored the document in SQL |
+
+The interval before Wazuh processing includes a deliberate saved-event delay;
+it is not a real-time ingestion performance measurement. Original packet
+microseconds remain in the Indexer source and SQL; the dashboard's formatted
+date field displays milliseconds. Wazuh renders the integer flow identifier
+with six decimal places. Exact decimal comparison confirmed unchanged numeric
+value; SQL retains that decoded string and the complete matching raw event.
+
+Task Scheduler returned 0 for the 11:57:41 Eastern run; the corresponding
+successful warehouse run covers the event's SQL load time. The four Windows
+SOC services were running. Private evidence retains the actual document ID,
+addresses, original event and comparisons outside the repository. The read-only
+verifier has five focused tests for identity, uniqueness, timing, context and
+exact flow-number formatting. It does not insert data or run the loader.
+
+In simple terms: the detector noticed our special test ping, Wazuh understood
+its alert, and the warehouse kept the same record. SID `9000001` recognizes an
+ICMP echo request containing `WATCHTIDE-PILOT`; it does not recognize malware.
+The unmarked request did not alert. Suricata priority 3 and Wazuh level 3 are
+separate severity systems, even though this test uses the same number.
+
 ## Acceptance Checklist
 
 - [x] Independently inspect both actual saved packets and positive alert time.
@@ -85,10 +121,10 @@ Definitions and SQL tests pass; Desktop refresh/rendering is still a separate ga
 - [x] Pass 19 reporting checks, including 11 actual disposable-database tests;
   no synthetic test database remains.
 - [x] Apply only the new reporting context branch, preserving schema and records.
-- [ ] Run authenticated guest preflight, configuration/rule validation and handoff.
-- [ ] Find exactly one matching live-test document in the TLS-verified Indexer.
-- [ ] Open the same labeled document in the existing authenticated dashboard.
-- [ ] Verify that the normal scheduled loader stores the same document and fields.
+- [x] Run authenticated guest preflight, configuration/rule validation and handoff.
+- [x] Find exactly one matching live-test document in the TLS-verified Indexer.
+- [x] Open the same labeled document in the existing authenticated dashboard.
+- [x] Verify that the normal scheduled loader stores the same document and fields.
 - [ ] Refresh the existing six-page Power BI project and verify the live context,
   both timestamps, both controlled records and resettable filter.
 - [ ] Explain the marker rule, observed path and missing browsing/phone coverage.

@@ -10,8 +10,10 @@ Desktop retest passed, including the exact controlled network record and a
 resettable context filter. Permanent capture remains disabled. The October 7
 [bounded live trial and independent packet review](suricata-live-trial.md) later
 passed; the [saved-live reporting handoff](suricata-live-reporting-handoff.md)
-is prepared, not run. Its SQL context branch is deployed and existing Power BI
-definitions updated; this later live event and Desktop refresh are not yet verified.
+completed. Its exact document and original fields are verified in the Wazuh
+dashboard, Indexer and SQL through the normal loader. The warehouse contains
+one offline and one saved-live record. Existing Power BI definitions are updated;
+fresh Desktop refresh/rendering is deferred while the owner uses the PC.
 
 ## What Changed And Why
 
@@ -125,6 +127,8 @@ The October 7 view update preserved its 32-column contract and original offline
 record; no stored telemetry or permissions changed. Its controlled-test measure
 now includes both known contexts, with a separate live-test chart color. The
 October 5 Desktop figures above remain historical, not a retest of these changes.
+The October 7 read-only proof separately confirms the live context, matching raw
+event and original packet microseconds in SQL; it does not refresh Desktop's cache.
 
 The reporting-role simulation is not a review of the actual Windows account
 used by Desktop. Sustained host/loader load, refresh duration, capture loss,

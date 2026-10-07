@@ -36,7 +36,7 @@ learning checks. A tool installation is not a detection-validation milestone.
 | L1 | Wireshark/TShark: inspect the existing synthetic positive/negative packets | 5 | Packet fields and exact rule conditions checked; owner explains both nonmatches |
 | L2 | Nmap: four-port check on one owned SOC VM | 4c / hardening | Expected/actual reachability recorded for a named source/path; port states understood |
 | L3 | Bounded live Suricata capture | 5 | Supported interface, harmless controls, packet/drop/resource evidence and scope verified |
-| L4 | Investigate and report one live network detection | 5, 7, 8 | Exact live event traced through existing reporting, with a case and known gaps |
+| L4 | Investigate and report one live network detection | 5, 7, 8 | Exact live event traced through existing reporting, with a validation note and known gaps; incident cases only where warranted |
 | L5 | Burp Community: manual request/response exercise | Separate test-lab track | HTTP/session behavior and server evidence explained |
 | L6 | sqlmap: known vulnerable/corrected web-lab input | Separate test-lab track | Selected input tested; evidence and remediation comparison written up |
 | L7 | Metasploit: one selected test against the separate test VM | Detection validation | Data prerequisites, detection/miss, cleanup and case verified |
@@ -54,14 +54,16 @@ one real request per control, zero drops, one marker alert, no control alert,
 approximately 50 MiB sampled sensor RSS, five healthy SOC services and clean
 shutdown. Independent inspection of both actual PCAPs also passed: hashes, path,
 ICMP request fields, marker/control and positive alert time match. Owner
-explanation remains open. L4 has a [one-time saved-live handoff](docs/suricata-live-reporting-handoff.md)
-prepared with 12 focused checks, not executed. Its SQL context is deployed and
-existing Power BI definitions are updated; actual ingestion/refresh remain open.
+explanation remains open. L4's [one-time saved-live handoff](docs/suricata-live-reporting-handoff.md)
+completed: the exact document is verified in the authenticated Wazuh dashboard,
+TLS-verified Indexer and SQL through the normal scheduled loader. There is one
+offline and one saved-live record. Existing Power BI definitions are updated;
+fresh Desktop refresh/rendering is deferred while the owner uses the PC.
 The current scope is the Windows PC and iPhone;
 the VM is inside the PC. No browsing or phone network coverage is claimed.
 
 The first L1/L2 tool exercises pass; owner explanations remain open. Continue
-the L4 reporting handoff while retaining hardening gates. Review host memory and lab
+the L4 Power BI verification while retaining hardening gates. Review host memory and lab
 placement before creating another VM or adding live capture. Burp/sqlmap/
 Metasploit stay planned until their own lab exercises are ready. Nmap reports
 and captures are private investigation evidence; they are not automatically

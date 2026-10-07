@@ -1,8 +1,10 @@
 # Network Coverage and Browsing Privacy Plan
 
-Updated: October 5, 2026. Status: Suricata 8.0.7 passed offline rule controls,
-and one controlled event was independently traced through the Wazuh Indexer
-into SQL and the existing Power BI report. All six pages rendered after refresh.
+Updated: October 7, 2026. Suricata 8.0.7 passed offline rule controls and the
+bounded live VM-to-host marker/control trial with independent packet inspection.
+The offline alert reached the existing six-page Power BI report on October 5.
+The later saved-live alert is verified in the authenticated Wazuh dashboard,
+Indexer and normal-loader SQL; fresh Power BI verification is deferred.
 No live capture feed, gateway or privacy-VPN deployment is enabled.
 The service remains masked; the [offline proof](suricata-offline-validation.md)
 and [controlled handoff](suricata-wazuh-handoff.md) do not establish whole-home
@@ -19,7 +21,7 @@ complete; it is not a prerequisite for the [Suricata pilot](suricata-pilot.md).
 |---|---|---|
 | Endpoint SOC | Windows/Sysmon to Wazuh, SQL and Power BI is built; six-page report retest passes; public console uses a sanitized historical snapshot | Recheck sustained loader/refresh performance before adding load |
 | Private SOC administration | Local trusted IPv4 HTTPS/login verified; renewal setup reported successful; management-only Windows grant unchanged; phone remains denied | Automatic renewal check/actual rotation, remaining denied/public-access and recovery checks; approved off-LAN administration deferred |
-| Network IDS | Stage 5 partial: controlled offline event verified through dashboard/Indexer/SQL/Power BI; service masked | Recheck resources and separately measure limited live capture; no whole-home feed verified |
+| Network IDS | Stage 5 partial: offline reporting and bounded live controls pass; saved-live event verified through Wazuh dashboard/Indexer/normal-loader SQL; service masked | Fresh Power BI verification, then measured sustained collection and supported wider coverage; no whole-home feed verified |
 | Whole-network browsing privacy | Extra VPN/router work deferred; not implemented or validated | Separate approval and gateway/client, egress/DNS/IPv6 and failure tests if resumed |
 
 ## Read-Only Baseline: October 5

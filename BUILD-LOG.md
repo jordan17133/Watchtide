@@ -45,6 +45,16 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
   the Ubuntu VM sits inside the PC. Existing endpoint alerts are not a complete
   browsing or connection archive. Neither device has verified live browsing
   coverage from this Suricata pilot.
+- The first authenticated live attempt stopped before staging/capture because
+  the guard required every parent to be root-owned. The hash-verified package's
+  installation script deliberately assigns the configuration directory to
+  the Suricata service account with mode `0750`. Added a narrowly scoped check
+  for that exact installed package override, account/group/mode, with protected
+  root ancestors and unchanged root-owned configuration-file checks. No guest
+  permission changes were made. Four new regression tests pass (16 trial tests,
+  94 across Suricata modules); corrected guest execution remains pending.
+- The following scheduled reporting run also returned 0. The stopped capture
+  attempt did not disable or broaden the loader connection.
 
 ## What is running
 

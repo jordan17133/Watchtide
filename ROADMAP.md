@@ -42,8 +42,9 @@ learning checks. A tool installation is not a detection-validation milestone.
 | L7 | Metasploit: one selected test against the separate test VM | Detection validation | Data prerequisites, detection/miss, cleanup and case verified |
 
 **October 7 execution:** L3 has a [bounded live activation](docs/suricata-live-trial.md)
-prepared with 12 local safety checks. Ubuntu capture and independent packet
-inspection are still pending. The current scope is the Windows PC and iPhone;
+prepared with 16 local safety checks. The first attempt stopped before capture;
+a corrected package-directory guard awaits guest execution. Ubuntu capture and
+independent packet inspection are still pending. The current scope is the Windows PC and iPhone;
 the VM is inside the PC. No browsing or phone network coverage is claimed.
 
 The first L1/L2 tool exercises pass; owner explanations remain open. Continue

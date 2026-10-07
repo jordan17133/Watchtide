@@ -369,8 +369,10 @@ Approved remote SSH/dashboard access succeeds; unauthorized tailnet access and d
 ## Stage 5: Add Suricata network telemetry
 
 **October 7 preparation:** the [first live trial](docs/suricata-live-trial.md)
-is prepared with 12 local safety checks. It observes only two harmless
-VM-to-Windows echo requests in bounded capture windows. Guest execution and
+is prepared with 16 local safety checks. The first attempt stopped at directory
+preflight before capture; the corrected guard verifies the installed package's
+service-owned configuration directory without changing permissions. It observes
+only two harmless VM-to-Windows echo requests in bounded capture windows. Guest execution and
 independent packet inspection remain pending; browsing and phone visibility
 are not implied. The permanent Suricata service stays masked.
 

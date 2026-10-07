@@ -1,8 +1,20 @@
 # First Live Suricata Trial
 
-Updated: October 7, 2026. Status: bounded activation prepared and 12 local
-regression tests pass. **The Ubuntu live trial has not run.** Existing proof
+Updated: October 7, 2026. Status: corrected bounded activation prepared and 16 local
+regression tests pass. **Live capture has not started.** The first authenticated
+attempt stopped during parent-directory preflight; the corrected attempt is
+pending. Existing proof
 still consists of the offline marker test and its exact reporting trace.
+
+The first guard incorrectly required root ownership of the configuration
+directory. The hash-verified reviewed package's installation script intentionally
+assigns that directory to the Suricata service account with mode `0750`.
+The corrected guard checks root-owned ancestors, inspects the actual directory
+metadata and accepts service ownership only when it matches the exact installed
+package override, account, group and mode. The configuration file itself still
+must be root-owned, single-linked, non-symlinked and not group/world writable.
+No ownership or permissions are changed to make the guard pass. Runtime
+confirmation of the directory facts remains part of the corrected activation.
 
 ## Plain-English Purpose
 
@@ -70,8 +82,10 @@ the launcher. The preparation-only SSH key is not broadened into shell access.
 ## Acceptance Checklist
 
 - [x] Prepare bounded activation without executing capture.
-- [x] Pass 12 local checks covering route restrictions, capture configuration,
+- [x] Pass 16 local checks covering route restrictions, capture configuration,
   fixed pings, watchdog cleanup, resource checks, result validation and launcher.
+  Four added checks cover the precise package-managed directory exception and
+  continued rejection of unrelated owners, links, mismatched overrides or writes.
 - [ ] Run guest preflight and validate the live configuration with Suricata.
 - [ ] Observe exactly one request in each test window, with matching flow fields.
 - [ ] Verify explicit zero kernel drops; absent counters must not count as zero.

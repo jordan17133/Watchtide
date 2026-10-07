@@ -24,6 +24,7 @@ SCHEMA = "https://developer.microsoft.com/json-schemas/fabric/item/report/defini
 INK, INK2, MUTED = "#0b0b0b", "#52514e", "#898781"
 BEFORE, NOW, NOW_LIGHT = "#c3c2b7", "#2a78d6", "#86b6ef"
 FAINT, CRITICAL, ORANGE = "#e1e0d9", "#d03b3b", "#eb6834"
+LIVE_CONTEXT = "#18856e"
 W, H, M, GAP = 1280, 720, 24, 12
 
 
@@ -518,7 +519,8 @@ def network_page():
     v.append(bar(p, "volume", M, ROW2_Y, half, ROW2_H, "columnChart",
                  col(NETWORK, "alert_hour_local"), [(mea(NETWORK, "Network records"), "Records")],
                  "Records by processing hour", series=col(NETWORK, "observation_context"),
-                 series_colors=[("Controlled validation", NOW), ("Labeled validation", NOW_LIGHT),
+                 series_colors=[("Controlled validation", NOW), ("Controlled live validation", LIVE_CONTEXT),
+                                ("Labeled validation", NOW_LIGHT),
                                 ("Offline replay", BEFORE), ("Unclassified", ORANGE)], value_axis=True))
     v.append(bar(p, "signatures", M + half + GAP, ROW2_Y, half, ROW2_H, "clusteredBarChart",
                  col(NETWORK, "signature"), [(mea(NETWORK, "Network records"), "Records")],
@@ -542,7 +544,7 @@ def network_page():
                            (col(NETWORK, "signature"), 250), (col(NETWORK, "suricata_priority"), 70),
                            (col(NETWORK, "rule_level"), 70), (col(NETWORK, "eve_timestamp_utc"), 150),
                            (col(NETWORK, "doc_id"), 200)]))
-    v.append(footer(p, "Source: rpt.network_alerts | Current pilot: offline validation | Live coverage: unverified"))
+    v.append(footer(p, "Source: rpt.network_alerts | Controlled tests are not incidents | Sustained coverage: unverified"))
     for _, visual in v:
         visual["$schema"] = f"{SCHEMA}/visualContainer/2.12.0/schema.json"
     return p, "Network Detection", v

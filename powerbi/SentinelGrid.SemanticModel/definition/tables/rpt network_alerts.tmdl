@@ -5,7 +5,7 @@ table 'rpt network_alerts'
 		formatString: #,0
 		lineageTag: bda7c280-f0c1-576a-a689-bb92f8b01967
 
-	measure 'Controlled tests' = CALCULATE([Network records], 'rpt network_alerts'[observation_context] = "Controlled validation") + 0
+	measure 'Controlled tests' = CALCULATE([Network records], 'rpt network_alerts'[observation_context] IN {"Controlled validation", "Controlled live validation"}) + 0
 		formatString: #,0
 		lineageTag: 1cd02d19-ab2d-576f-9110-8bfdf590a4e0
 

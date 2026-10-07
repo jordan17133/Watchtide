@@ -176,7 +176,7 @@ SPEC = {
         "measures": [
             ("Network records", "COUNTROWS('rpt network_alerts') + 0", "#,0"),
             ("Controlled tests",
-             "CALCULATE([Network records], 'rpt network_alerts'[observation_context] = \"Controlled validation\") + 0", "#,0"),
+             "CALCULATE([Network records], 'rpt network_alerts'[observation_context] IN {\"Controlled validation\", \"Controlled live validation\"}) + 0", "#,0"),
             ("Unclassified alerts",
              "CALCULATE([Network records], 'rpt network_alerts'[observation_context] = \"Unclassified\") + 0", "#,0"),
             ("Network signatures", "DISTINCTCOUNTNOBLANK('rpt network_alerts'[signature_id]) + 0", "#,0"),

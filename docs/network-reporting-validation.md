@@ -7,7 +7,11 @@ pages were inspected with populated visuals. The first actual Desktop refresh fa
 with a confirmed SQL read/write deadlock; a guarded fix is tested and now applied
 in the quiet window ([reliability evidence](report-refresh-reliability.md)). Actual
 Desktop retest passed, including the exact controlled network record and a
-resettable context filter. Live capture is still disabled.
+resettable context filter. Permanent capture remains disabled. The October 7
+[bounded live trial and independent packet review](suricata-live-trial.md) later
+passed; the [saved-live reporting handoff](suricata-live-reporting-handoff.md)
+is prepared, not run. Its SQL context branch is deployed and existing Power BI
+definitions updated; this later live event and Desktop refresh are not yet verified.
 
 ## What Changed And Why
 
@@ -26,7 +30,8 @@ editing the telemetry or replacing the existing dashboards:
   months-long ingestion delay. Flow IDs remain text to avoid numeric precision
   loss, and numeric identifiers/ports are not summed in Power BI.
 - Observation context separates `Controlled validation`, other labeled
-  validation, offline replay and `Unclassified`. An unmarked event is not assumed
+  validation, offline replay and `Unclassified`. The October 7 context update
+  adds `Controlled live validation`, distinct from the earlier fixture. An unmarked event is not assumed
   live or malicious. These are alert-record counts, not incident counts or new
   ATT&CK coverage credit.
 - The [existing Power BI project](../powerbi/SentinelGrid.pbip) gains a Network
@@ -116,10 +121,16 @@ The view stores no extra copy of telemetry. Imported Power BI data, personal
 network destinations and raw evidence stay private; publishing definitions is
 not permission to publish a report cache or live logs.
 
+The October 7 view update preserved its 32-column contract and original offline
+record; no stored telemetry or permissions changed. Its controlled-test measure
+now includes both known contexts, with a separate live-test chart color. The
+October 5 Desktop figures above remain historical, not a retest of these changes.
+
 The reporting-role simulation is not a review of the actual Windows account
 used by Desktop. Sustained host/loader load, refresh duration, capture loss,
-retention and broader recovery remain separate gates. Next capture work must
-identify and test one supported interface before making wider visibility claims.
+retention and broader recovery remain separate gates. A supported VM-to-host
+path passed the bounded trial; Windows browsing and iPhone visibility do not
+follow from that result.
 
 References: [SQL JSON extraction](https://learn.microsoft.com/en-us/sql/t-sql/functions/json-value-transact-sql),
 [OPENJSON](https://learn.microsoft.com/en-us/sql/t-sql/functions/openjson-transact-sql),

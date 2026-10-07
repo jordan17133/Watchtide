@@ -63,6 +63,8 @@ SELECT
     CAST(n.validation_label AS nvarchar(128)) AS validation_label,
     CAST(CASE WHEN n.validation_label COLLATE Latin1_General_100_BIN2 = N'controlled-offline-suricata-pilot'
               THEN N'Controlled validation'
+              WHEN n.validation_label COLLATE Latin1_General_100_BIN2 = N'controlled-live-suricata-trial'
+              THEN N'Controlled live validation'
               WHEN n.validation_label IS NOT NULL AND n.validation_label <> N'' THEN N'Labeled validation'
               WHEN n.packet_source = N'wire/pcap' THEN N'Offline replay'
               ELSE N'Unclassified' END AS nvarchar(32)) AS observation_context

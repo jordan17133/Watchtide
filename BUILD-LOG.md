@@ -11,7 +11,7 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
 | 2. Sysmon on Windows | Done |
 | 3. Wazuh agent on Windows | Done, agent `jordan-pc` is Active |
 | 4. Prove the event path end to end | Done, traced through every layer (docs/event-trace.md) |
-| 5. Suricata network telemetry | Partial: controlled offline event verified through reporting; bounded live VM-to-host controls pass; independent packet review, live reporting and broader coverage pending |
+| 5. Suricata network telemetry | Partial: offline reporting, bounded live VM-to-host controls and independent packet review pass; live reporting handoff prepared; actual ingestion/refresh and broader coverage pending |
 | 6. Watchtide API on live Wazuh data | Private live API not started; public console serves a sanitized snapshot of real lab data |
 | 4b. Posture review | Historical baseline: 437 of 447 findings resolved, CIS 27.1% to 37.0%; reviewed file/logging, SOC runtime patch and Steam access checks pass; remaining hardening and fresh posture scan open |
 | 7. SQL Server reporting storage | Done: loader every 15 minutes; case log with history (`warehouse/cases.py`) meets the incident gate |
@@ -101,6 +101,26 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
   review still require local SSH/sudo authentication. The helper changes no
   guest files, services, policies or collection settings; it stores evidence
   outside Git and compares the positive alert's time with the captured packet.
+- The owner completed that read-only transfer with `LIVE_PACKET_REVIEW_PASSED`.
+  Independently inspected the private results and re-decoded both actual PCAPs
+  using installed TShark: original hashes, one ICMP request each, recorded path,
+  marker/control and positive alert packet time match. No new capture or guest
+  change. Owner explanation and broader browsing/phone coverage remain open.
+- Prepared a separate saved-live reporting handoff, pinned to the inspected
+  result/path/captures/alert and with 12 new focused checks. It preserves the
+  offline source, adds one bounded controlled-live source, retains original
+  packet time, tests installed Wazuh rules/active-response safety, backs up
+  settings and briefly restarts only the manager. Guest activation has not run;
+  no live alert, continuous feed or reporting refresh is claimed yet.
+- Updated and transactionally deployed only the SQL reporting context branch
+  for that live-test label, with private baseline backup and lock timeout.
+  Preserved all 32 columns and the original one offline record; zero telemetry
+  rows, grants or loader settings changed. Updated the existing Power BI measure,
+  network chart color and footer without regenerating the original five pages.
+  All 19 reporting checks pass, including 11 disposable SQL tests; no test
+  database remains. The combined 204 selected Suricata, loader, publication and
+  reporting checks pass; Windows SOC services and the latest scheduled loader
+  remain healthy. Actual live ingestion and Desktop retest remain separate.
 
 ## What is running
 

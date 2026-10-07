@@ -325,6 +325,47 @@
                 "color": {
                   "expr": {
                     "Literal": {
+                      "Value": "'#18856e'"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "rpt network_alerts"
+                          }
+                        },
+                        "Property": "observation_context"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Controlled live validation'"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
                       "Value": "'#c3c2b7'"
                     }
                   }

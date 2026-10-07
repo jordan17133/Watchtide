@@ -380,11 +380,13 @@ service account; it does not select live capture. Exact protected syntax-stop
 evidence must match before retrying. No permissions are relaxed. The planned
 trial observes only two harmless VM-to-Windows echo requests in bounded windows.
 The fourth activation passed: one request per control, zero drops, marker alert
-only, five healthy SOC services and clean shutdown. Independent packet review
-and owner explanation remain pending; the read-only TShark review helper is
-prepared with twelve local checks but has not read the actual captures. Live
-reporting, browsing and phone visibility are not implied. The permanent
-Suricata service stays masked.
+only, five healthy SOC services and clean shutdown. Independent TShark review
+of both actual captures passed, including hashes, packet fields, marker/control
+and positive alert time. Owner explanation remains pending. A
+[separate saved-live handoff](docs/suricata-live-reporting-handoff.md) is prepared,
+not run; its SQL context is deployed and Power BI definitions updated. Actual
+live-event reporting, browsing and phone visibility are not implied. The
+permanent Suricata service stays masked.
 
 Do this only after Stage 4 works reliably.
 

@@ -138,8 +138,10 @@ or untested status. Absence of records is never automatically marked safe.
   the masked always-on service with a clear stop path.
 - [x] Use harmless owned traffic and the proven marker rule; record packet
   counts, capture drops, alerts, CPU/memory and SOC/loader health before/after.
-- [ ] Independently inspect the saved positive and negative packets and explain
-  their test labels, actual timestamps and the exact observed sensor scope.
+- [x] Independently inspect the saved positive and negative packets, their
+  marker/control payloads, exact path and actual timestamps.
+- [ ] Explain the test labels and exact observed/unobserved scope in the owner's
+  own words.
 
 Acceptance: a real live packet is observed and the expected rule result is
 explained, with capture/resource limits recorded. This is not yet whole-home
@@ -161,10 +163,10 @@ failed before capture. The corrected test lets Suricata drop privileges itself;
 the live non-root UID check remains required. The owner supplied the fourth
 activation's pass: one captured/decoded request in each control, explicit zero
 drops, one marker alert and no control alert, resource measurements and five
-active SOC services. No sensor process survived. Independent packet inspection
-and the owner's explanation are still open, so Phase C is not fully closed.
-A read-only review helper is prepared with twelve local checks; actual capture
-transfer and TShark review are pending. Phase D live reporting is unchanged.
+active SOC services. No sensor process survived. The owner then completed the
+read-only transfer: both actual captures pass independent TShark inspection,
+including hashes, request fields, marker/control and the alert's packet time.
+The owner's explanation remains open, so Phase C's learning gate is not closed.
 
 ### D Live Alert Reporting
 
@@ -177,6 +179,13 @@ transfer and TShark review are pending. Phase D live reporting is unchanged.
 
 Acceptance: the exact live document and original fields agree across layers;
 freshness, duplicates, rotation and rollback are checked.
+
+October 7: a [one-time saved-live handoff](suricata-live-reporting-handoff.md) is
+prepared with 12 focused checks, a separate protected source/label and guarded
+manager-only restart. It has not run. The SQL live-context branch is deployed,
+preserving 32 columns and the original offline record, and the existing Power BI
+definitions are updated. Actual live-event ingestion and refresh are pending.
+This bounded pilot does not close routine collection/rotation or recovery gates.
 
 ### E Routine Network Activity
 

@@ -5,8 +5,8 @@ fourth activation output, completed at 14:35:52 UTC. The corrected configuration
 check passed, both real test requests were captured/decoded, and the positive
 and negative controls behaved as expected. The five SOC services remained active
 and the permanent sensor stayed masked with no surviving capture process.
-Independent review of the saved packets, owner explanation and live reporting
-are still open. This is not continuous browsing or whole-home coverage.
+Independent review of the saved packets also passed. Owner explanation and live
+reporting are still open. This is not continuous browsing or whole-home coverage.
 
 | Measurement | Unmarked control | Marked request |
 |---|---|---|
@@ -101,7 +101,7 @@ device. Broader guest/IoT expansion is a future option, not current coverage.
 | Source | Evidence so far | Important gap |
 |---|---|---|
 | Windows endpoint | Sysmon/Wazuh alerts and existing SQL/Power BI reporting | Stored alerts are not a complete connection, DNS or browser-history archive |
-| Ubuntu sensor | Bounded live VM-to-host marker/control test passed, including packet/drop/resource checks | Independent packet review, live reporting and sustained coverage remain open |
+| Ubuntu sensor | Bounded live VM-to-host marker/control test and independent TShark review passed | Live reporting, owner explanation and sustained coverage remain open |
 | Windows Internet traffic | No live Suricata feed verified | The NAT VM does not automatically observe the host's browsing |
 | iPhone | Tailscale enrollment reported; SOC access remains denied | No packet feed or endpoint telemetry into the SOC verified |
 
@@ -156,7 +156,7 @@ the launcher. The preparation-only SSH key is not broadened into shell access.
   peak RSS is not a guarantee that no higher transient peak occurred.
 - [x] Confirm five SOC services remain active, installed configuration matches
   its preflight bytes, and no Suricata process survives the trial.
-- [ ] Independently inspect the saved packets with Wireshark/TShark.
+- [x] Independently inspect the saved packets with Wireshark/TShark.
 - [ ] Explain the result and the unobserved paths in the owner's own words.
 
 The completed boxes above describe the bounded activation's reported checks.
@@ -169,8 +169,14 @@ outside Git in the protected private workspace. SSH/sudo prompts remain local;
 the capture bytes are not printed in the console. TShark then reads the saved
 files with name resolution disabled and no live-capture options. It checks the
 request addresses/type/code, marker/control and positive alert's packet time.
-Actual transfer and packet review have not run; this helper changes no guest
-file, collection, rule, permissions, key or network settings.
+The owner ran the read-only transfer and supplied `LIVE_PACKET_REVIEW_PASSED`.
+The private review was inspected independently and both captures were decoded
+again during handoff preparation. Each contains exactly one IPv4 ICMP request,
+type 8/code 0, on the recorded VM-to-host path; the payload marker appears only
+in the positive control. Packet times are October 7 at 14:35:38.347846 UTC and
+14:35:45.491168 UTC. The positive alert's time matches its packet. Both hashes
+match the live activation's reported bytes. No new capture or guest change was
+needed for this review; raw addresses, captures and private paths remain private.
 
 A missing ping reply is not automatically a detection failure: the Windows
 firewall may decline echo replies. The test instead requires evidence that
@@ -183,11 +189,13 @@ This trial saves private evidence; it does not append live EVE to Wazuh or
 change the existing offline-only collection label. Do not relabel a live
 event as the historical synthetic fixture just to reuse that source.
 
-After capture and independent packet inspection pass, review a protected
-live-event source and accurate validation label. Then trace the same live
-event through Wazuh, the Indexer, the scheduled loader, SQL and the existing
-Network Detection page. Routine DNS/flow coverage and the iPhone need their
-own supported feeds, retention budgets and health checks.
+A [one-time saved-live handoff](suricata-live-reporting-handoff.md) is now prepared
+with a separate controlled-live label, pinned evidence, existing Wazuh rule test,
+private backup and manager-only restart. It has not run. The SQL context branch
+is deployed and the existing Power BI definitions count both known controlled
+contexts, but live-event ingestion and actual Desktop refresh remain unverified.
+Routine DNS/flow coverage and the iPhone need their own supported feeds,
+retention budgets and health checks.
 
 See the [learning runbook](analyst-toolkit-runbook.md) and
 [network maturity checklist](soc-network-maturity-plan.md).

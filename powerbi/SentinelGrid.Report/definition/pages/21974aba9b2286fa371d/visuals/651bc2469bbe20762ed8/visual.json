@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Source: rpt.network_alerts | Current pilot: offline validation | Live coverage: unverified",
+                    "value": "Source: rpt.network_alerts | Controlled tests are not incidents | Sustained coverage: unverified",
                     "textStyle": {
                       "fontSize": "8pt",
                       "color": "#898781"

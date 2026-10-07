@@ -52,14 +52,16 @@ lets Suricata perform its own configured privilege drop and requires matching
 protected syntax-failure evidence before retrying. The fourth activation passed:
 one real request per control, zero drops, one marker alert, no control alert,
 approximately 50 MiB sampled sensor RSS, five healthy SOC services and clean
-shutdown. Independent packet inspection and owner explanation remain open;
-a read-only review helper is prepared with twelve local checks, not yet executed
-against the actual captures. Live reporting remains L4, not completed by this test.
+shutdown. Independent inspection of both actual PCAPs also passed: hashes, path,
+ICMP request fields, marker/control and positive alert time match. Owner
+explanation remains open. L4 has a [one-time saved-live handoff](docs/suricata-live-reporting-handoff.md)
+prepared with 12 focused checks, not executed. Its SQL context is deployed and
+existing Power BI definitions are updated; actual ingestion/refresh remain open.
 The current scope is the Windows PC and iPhone;
 the VM is inside the PC. No browsing or phone network coverage is claimed.
 
 The first L1/L2 tool exercises pass; owner explanations remain open. Continue
-the bounded L3 trial while retaining hardening gates. Review host memory and lab
+the L4 reporting handoff while retaining hardening gates. Review host memory and lab
 placement before creating another VM or adding live capture. Burp/sqlmap/
 Metasploit stay planned until their own lab exercises are ready. Nmap reports
 and captures are private investigation evidence; they are not automatically

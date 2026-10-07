@@ -132,8 +132,9 @@ or untested status. Absence of records is never automatically marked safe.
 ### C Bounded Live Suricata Trial
 
 - [ ] Review current guest interfaces, permissions, service state and resources.
-- [ ] Prepare a separately approved, time-limited passive capture on one verified
-  interface, preserving the masked always-on service and a clear stop path.
+- [x] Prepare a separately approved, time-limited passive trial for one candidate
+  interface, requiring guest route verification before capture and preserving
+  the masked always-on service with a clear stop path.
 - [ ] Use harmless owned traffic and the proven marker rule; record packet
   counts, capture drops, alerts, CPU/memory and SOC/loader health before/after.
 - [ ] Include a visible positive and negative control, with a test label and
@@ -142,6 +143,12 @@ or untested status. Absence of records is never automatically marked safe.
 Acceptance: a real live packet is observed and the expected rule result is
 explained, with capture/resource limits recorded. This is not yet whole-home
 visibility, packet blocking or permission to leave capture running indefinitely.
+
+October 7 preparation: the [bounded live trial](suricata-live-trial.md) has
+12 local regression checks, a direct-route gate, narrow test-packet filter,
+resource guards and per-capture watchdogs. Guest interface verification and
+actual capture still require execution. Current scope is the Windows PC and
+iPhone; the VM is inside the PC. No browsing or phone packet coverage is claimed.
 
 ### D Live Alert Reporting
 

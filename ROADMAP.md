@@ -41,7 +41,13 @@ learning checks. A tool installation is not a detection-validation milestone.
 | L6 | sqlmap: known vulnerable/corrected web-lab input | Separate test-lab track | Selected input tested; evidence and remediation comparison written up |
 | L7 | Metasploit: one selected test against the separate test VM | Detection validation | Data prerequisites, detection/miss, cleanup and case verified |
 
-Start with L1/L2 while continuing bounded hardening. Review host memory and lab
+**October 7 execution:** L3 has a [bounded live activation](docs/suricata-live-trial.md)
+prepared with 12 local safety checks. Ubuntu capture and independent packet
+inspection are still pending. The current scope is the Windows PC and iPhone;
+the VM is inside the PC. No browsing or phone network coverage is claimed.
+
+The first L1/L2 tool exercises pass; owner explanations remain open. Continue
+the bounded L3 trial while retaining hardening gates. Review host memory and lab
 placement before creating another VM or adding live capture. Burp/sqlmap/
 Metasploit stay planned until their own lab exercises are ready. Nmap reports
 and captures are private investigation evidence; they are not automatically
@@ -62,7 +68,8 @@ The owner deferred extra VPN/router work; browsing-privacy routing is not a
 prerequisite for this pilot. See the [pilot guide](docs/suricata-pilot.md) and
 [network coverage plan](docs/network-coverage-plan.md).
 
-**Owner-selected focus:** finish bounded hardening checks before adding capture.
+**Owner-selected focus:** continue the first bounded sensor trial after checking
+platform health; retain open hardening/recovery gates without marking them done.
 Recovery was deferred, not passed; no database backup or restore drill ran.
 Reviewed private-file permissions passed, with the next automatic ingestion
 still successful. The administrator firewall-logging helper now passed, with

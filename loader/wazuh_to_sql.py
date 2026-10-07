@@ -19,6 +19,7 @@ Re-running is always safe: duplicates are skipped by document ID.
 import argparse
 import json
 import os
+import re
 import socket
 import ssl
 import subprocess
@@ -50,6 +51,10 @@ def ssh_tunnel(settings: dict):
         yield
         return
     local_port = int(settings.get("SSH_TUNNEL_LOCAL_PORT", "19200"))
+    host_key_alias = settings.get("SSH_TUNNEL_HOST_KEY_ALIAS")
+    if host_key_alias and not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,252}", host_key_alias):
+        raise ValueError("SSH_TUNNEL_HOST_KEY_ALIAS must name an existing verified known-host entry")
+    identity_options = ["-o", f"HostKeyAlias={host_key_alias}"] if host_key_alias else []
     proc = subprocess.Popen(
         [
             "ssh", "-N",
@@ -60,6 +65,9 @@ def ssh_tunnel(settings: dict):
             "-o", "GatewayPorts=no",
             "-o", "ExitOnForwardFailure=yes",
             "-o", "StrictHostKeyChecking=yes",
+            "-o", "ConnectTimeout=10",
+            "-o", "ConnectionAttempts=1",
+            *identity_options,
             target,
         ],
         stdin=subprocess.DEVNULL,

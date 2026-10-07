@@ -12,6 +12,11 @@ the matching event and network metrics; live capture remains separate
 ([reporting proof and limits](network-reporting-validation.md)). See
 the [engine validation evidence](suricata-offline-validation.md).
 
+October 7: a [bounded live VM-to-host trial](suricata-live-trial.md) is prepared
+with local safety tests. It has not run on Ubuntu; the masked service and
+offline-only reporting proof remain unchanged. The current device scope is
+the Windows PC and iPhone, with the SOC VM inside the PC.
+
 ## What We Are Adding
 
 Sysmon tells the SOC what happened on the Windows computer. Suricata adds

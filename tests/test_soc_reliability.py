@@ -62,6 +62,29 @@ class TunnelTests(unittest.TestCase):
             args = spawn.call_args.args[0]
             self.assertEqual(args[args.index("-L") + 1], "127.0.0.1:19200:127.0.0.1:9200")
 
+    def test_alternate_address_keeps_the_explicit_verified_host_identity(self):
+        process = Mock()
+        process.poll.return_value = None
+        settings = dict(self.settings, SSH_TUNNEL_TARGET="soc-user@192.0.2.20",
+                        SSH_TUNNEL_HOST_KEY_ALIAS="soc.example.test")
+        with patch.object(loader.subprocess, "Popen", return_value=process) as spawn, \
+             patch.object(loader.socket, "create_connection", return_value=Mock()):
+            with loader.ssh_tunnel(settings):
+                pass
+            args = spawn.call_args.args[0]
+            self.assertIn("HostKeyAlias=soc.example.test", args)
+            self.assertIn("StrictHostKeyChecking=yes", args)
+            self.assertIn("ConnectTimeout=10", args)
+            self.assertEqual(args[-1], "soc-user@192.0.2.20")
+
+    def test_invalid_identity_alias_stops_before_starting_ssh(self):
+        for alias in ("-oStrictHostKeyChecking=no", "soc\nother", "soc example", "a" * 254):
+            with self.subTest(alias=alias), patch.object(loader.subprocess, "Popen") as spawn:
+                with self.assertRaises(ValueError):
+                    with loader.ssh_tunnel(dict(self.settings, SSH_TUNNEL_HOST_KEY_ALIAS=alias)):
+                        pass
+                spawn.assert_not_called()
+
     def test_ssh_refusal_fails_closed_and_cleans_up(self):
         process = Mock()
         process.poll.return_value = 1

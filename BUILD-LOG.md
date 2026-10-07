@@ -2,7 +2,7 @@
 
 A running record of how the Watchtide home SOC lab was built, what broke, and how it was fixed. The step-by-step plan lives in [SentinelGrid-Build-Runbook.md](SentinelGrid-Build-Runbook.md). Alert investigations live in [triage/](triage/).
 
-## Status at a glance (2026-10-06)
+## Status at a glance (2026-10-07)
 
 | Runbook stage | Status |
 |---|---|
@@ -18,6 +18,33 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
 | 8. Power BI report | All six pages rendered after refresh; network fields/metrics/filter verified; saved model parsed, available-schema checks passed with one unpublished schema; imported cache ignored |
 | Detection validation | In progress: controlled SSH password-guessing test detected end to end; every Critical alert since tuning explained |
 | 4c. Tailscale private remote access | Trusted local HTTPS/dashboard login verified; renewal setup reported successful; phone test declined and approved off-LAN access deferred; remaining exposure/recovery/reporting gates open |
+
+## October 7: Bounded Live Trial Preparation And Loader Address Review
+
+- Rechecked the four Windows SOC services and five Ubuntu services. All were
+  running; guest available memory and disk space supported attempting a short
+  trial, not sustained or whole-home capture.
+- Found a failed scheduled load with an SSH readiness timeout. The VM's local
+  name returned two different virtual-network addresses, including an
+  unreachable one. This is a likely failure cause, not proof of every prior
+  interruption.
+- Independently tested the existing restricted loader key over the VM's stable
+  private Tailscale address, with the existing verified SSH host-key alias and
+  TLS validation unchanged. The read-only Indexer query succeeded. Backed up
+  private loader settings before changing the destination; no keys, permissions
+  or network rules were broadened. Added two regression tests; all 23 loader
+  reliability tests pass. The following automatic scheduled run independently
+  succeeded in 3.7 seconds, fetching 151 alerts and inserting 68 new documents;
+  Task Scheduler returned 0. Longer-term reliability remains a separate gate.
+- Prepared the [bounded live trial](docs/suricata-live-trial.md): two controlled
+  echo requests, narrowly filtered passive capture, direct-route and resource
+  gates, privilege dropping, private evidence and automatic watchdogs. All 12
+  local trial checks pass. No new driver/package/key, always-on capture or
+  Wazuh collection change was made. Guest execution remains pending.
+- Clarified the current scope: two physical devices, Windows PC and iPhone;
+  the Ubuntu VM sits inside the PC. Existing endpoint alerts are not a complete
+  browsing or connection archive. Neither device has verified live browsing
+  coverage from this Suricata pilot.
 
 ## What is running
 

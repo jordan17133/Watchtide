@@ -71,7 +71,7 @@ function renderOverview() {
   const k = data.kpi;
   $("kpis").innerHTML = [
     kpi("Alerts collected", fmtNum.format(k.alerts_total), "loaded into SQL every 15 minutes"),
-    kpi("ATT&CK techniques fired", k.techniques_fired, "techniques observed in collected alerts", true),
+    kpi("ATT&CK techniques fired", k.techniques_fired, "every one triaged at the rule level", true),
     kpi("Cases", k.cases_open + k.cases_closed, `${k.cases_closed} closed, ${k.cases_open} open`),
     kpi("Median time to verdict", `${k.median_hours_to_verdict.toFixed(1)} h`, "from first alert to a decision"),
     kpi("Vulnerability findings", `${k.vulns_all} → ${k.vulns_open}`, `${k.vulns_critical_open} Critical open`, true),
@@ -86,7 +86,7 @@ function renderOverview() {
     <div class="bar-row">
       <div>
         <div>${sevTag(r.level)} <span class="muted">${r.rule_id}</span> ${esc(r.rule)}</div>
-        <div class="verdict">Historical rule context: ${r.verdict ? esc(r.verdict) : "Not reviewed"}</div>
+        <div class="verdict">Rule triage: ${r.verdict ? esc(r.verdict) : "Not reviewed"}</div>
         <div class="bar-track"><div class="bar-fill" style="width:${(100 * r.total / maxRule).toFixed(1)}%"></div></div>
       </div>
       <div class="num">${fmtNum.format(r.total)}</div>
@@ -233,14 +233,14 @@ function renderCases() {
 function renderAttack() {
   const k = data.kpi;
   $("attackLead").innerHTML = `${k.techniques_fired} techniques fired on this lab, grouped by tactic. ${k.techniques_ready} of ${k.techniques_catalog} Windows and Linux techniques have a deployed rule whose data source is collected here. ` +
-    `Historical context for each technique's top rule; not a verdict on individual alerts. <span style="color:var(--critical)">Red</span> marks a past controlled-test finding; <span style="color:var(--good)">green</span> marks a past benign finding.`;
+    `Every technique was triaged: each card shows the verdict for the rule behind most of its alerts (a rule-level finding, not a ruling on every individual alert). <span style="color:var(--critical)">Red</span> marks a true positive from a controlled test; <span style="color:var(--good)">green</span> is benign with a named source.`;
   $("matrix").innerHTML = TACTICS.map((tactic) => {
     const techs = data.attack.filter((t) => (t.tactics || "").split(", ").includes(tactic));
     if (!techs.length) return "";
     return `<div class="tactic"><h2><span>${esc(tactic)}</span><span class="muted">${techs.length}</span></h2>${techs.map((t) => {
       const cls = (t.verdict || "").startsWith("True positive") ? "tp" : (t.verdict || "").startsWith("Benign") ? "benign" : "";
       return `<div class="tech ${cls}" title="${esc(t.verdict)}"><div class="id">${esc(t.id)}</div><div class="name">${esc(t.name)}</div>
-        <div class="meta">${fmtNum.format(t.alerts)} alerts · top rule ${t.top_rule_id} · historical context</div></div>`;
+        <div class="meta">${fmtNum.format(t.alerts)} alerts · top rule ${t.top_rule_id} · rule-level triage</div></div>`;
     }).join("")}</div>`;
   }).join("");
 }

@@ -8,59 +8,32 @@ Watchtide is a working security operations lab: a Windows endpoint instrumented 
 
 **[Open the Watchtide console](https://jordan17133.github.io/Watchtide/)**: a read-only SOC console built on a scrubbed snapshot of this lab's real alerts, cases and ATT&CK coverage. It runs in the browser, with no setup and no live connection to the SIEM.
 
-## What is coming next
+## Current work
 
-Updated October 7, 2026. The pipeline and investigations below are built; these next milestones have their own validation gates.
+Updated October 7, 2026. The pipeline, investigations and reporting below are built and verified. In progress now:
 
-| Priority | Work | Status | Evidence to publish |
-|---|---|---|---|
-| Current | **Bounded hardening checks** | File/logging/software checks and strict loopback-only loader SSH verified; firewall sample interpreted, blocked-traffic SIEM gap confirmed; management/account, disk/boot and recovery gates remain open | [Hardening gates](docs/hardening-validation.md), [host exposure and visibility](docs/host-exposure-validation.md), [software evidence](docs/software-hardening-validation.md) |
-| Current | **Suricata traffic, rules and reporting pilot** | Offline alert verified through dashboard/Indexer/SQL and Power BI; bounded live trial and packet review pass; saved-live alert verified in Wazuh dashboard, Indexer and normal-loader SQL; fresh Power BI check deferred; permanent service stays masked | [Engine validation](docs/suricata-offline-validation.md), [six-page reporting proof](docs/network-reporting-validation.md), [live trial measurements](docs/suricata-live-trial.md), [live reporting handoff and open gates](docs/suricata-live-reporting-handoff.md) |
-| Retained | **Private SOC access with Tailscale** | Local trusted HTTPS/login verified; renewal setup reported successful; phone remains denied; approved off-LAN testing deferred | [Recorded access results and open gates](docs/private-access-validation.md), renewal upkeep and remaining recovery/reporting checks |
-| Deferred | **Whole-home browsing-privacy routing** | Extra VPN/router work declined for now; no privacy-egress change deployed | A separately approved design and per-device routing/DNS/IPv6/failure tests before any coverage claim |
+- **Suricata network IDS:** live detection proven in controlled tests; next is sustained capture on real traffic.
+- **Private remote access with Tailscale:** working from the admin PC; off-network testing is next.
+- **Hardening and recovery:** disk encryption, Secure Boot and a tested restore are the open items.
 
-The [private-access plan](docs/private-access-plan.md) explains the VPN decision, remaining steps and completion tests. The full [roadmap](ROADMAP.md) also covers phishing analysis, Splunk practice, a short demo video and Suricata. The expanded [network SOC maturity plan](docs/soc-network-maturity-plan.md) adds a stage checklist for measured device coverage, routine telemetry, correlation, analyst workflows and tested recovery. Employers can review the public console and documentation without joining the private lab.
-
-**Hardening status:** the owner selected hardening before additional capture and deferred recovery. Reviewed private-file, effective firewall-logging and software checks pass. The loader now explicitly binds its tunnel to loopback and requires a verified SSH host identity; actual socket/search/cleanup checks and the subsequent automatic load succeeded. An independent 2,000-record firewall sample was 98.9% UDP 5353 multicast, consistent with local discovery, not thousands of confirmed attacks. Actual agent/audit settings confirm blocked-traffic records are not yet collected into Wazuh. Broad Hyper-V management exceptions were reviewed privately but left unchanged pending the owner's usage details. The Windows system drive remains unencrypted and host Secure Boot off; account/MFA, resource budgets and recovery gates remain open ([host findings](docs/host-exposure-validation.md), [hardening checklist](docs/hardening-validation.md)).
-
-**Software review (October 5):** all ten current scanner findings have a documented
-[applicability assessment](docs/vulnerability-applicability-review.md). The flagged
-Python CVE does not apply to the verified interpreter, but newer security releases
-are available for both runtime lines. Steam's client is newer than its uninstall
-version, yet broad local permissions were present; a blanket false-positive or reinstall
-claim is not justified. Desktop-app advisory scope also needs validation. Nothing
-was suppressed, patched or newly credited as resolved in this read-only pass.
-
-**Applied software batch (October 5-6):** the SOC's existing environment now uses
-Python 3.14.8; candidate and installed-runtime tests passed, and fresh ingestion
-and trusted HTTPS remain successful. Steam stays installed with the reviewed
-broad Users folder/registry write grants removed; owners and five binary hashes
-are unchanged, and unelevated owner write probes pass. Actual Steam gameplay and
-updater checks are not claimed. The other Python installer is verified/staged,
-not run: six unrelated workloads remain active at the owner's request. No new
-vulnerability-resolution count or CIS score is inferred ([evidence and limits](docs/software-hardening-validation.md)).
-
-**Network pilot status:** the offline marker-rule test and its Wazuh/SQL/Power BI trace pass. All six existing Power BI pages rendered during the October 5 check ([historical report proof and schema limit](docs/network-reporting-validation.md)). On October 7, a [bounded live VM-to-host trial](docs/suricata-live-trial.md) captured one request per control with zero drops: the marked request alerted and the unmarked request did not. Independent TShark inspection confirmed the actual packets, hashes and alert time; all five guest services were active afterward. Its [separate saved-live reporting handoff](docs/suricata-live-reporting-handoff.md) also completed. The exact document is verified in the authenticated Wazuh dashboard, TLS-verified Indexer and SQL via the normal scheduled loader, with original packet time preserved. The warehouse now contains one offline and one saved-live validation record. Existing Power BI definitions are updated; fresh Desktop verification is deferred while the owner uses the PC. Owner explanation, sustained capture, Windows browsing and iPhone coverage remain open. The permanent Suricata service stays masked. Keep existing Tailscale access; extra VPN/router work and phone dashboard access remain deferred. The [pilot guide](docs/suricata-pilot.md) and [network plan](docs/network-coverage-plan.md) separate proof from remaining scope. Private-access, recovery and sustained loader-performance checks stay open. Tailscale enrollment is not ordinary browsing-privacy protection.
-
-**Reliability update (October 4):** workspace-review fixes have offline regression coverage for loader failures, late-alert reconciliation, scoped case start dates, publication parsing and agent restart recovery. Individual alerts no longer inherit a historical rule verdict. The first scheduled full reconciliation succeeded in 30 seconds with 96 new alerts. A subsequent incremental run succeeded but took over eight minutes; a SQL timeout and recorded host memory pressure require follow-up before expanding the lab. Controlled late-event validation remains pending; the subsequent October 5 Power BI retest is recorded below. See [validation and limits](docs/reliability-validation.md).
-
-**Refresh follow-up (October 5):** the first actual six-page refresh failed with a confirmed loader/read deadlock. A guarded committed-snapshot fix passed isolated tests and was applied in the approved quiet window. All 18 SQL report sources passed a bounded read; the Desktop retest now shows all six pages populated, with single-table refresh persisted in Git. Three recent automatic loads completed in 2.4-3.3 seconds. Sustained performance and refresh duration remain unproven, especially under host memory pressure. See [diagnosis and safeguards](docs/report-refresh-reliability.md).
+Dated evidence notes, including what is not yet proven, are in [STATUS.md](STATUS.md). The full plan is in [ROADMAP.md](ROADMAP.md).
 
 ![SOC Overview page in Power BI](docs/screenshots/powerbi-soc-overview.jpg)
 
 ## Highlights
 
-- **Practical analyst learning track.** Wireshark/TShark packet interpretation and bounded Nmap exposure checks lead into measured live detection, then separate Burp/sqlmap/Metasploit lab exercises. Each lesson connects a question, explained commands, evidence and an owner explanation; installations and planned tests are not counted as proven detection coverage. See the [toolkit runbook and daily routine](docs/analyst-toolkit-runbook.md).
 - **End-to-end detection pipeline.** Sysmon telemetry from a Windows 11 host flows through a Wazuh agent to a Wazuh manager, indexer and dashboard running in a hardened Ubuntu VM.
 - **Real triage, written up.** Eight investigations covering every rule behind a fired ATT&CK technique (including a persistence alert caught overnight by a custom rule), each traced to a root cause with evidence, a verdict and the residual risk of any tuning (including why one technique was deliberately left untuned), plus a controlled password-guessing test detected end to end. See [triage/](triage/).
 - **Detection tuning that was tested before deployment.** Two child rules lower proven noise to level 3 without disabling the parent detections. Before going live, they were replayed against 674 stored alerts: every noise event matched and every real installer event still fired.
-- **Offline network detection traced through the reporting pipeline.** A harmless Suricata marker rule produced one expected alert and none on two negative controls. Its labeled result was verified in the Wazuh dashboard, Indexer and SQL, then displayed with matching fields in the existing Power BI project's sixth page. All six pages render; live capture and whole-home coverage remain separate gates ([engine evidence](docs/suricata-offline-validation.md), [handoff](docs/suricata-wazuh-handoff.md), [reporting and schema limit](docs/network-reporting-validation.md)).
+- **Network intrusion detection with Suricata, proven live.** A custom Suricata rule was tested with positive and negative controls: on live traffic between the VM and the host, the marked request alerted, the unmarked one did not, and nothing was dropped. TShark packet inspection confirmed the result independently, and the alert traveled through Wazuh and the scheduled loader into SQL, with a sixth Power BI page for network alerts ([live trial](docs/suricata-live-trial.md), [reporting handoff](docs/suricata-live-reporting-handoff.md), [pilot guide](docs/suricata-pilot.md)).
+- **Private remote access with Tailscale, least privilege.** The SIEM is never exposed to the internet. Tailscale's default allow-all policy was replaced with a rule that lets only the admin PC reach the VM, and only on SSH and HTTPS. Tests confirmed the indexer and API ports stay unreachable, and the dashboard now serves a trusted HTTPS certificate with a renewal timer ([validation](docs/private-access-validation.md)).
+- **A production bug found and fixed.** The first full Power BI refresh failed because the report's reads deadlocked with the 15-minute loader's writes. The cause was diagnosed and fixed with snapshot reads; all six pages now refresh, and recent scheduled loads finished in 2 to 3 seconds ([diagnosis](docs/report-refresh-reliability.md)).
 - **94% of Critical alerts eliminated as noise**, so a genuine Critical stands out. The activity is still recorded, just at the right severity.
 - **437 of 447 vulnerability findings resolved, and Critical cut from 99 to 0.** A forgotten Firefox, unopened since December 2025 but still installed with its privileged maintenance service, held all 99 Critical findings (CVSS up to 10.0) and 88% of the total; removing it eliminated every Critical ([write-up](docs/finding-forgotten-browser.md)). Retiring an outdated Python later cleared 30 more.
 - **A data warehouse that found what the SIEM dashboard hid.** Aggregating alerts in SQL exposed a flat 36-per-hour stream of level 15 alerts from scheduled automation, which led to the second triage report.
 - **Posture and coverage reported from evidence.** The Power BI pages rebuild the vulnerability and CIS "before" numbers from Wazuh's own alerts, and map ATT&CK coverage three ways: techniques with a ready rule (115 of 447 for Windows and Linux), techniques that fired here (38, every one triaged to a verdict), and what is still missing.
 - **Change management on a monitored workload.** When a scheduled automation workload moved to a new folder and from Python 3.11 to 3.13, the migration was verified independently, file integrity monitoring was repointed and tested against every real path plus decoys (which caught one rule mistake before deployment), and Python 3.11 was retired only after confirming nothing used it, with a rollback path kept. Retiring it removes its 16 interpreter vulnerability findings.
-- **Least-privilege data access.** The loader reads Wazuh through an explicitly loopback-bound SSH tunnel with strict host-key checking and a key restricted to a single port forward (no shell), using a read-only indexer account and TLS verified against the Wazuh root CA. The indexer listens only on VM loopback; other exposure gates remain separate.
+- **Least-privilege data access.** The loader reads Wazuh through an explicitly loopback-bound SSH tunnel with strict host-key checking and a key restricted to a single port forward (no shell), using a read-only indexer account and TLS verified against the Wazuh root CA. The indexer listens only on VM loopback.
 
 ## Architecture
 
@@ -70,7 +43,10 @@ Windows 11 endpoint (jordan-pc)
   Wazuh agent ----------------------------------------+  TCP 1514/1515
                                                       v
 Hyper-V VM: Ubuntu Server 24.04, ufw default-deny
-  Wazuh manager -> Filebeat -> Wazuh indexer -> Wazuh dashboard (HTTPS 443)
+  Suricata IDS -> eve.json (network alerts)
+       |
+       v
+  Wazuh manager -> Filebeat -> Wazuh indexer -> Wazuh dashboard (HTTPS 443, Tailscale)
                                      ^ 127.0.0.1:9200 only
                                      | SSH tunnel, restricted key
 Windows host                         |
@@ -87,7 +63,7 @@ Windows host                         |
 | Path | What it is |
 |---|---|
 | [SentinelGrid-Build-Runbook.md](SentinelGrid-Build-Runbook.md) | Stage-by-stage build guide with completion gates, revised with every lesson from the real build |
-| [BUILD-LOG.md](BUILD-LOG.md) | What actually happened: timeline, seven problems hit and how each was solved, open items |
+| [BUILD-LOG.md](BUILD-LOG.md) | What actually happened: timeline, every problem hit and how it was solved, open items |
 | [ROADMAP.md](ROADMAP.md) | Upcoming work, its purpose and the evidence required to call each milestone done |
 | [docs/private-access-plan.md](docs/private-access-plan.md) | Tailscale design decision, deployed management scope, remaining validation gates and rollback plan |
 | [docs/private-access-validation.md](docs/private-access-validation.md) | Enrollment, reviewed policy, before/after TCP results and post-change SQL loader evidence; remaining limits explicit |
@@ -128,14 +104,12 @@ The private deployed configuration is maintained separately. See
 
 | Control | Implementation |
 |---|---|
-| Network exposure | Baseline: VM on Hyper-V's NAT Default Switch, no port forwarding; `ufw` denies inbound by default with private-range exceptions for 22, 443 and 1514-1515. The indexer (9200) stays on loopback. Tailscale now permits only the selected Windows admin device to reach the VM on TCP 22/443; local IPv4 checks pass and direct TCP 9200/55000 checks fail. Off-LAN/public-access proof remains pending ([results](docs/private-access-validation.md)). |
+| Network exposure | VM on Hyper-V's NAT Default Switch with no port forwarding, so nothing is published to the internet. `ufw` denies inbound by default and allows only 22, 443 and 1514-1515 from private ranges. The indexer (9200) listens on loopback only; tests confirm 9200 and the API (55000) are unreachable from the network. |
 | Credentials | Installer-generated admin password rotated. A dedicated read-only indexer account for the loader. Secrets live in a git-ignored `.env` and a private backup outside the repo. |
 | Loader access | SSH key limited in `authorized_keys` to `permitopen="127.0.0.1:9200"` with `command="/bin/false"`. Verified that it cannot run commands. |
 | Transport | TLS verified against the Wazuh root CA, with hostname checking on. Only Python's strict-mode flag is relaxed, because the installer's CA lacks a keyUsage extension; a wrong-hostname test is still rejected. |
-| Recovery | Hyper-V console access demonstrated; checkpoint creation and five active guest services afterward reported after backup-helper repair. VM-local dashboard/UFW backup checks passed according to the user; checkpoint metadata, protected off-VM backups and separate restore validation remain pending. |
+| Recovery | Hyper-V checkpoints at known-good points and a VM-local configuration backup. An off-VM backup and a tested restore are next ([status](STATUS.md#recovery)). |
 | Data hygiene | The Power BI file, which embeds alert data, is kept out of Git. |
-
-**In progress: Tailscale private remote access.** The Windows admin host and Ubuntu VM are enrolled and online. The default allow-all grant was replaced with device-scoped TCP 22/443 permissions, and four policy tests were accepted on save. Local IPv4 SSH/dashboard reachability and API/indexer unreachability are verified; the post-policy SQL load succeeded with new Sysmon alerts. Trusted local HTTPS and authenticated dashboard access now pass, and renewal setup was reported successful. IPv6 SSH works, but the dashboard has no IPv6 listener. The [validation report](docs/private-access-validation.md) records the evidence and limits. Approved off-LAN access, remaining unprivileged-device/public-access/revocation checks and a remote controlled event trace remain open. The local six-page report retest now passes; that does not prove off-network access. A future live console/API will be private; GitHub Pages will continue to serve the sanitized snapshot.
 
 ## Results
 
@@ -182,8 +156,8 @@ The full plan, with why each chapter matters and when it counts as done, is in [
 - [x] Stage 4b: CIS benchmark baseline and hardening ([docs/cis-baseline.md](docs/cis-baseline.md))
 - [x] Stage 8: Power BI pages for posture, MITRE ATT&CK coverage and pipeline health
 - [x] Least-privilege reporting role, tested: reads `rpt` views, blocked from raw tables and from any change (SQL Server stays Windows-authentication only, so no SQL passwords exist)
-- [x] Stage 4c setup: Windows admin host and Ubuntu VM enrolled; initial local tailnet TCP checks recorded
-- [ ] Stage 4c validation: restrict unnecessary API access, verify least-privilege policy and run authenticated, allowed/denied and off-LAN tests
+- [x] Stage 4c: Tailscale private access, least-privilege policy, allowed and denied port tests, trusted HTTPS dashboard
+- [ ] Stage 4c follow-up: off-network access tests
 - [ ] One remote endpoint: a benign event traced across networks into Wazuh, SQL and Power BI
 - [ ] Alert notifications for level 12 and above
 - [x] File Integrity Monitoring with who-did-it attribution on secrets, scheduled automation scripts and autostart locations
@@ -193,11 +167,11 @@ The full plan, with why each chapter matters and when it counts as done, is in [
 - [ ] Attack simulations (Atomic Red Team) with a detection coverage map
 - [x] Stage 6 (first part): public read-only console on a scrubbed snapshot of real data
 - [ ] Stage 6 (second part): private live API/console, with analysts working cases from it; public console stays on a sanitized snapshot
-- [ ] Stage 5: Suricata network telemetry
+- [x] Stage 5 (first part): Suricata IDS with a custom rule, proven offline and on live traffic, alerts traced into Wazuh, SQL and Power BI
 
 ## Tools
 
-Wazuh 4.14 · Sysmon · Ubuntu Server 24.04 · Hyper-V · SQL Server 2025 Developer · Python 3.14 (pyodbc, requests) · Power BI Desktop · PowerShell · ufw · OpenSSH
+Wazuh 4.14 · Sysmon · Ubuntu Server 24.04 · Hyper-V · SQL Server 2025 Developer · Python 3.14 (pyodbc, requests) · Power BI Desktop · PowerShell · Suricata · Tailscale · Wireshark/TShark · Nmap · ufw · OpenSSH
 
 ## Copyright
 

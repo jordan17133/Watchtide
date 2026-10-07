@@ -195,6 +195,12 @@ Windows host                         |
 
 ## Timeline
 
+### 2026-10-07: Presentation pass on the README and console
+
+- Moved the dated status notes from the README into [STATUS.md](STATUS.md), unchanged, and summarized the work in progress in three lines.
+- Added Suricata live detection, Tailscale least-privilege access and the refresh deadlock fix to the README highlights, results, architecture and checklist.
+- Console: the ATT&CK view states that every fired technique was triaged at the rule level, and the banner states that the SIEM stays private. Individual alerts still carry no inherited verdict.
+
 ### 2026-10-06: Add the analyst learning track and begin packet interpretation
 - Added a practical daily SOC routine and lessons L0-L7 to the roadmap/runbook: Wireshark/TShark interpretation, bounded Nmap exposure checks, measured live Suricata reporting, then separate Burp/sqlmap/Metasploit lab exercises. Each operation has a purpose, expected result and verification; owner understanding is recorded separately. Added a private-evidence lesson/case template and corrected two stale runbook rows that still listed Desktop rendering as pending.
 - Official Wireshark 4.6.9 and Nmap 7.991 Windows installers matched vendor SHA-256 values and valid Wireshark Foundation / Nmap Software LLC signatures. Wireshark's documented silent installation exited zero and installed TShark 4.6.9; no Npcap capture driver was installed. Nmap's interactive minimal setup completed and its installed 7.991 version was checked; extras, Npcap, performance registry edits and PATH registration were excluded from the reviewed setup.

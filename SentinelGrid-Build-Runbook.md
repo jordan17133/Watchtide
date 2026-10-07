@@ -375,6 +375,15 @@ Approved remote SSH/dashboard access succeeds; unauthorized tailnet access and d
 
 ## Stage 5: Add Suricata network telemetry
 
+**Maintained libraries:** use the [detection-library guide](docs/detection-library-plan.md)
+for the observed-alert inventory, ET Open staging results and rollout gates.
+October 7 preparation reviewed all 147 observed Wazuh rule IDs and parsed the
+official network feed privately, without deploying it. Review recorded collection
+pressure, then select a small relevant TCP batch with official dependency
+handling, actual installed-engine tests and harmless controls. Vendor rule state
+is not active SOC coverage; do not replace the masked pilot with an unbounded
+full-feed capture. Raw rule archives and detailed inventories stay private.
+
 **October 7 preparation:** the [first live trial](docs/suricata-live-trial.md)
 is prepared with 29 local safety checks. The first attempt stopped at directory
 preflight before capture; the second confirmed the package-managed directory

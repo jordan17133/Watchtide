@@ -6,8 +6,9 @@ how each step happened; the [roadmap](ROADMAP.md) lists what comes next.
 
 ## Active Work
 
-No active file or live-deployment claim. October 7 reconciliation is complete;
-publication is gated on the reviewed source commit and public privacy checks.
+No active file or live-deployment claim. October 7 alert inventory and ET Open
+staging review are complete; detailed inventories and downloaded rules stay
+private. No new rules are deployed or engine-validated by this preparation.
 
 ## Pickup And Execution Order
 
@@ -22,6 +23,13 @@ this file remains the authoritative status, not the older side-workspace map.
 | 3 | Resume TCP/Nmap learning | Build a harmless offline TCP rule/control test, then a separate bounded owned-VM exercise on a verified capture path; [existing baseline](docs/nmap-exposure-baseline.md) is already complete |
 | 4 | Reporting and reliability | Fresh saved-live Power BI rendering when the PC is available; explain source/packet, Wazuh, SQL and refresh times; retain [loader duration follow-up](docs/loader-slow-run-investigation.md) |
 | 5 | Expand network coverage | Supported feed, resource/drop/retention budgets and routine DNS/flow visibility before sustained capture or phone/home coverage claims |
+
+The owner's maintained-library request now has a [separate inventory and rollout
+guide](docs/detection-library-plan.md). All 147 observed alert types are indexed
+privately; 40 have historical rule reviews and 107 do not, without inheriting
+old verdicts. ET Open is downloaded and field-reviewed only, not deployed.
+Collection pressure recorded earlier on October 7 needs fresh health/cause
+review before sustained load; TCP/Nmap remains the selected learning track.
 
 Off-LAN administration, additional routers/VPN egress and separate web/test VMs
 remain deferred or planned. They do not displace the owner's TCP/Nmap learning
@@ -54,6 +62,32 @@ All ten current scanner findings have a documented [applicability assessment](do
 The SOC's existing environment now uses Python 3.14.8; candidate and installed-runtime tests passed, and fresh ingestion and trusted HTTPS remain successful. Steam stays installed with the reviewed broad Users folder/registry write grants removed; owners and five binary hashes are unchanged, and unelevated owner write probes pass. Actual Steam gameplay and updater checks are not claimed. The other Python installer is verified/staged, not run: six unrelated workloads remain active at the owner's request. No new vulnerability-resolution count or CIS score is inferred ([evidence and limits](docs/software-hardening-validation.md)).
 
 ## Network pilot (Suricata)
+
+### Maintained Rule Library Preparation (October 7)
+
+At 20:24 UTC, a bounded read-only warehouse query counted 37,641 retained alerts
+and 147 observed rule IDs (highest per-ID bands: 1 Critical, 4 High, 29 Medium,
+113 Low). The existing October 1 catalog remains a historical MITRE-tagged
+export, not the current total installed-rule inventory. Detailed JSON/Markdown
+with every observed ID and historical-review references stays owner-protected.
+
+Official version-addressed ET Open archive downloaded over HTTPS and reviewed
+with a hash-pinned, uninstalled OISF parser: 54 rule files, 72,100 unique parsed
+entries; outside deleted files, 52,608 uncommented and 16,029 commented entries.
+Field inspection is not Suricata 8 engine validation, source signature
+authentication or tested coverage. No rules/configuration were rewritten or
+deployed; no capture or service restart occurred. Earlier agent queue overflow
+and Sysmon error warnings, followed by a normal-queue message, add a collection
+health gate before sustained load. See [scope, results and gates](docs/detection-library-plan.md).
+
+Twenty new helper regression tests passed; the selected cross-project suite
+passed 244 checks, with 11 optional database-changing integration checks skipped
+for this read-only scope. All 326 checked local documentation links resolve.
+Detailed evidence-folder/file reader checks and snapshot hashes passed. Windows
+Wazuh/Sysmon/SQL services are running. The latest five loader runs succeeded;
+the last took 42.396 seconds and a preceding full reconciliation took 74.630
+seconds. A host sample showed 695 MiB free physical memory. These are samples,
+not a stable resource benchmark; no full-feed engine test started during gaming.
 
 The offline marker-rule test and its Wazuh/SQL/Power BI trace pass. All six existing Power BI pages rendered during the October 5 check ([historical report proof and schema limit](docs/network-reporting-validation.md)). On October 7, a [bounded live VM-to-host trial](docs/suricata-live-trial.md) captured one request per control with zero drops: the marked request alerted and the unmarked request did not. Independent TShark inspection confirmed the actual packets, hashes and alert time; all five guest services were active afterward. Its [separate saved-live reporting handoff](docs/suricata-live-reporting-handoff.md) also completed. The exact document is verified in the authenticated Wazuh dashboard, TLS-verified Indexer and SQL via the normal scheduled loader, with original packet time preserved. The warehouse now contains one offline and one saved-live validation record. Existing Power BI definitions are updated; fresh Desktop verification is deferred while the owner uses the PC. Owner explanation, sustained capture, Windows browsing and iPhone coverage remain open. The permanent Suricata service stays masked. The [pilot guide](docs/suricata-pilot.md) and [network plan](docs/network-coverage-plan.md) separate proof from remaining scope.
 

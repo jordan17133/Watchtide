@@ -19,6 +19,39 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
 | Detection validation | In progress: controlled SSH password-guessing test detected end to end; historical post-tuning clusters reviewed, later alerts need fresh verdicts |
 | 4c. Tailscale private remote access | Trusted local HTTPS/dashboard login verified; renewal setup reported successful; phone test declined and approved off-LAN access deferred; remaining exposure/recovery/reporting gates open |
 
+## October 7: Inventory Alerts And Stage A Maintained Detection Library
+
+- Read-only SQL aggregate at 20:24 UTC: 37,641 retained alerts across 147 rule
+  IDs. One Critical, four High, 29 Medium and 113 Low rule types by highest
+  observed level. Forty have historical reviews; 107 do not. Fresh alert
+  verdicts remain unassigned. Every observed type is retained in private
+  JSON/Markdown; no raw logs or dynamic descriptions are published.
+- Downloaded the official version-addressed ET Open archive into a verified
+  owner-protected Windows folder. Retained snapshot SHA-256; this local hash is
+  not an independently authenticated vendor signature.
+- Reviewed field extraction with the pinned OISF parser without installing it
+  or extracting vendor code/rules into system paths. Parsed 72,100 entries in
+  54 files, no duplicate generator/signature pairs. Outside deleted files:
+  52,608 vendor-uncommented and 16,029 commented entries. All use alert actions;
+  426 uncommented noalert helpers are not independent alert coverage.
+- Recorded October 7 queue-full/flooded and nearby Sysmon error warnings,
+  followed by a normal-queue message. Historical recovery is not proof that
+  no events were lost or that sustained collection is healthy.
+- Added repeatable read-only inventory/archive helpers and synthetic regression
+  checks for history/verdict separation, private output paths, archive hashes,
+  links/traversal, expansion limits and parsing failures. Actual SQL read and
+  entire staged feed field review both passed. Installed-engine tests and
+  detection controls remain separate.
+- Integrated [the library rollout](docs/detection-library-plan.md) with Stage 5
+  and the retained TCP/Nmap lesson. No live rules/configuration, package
+  installations, capture, manager restarts, firewall/VPN changes or new updater
+  schedules. The permanent Suricata service remains masked.
+- Verification: 20 new helper tests; 244 selected checks passed, with 11 optional
+  database-changing integration checks skipped. All 326 checked local doc links
+  resolve. Private evidence permissions and hashes pass; Windows SOC services
+  are running, and the latest five loads succeeded. Two slow durations and a
+  695 MiB free-memory sample retain the measured-load gate before engine tests.
+
 ## October 7: Reconcile Claude's Handoff Without Restarting The Plan
 
 - Located handoff commit `b067d36` in Claude's separate workspace worktree and

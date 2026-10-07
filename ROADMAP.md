@@ -45,6 +45,20 @@ only for its tested local SQL slice. Off-LAN access, phone administration and
 whole-home VPN routing stay deferred; later Burp/sqlmap/Metasploit labs stay
 separate. Every operation includes a short purpose and expected/actual result.
 
+### Maintained Libraries Join The TCP Track
+
+The owner requested comprehensive alert-type review and maintained detection
+sources. October 7 preparation inventoried all 147 rule IDs observed in SQL and
+staged ET Open privately: 54 files, 72,100 parsed entries, with disabled/deleted
+states distinguished. This is not a deployment or 72,100 validated detections.
+The [library guide and rollout checklist](docs/detection-library-plan.md) add
+collection-health review, a small relevant TCP batch, installed-engine testing,
+controls, reporting and measured update/retention gates to Stage 5. Recorded
+agent queue pressure/error warnings require follow-up before sustained load;
+the historical recovery message does not recover any lost events. Sigma remains
+a later, separately mapped log-detection gap analysis, not a plug-in install.
+Do not repeat completed ICMP tests or enable the full feed by default.
+
 ### Learn And Operate The SOC
 
 The owner selected practical analyst training alongside the build. Follow the

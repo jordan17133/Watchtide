@@ -1,10 +1,11 @@
 # First Live Suricata Trial
 
-Updated: October 7, 2026. Status: corrected bounded activation prepared and 16 local
-regression tests pass. **Live capture has not started.** The first authenticated
-attempt stopped during parent-directory preflight; the corrected attempt is
-pending. Existing proof
-still consists of the offline marker test and its exact reporting trace.
+Updated: October 7, 2026. Status: revised bounded activation prepared and 25 local
+regression tests pass. **No successful live capture is verified.** The first
+authenticated attempt stopped during parent-directory preflight. The second
+passed that guard, created private staging evidence and stopped with a generic
+failure. Existing detection proof still consists of the offline marker test and
+its exact reporting trace.
 
 The first guard incorrectly required root ownership of the configuration
 directory. The hash-verified reviewed package's installation script intentionally
@@ -13,8 +14,22 @@ The corrected guard checks root-owned ancestors, inspects the actual directory
 metadata and accepts service ownership only when it matches the exact installed
 package override, account, group and mode. The configuration file itself still
 must be root-owned, single-linked, non-symlinked and not group/world writable.
-No ownership or permissions are changed to make the guard pass. Runtime
-confirmation of the directory facts remains part of the corrected activation.
+No ownership or permissions are changed to make the guard pass. The owner's
+second attempt confirmed the exact directory ownership, mode and package override.
+
+The next failure was reproduced locally using the hash-verified package's actual
+YAML: the optional `security.lua` section is empty, parsed as `None`, and the
+old configuration builder tried to edit it as a mapping. The revised builder
+handles empty sections, preserves other security settings and rejects malformed
+non-mapping sections. The full packaged YAML now builds and round-trips locally;
+the guest's Suricata syntax test and actual capture remain separate gates.
+
+Before another capture, the revised activation reviews the specified second
+attempt's protected evidence directory. It proceeds only if the exact three
+pre-configuration artifacts remain and their route, directory facts and rule
+match the current preflight. Later-stage files or changed settings stop the job.
+Failures now report the phase and exception type without printing private
+details; a root-protected diagnostic file retains the traceback for review.
 
 ## Plain-English Purpose
 
@@ -82,10 +97,15 @@ the launcher. The preparation-only SSH key is not broadened into shell access.
 ## Acceptance Checklist
 
 - [x] Prepare bounded activation without executing capture.
-- [x] Pass 16 local checks covering route restrictions, capture configuration,
+- [x] Pass 25 local checks covering route restrictions, capture configuration,
   fixed pings, watchdog cleanup, resource checks, result validation and launcher.
-  Four added checks cover the precise package-managed directory exception and
-  continued rejection of unrelated owners, links, mismatched overrides or writes.
+  Checks include the exact package-managed directory exception, empty YAML
+  sections, prior-attempt review and safe failure diagnostics. Capture failure
+  still checks service health and unchanged installed configuration, without
+  losing the failed phase.
+- [x] Confirm the installed configuration-directory facts from guest preflight.
+- [ ] Confirm the specified prior attempt stopped before configuration/capture
+  using its protected artifacts, not only the generic console message.
 - [ ] Run guest preflight and validate the live configuration with Suricata.
 - [ ] Observe exactly one request in each test window, with matching flow fields.
 - [ ] Verify explicit zero kernel drops; absent counters must not count as zero.

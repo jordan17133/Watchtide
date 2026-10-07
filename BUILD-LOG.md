@@ -55,6 +55,20 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
   94 across Suricata modules); corrected guest execution remains pending.
 - The following scheduled reporting run also returned 0. The stopped capture
   attempt did not disable or broaden the loader connection.
+- The owner supplied the second attempt's directory facts: the installed service
+  account/group, mode `0750` and exact package override passed the corrected
+  guard. The job then created a private staging directory and stopped with a
+  generic failure; that message alone does not establish how far it progressed.
+- Reproduced a configuration-builder `TypeError` from the hash-verified package's
+  actual YAML: its optional `security.lua` section parses as `None`. Handled
+  empty sections while preserving unrelated security settings and rejecting
+  malformed non-mappings. The complete packaged configuration now builds and
+  round-trips locally. All 25 live-trial checks pass, including prior-stage
+  artifact matching, phase-safe private diagnostics and health/config checks
+  after capture failure. Prepared a revised one-time activation that refuses
+  capture unless the specified stopped attempt's exact protected artifacts
+  establish a pre-configuration stop. Guest execution remains pending; no live
+  detection, browsing visibility or phone coverage is claimed.
 
 ## What is running
 

@@ -15,11 +15,12 @@ What actually happened during the build, including every failure and fix, is rec
 | 4. First real event path | Done 2026-09-30 |
 | 4b. Review posture findings | Done 2026-10-01 (437 of 447 findings resolved, 10 open; CIS 27.1% to 37.0%) |
 | 7. SQL Server warehouse (moved ahead of Stage 6) | Done 2026-09-30; case log added 2026-10-01 (`warehouse/cases.py`) |
-| 8. Power BI report | Original five pages built 2026-10-01; sixth Network Detection page defined October 5 and model/schema checked, Desktop refresh/rendering pending; project kept in Git |
+| 8. Power BI report | All six existing pages rendered after October 5 refresh; network fields/metrics/filter verified; definitions kept in Git, imported data private; sustained performance open |
 | Detection validation | In progress: controlled SSH password-guessing test detected and written up |
 | 4c. Tailscale private remote access | Trusted local HTTPS/dashboard login verified; renewal setup reported successful; phone remains denied and approved off-LAN testing deferred; remaining exposure/reporting/recovery gates open ([results](docs/private-access-validation.md)) |
 | 6. Watchtide API | Planned |
-| 5. Suricata network telemetry | Partial: controlled event verified in dashboard/Indexer/SQL; network view deployed and sixth Power BI page defined/checked; actual refresh/live capture pending ([proof](docs/network-reporting-validation.md)) |
+| 5. Suricata network telemetry | Partial: controlled offline event verified through dashboard/Indexer/SQL/Power BI; live capture and wider coverage pending ([proof](docs/network-reporting-validation.md)) |
+| Analyst toolkit / lessons L0-L7 | October 6: Wireshark/TShark synthetic interpretation and four-port Nmap baseline pass; owner explanations pending; live and separate Burp/sqlmap/Metasploit lab lessons planned |
 
 ## Lab facts
 
@@ -409,6 +410,32 @@ visibility; browsing-privacy routing is separate.
 
 The marker rule passes engine syntax, positive and negative tests; a genuine network alert is traced through EVE, Wazuh, SQL and Power BI. A harmless live DNS or HTTP event and the sensor's actual capture scope are verified separately. Do not mark whole-home coverage complete from a replay or a NAT-VM test.
 
+### Analyst Workbench And Learning Track
+
+Use the [analyst toolkit runbook](docs/analyst-toolkit-runbook.md) alongside
+Stage 5. Lessons L0-L7 extend existing stages; they do not add seven new platform
+installations. The first two tools are Wireshark/TShark and Nmap. Burp Suite
+Community, sqlmap and Metasploit belong to later exercises in a separate lab.
+
+1. Explain the existing event-to-report path and check collector/report freshness.
+2. Inspect the reviewed synthetic PCAPs with Wireshark/TShark. Explain the ICMP
+   request/reply distinction, source/destination and both marker-rule conditions.
+3. Run a bounded four-port Nmap check against one owned SOC VM on a documented
+   path. Explain open/closed/filtered and compare with expected access.
+4. After capture/resource checks, perform a short live network test. Confirm the
+   sensor sees its packets and use a suitable rule; the ICMP marker does not
+   detect a TCP scan. Trace an actual alert through existing reporting.
+5. Review capacity/isolation before a separate web/test lab. Learn HTTP requests
+   manually with Burp, then validate a selected web-lab input with sqlmap and one
+   selected test-VM technique with Metasploit. Record evidence and cleanup.
+
+Before a command, explain its purpose, expected output and verification. Keep
+tool installs, machine-tested results and the owner's explanation as separate
+checks. Use the [lesson/case template](docs/analyst-lesson-template.md), with
+private captures, scan XML and HTTP sessions outside Git. The existing SQL loader
+does not automatically import these artifacts. Whole-home coverage needs its
+own supported packet feed, and encrypted traffic has inspection limits.
+
 ## Stage 6: Connect the Watchtide API
 
 The public GitHub Pages console stays on a sanitized snapshot. This future live API and analyst console are private services reached through approved lab access; they do not give public visitors a connection to Wazuh or SQL.
@@ -534,6 +561,7 @@ Reached on 2026-09-30.
 
 ## Operating the lab
 
+- **Daily analyst routine:** check health/freshness, investigate one question, choose supporting evidence and record a verdict or uncertainty. Follow the [practical routine](docs/analyst-toolkit-runbook.md#a-daily-routine-you-can-explain); Nmap and web-lab testing are used for specific questions, not automatically every day.
 - **Startup:** Sysmon and the Wazuh agent start with Windows. Hyper-V saves the VM when Windows shuts down and resumes it at boot if it was running. The dashboard can take up to 3 minutes after a cold VM boot.
 - **If the dashboard will not load after a Windows restart:** the Default Switch may have moved to a new subnet (observed: 172.26.176.0/20 to 192.168.160.0/20) while the resumed VM kept its old IP. Restart the VM from an elevated PowerShell with `Restart-VM -Name SentinelGrid-Wazuh -Force` and wait 3 minutes.
 - **Turning the lab off:** `Stop-VM -Name SentinelGrid-Wazuh` shuts it down cleanly, and it stays off across Windows restarts until `Start-VM -Name SentinelGrid-Wazuh`.

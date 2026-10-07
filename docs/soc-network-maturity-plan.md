@@ -186,6 +186,10 @@ coverage is earned through tests, not inferred from an installed sensor.
 
 ### G Correlation And Detection Engineering
 
+- [ ] Complete the [analyst-toolkit lessons](analyst-toolkit-runbook.md): explain
+  packets with Wireshark, check selected owned services with Nmap and, after lab
+  placement/isolation, compare Burp/sqlmap/Metasploit exercises with collected
+  evidence. Record operator understanding separately from automated execution.
 - [ ] Correlate supported endpoint process/account evidence with network events;
   verify required event sources before promising attribution.
 - [ ] Validate rules for authorized scan patterns, authentication bursts, new

@@ -50,6 +50,7 @@ vulnerability-resolution count or CIS score is inferred ([evidence and limits](d
 
 ## Highlights
 
+- **Practical analyst learning track.** Wireshark/TShark packet interpretation and bounded Nmap exposure checks lead into measured live detection, then separate Burp/sqlmap/Metasploit lab exercises. Each lesson connects a question, explained commands, evidence and an owner explanation; installations and planned tests are not counted as proven detection coverage. See the [toolkit runbook and daily routine](docs/analyst-toolkit-runbook.md).
 - **End-to-end detection pipeline.** Sysmon telemetry from a Windows 11 host flows through a Wazuh agent to a Wazuh manager, indexer and dashboard running in a hardened Ubuntu VM.
 - **Real triage, written up.** Eight investigations covering every rule behind a fired ATT&CK technique (including a persistence alert caught overnight by a custom rule), each traced to a root cause with evidence, a verdict and the residual risk of any tuning (including why one technique was deliberately left untuned), plus a controlled password-guessing test detected end to end. See [triage/](triage/).
 - **Detection tuning that was tested before deployment.** Two child rules lower proven noise to level 3 without disabling the parent detections. Before going live, they were replayed against 674 stored alerts: every noise event matched and every real installer event still fired.

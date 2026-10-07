@@ -19,8 +19,37 @@ What is built, what comes next, and why. Each chapter ends the same way: build i
 - [x] Offline Suricata 8.0.7 marker-rule validation: one positive alert, zero alerts on two controls; that engine-only phase did not enable live capture or Wazuh collection ([evidence](docs/suricata-offline-validation.md))
 - [x] Controlled Suricata EVE-to-Wazuh-to-SQL-to-Power BI trace: same labeled event and network fields verified; live coverage remains separate ([evidence](docs/suricata-wazuh-handoff.md))
 - [x] Read-only network reporting view and existing sixth Power BI page verified; four metrics, event fields and context-filter reset checked. Saved model and available schemas checked with an explicit unpublished-schema limit ([evidence](docs/network-reporting-validation.md))
+- [x] Analyst-tool startup: Wireshark/TShark synthetic packet decode and one four-port Nmap Tailscale exposure baseline pass; owner explanations, live capture and later web/test-lab lessons remain open ([learning runbook](docs/analyst-toolkit-runbook.md))
 
 ## Current Execution Order
+
+### Learn And Operate The SOC
+
+The owner selected practical analyst training alongside the build. Follow the
+[analyst toolkit and learning runbook](docs/analyst-toolkit-runbook.md) for the
+daily health/investigation routine, each tool's purpose, explained commands and
+learning checks. A tool installation is not a detection-validation milestone.
+
+| Lesson | Tool / work | Connects to existing stage | Complete when |
+|---|---|---|---|
+| L0 | Explain one existing source-event-to-report trace | 4, 7, 8 | Owner explains source, rule, timestamps and evidence |
+| L1 | Wireshark/TShark: inspect the existing synthetic positive/negative packets | 5 | Packet fields and exact rule conditions checked; owner explains both nonmatches |
+| L2 | Nmap: four-port check on one owned SOC VM | 4c / hardening | Expected/actual reachability recorded for a named source/path; port states understood |
+| L3 | Bounded live Suricata capture | 5 | Supported interface, harmless controls, packet/drop/resource evidence and scope verified |
+| L4 | Investigate and report one live network detection | 5, 7, 8 | Exact live event traced through existing reporting, with a case and known gaps |
+| L5 | Burp Community: manual request/response exercise | Separate test-lab track | HTTP/session behavior and server evidence explained |
+| L6 | sqlmap: known vulnerable/corrected web-lab input | Separate test-lab track | Selected input tested; evidence and remediation comparison written up |
+| L7 | Metasploit: one selected test against the separate test VM | Detection validation | Data prerequisites, detection/miss, cleanup and case verified |
+
+Start with L1/L2 while continuing bounded hardening. Review host memory and lab
+placement before creating another VM or adding live capture. Burp/sqlmap/
+Metasploit stay planned until their own lab exercises are ready. Nmap reports
+and captures are private investigation evidence; they are not automatically
+ingested by the existing alert loader. The earlier excluded website remains out
+of scope. Every operation gets a purpose, expected result and verification;
+each lesson also requires the owner's explanation.
+
+### Existing Platform Gates
 
 The expanded [network SOC maturity plan](docs/soc-network-maturity-plan.md)
 defines the device-coverage, routine-telemetry, correlation, analyst workflow,
@@ -116,9 +145,11 @@ runbook stages or a requirement to delay the network pilot.
 | 11 | **Network monitoring: Suricata** (runbook Stage 5) | Extend live endpoint telemetry with measured network visibility; offline-to-SIEM proof now passes | DNS and HTTP events visible and traced to Wazuh records; VPN visibility limits documented |
 | 12 | **Private live API/console** (runbook Stage 6, second part) | Work cases from the console, not a script | Authenticated analysts open, assign and close cases over private access; public GitHub Pages remains a sanitized snapshot |
 | 13 | **Alert notifications** for level 12 and above | Faster response | Optional; tested so it never floods |
+| 14 | **Analyst toolkit and practical learning** (L0-L7) | Build understandable operating skills with Wireshark, Nmap and a separate web/test lab | Completed lesson records, private evidence, owner explanations and measured detection results; [runbook](docs/analyst-toolkit-runbook.md) |
 
 ## Ongoing upkeep
 
+- Daily: use the [analyst routine](docs/analyst-toolkit-runbook.md#a-daily-routine-you-can-explain): check collection/report freshness, investigate one question, select appropriate evidence and record a verdict or uncertainty. Scanning is not a daily requirement.
 - Weekly: check Pipeline Health (loader success above 95%, data fresh within 30 minutes) and patch the VM.
 - Before risky work: take a Hyper-V checkpoint.
 - After a Wazuh upgrade: re-export the ATT&CK catalog and reload it.

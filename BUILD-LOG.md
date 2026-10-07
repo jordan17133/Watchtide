@@ -19,6 +19,33 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
 | Detection validation | In progress: controlled SSH password-guessing test detected end to end; historical post-tuning clusters reviewed, later alerts need fresh verdicts |
 | 4c. Tailscale private remote access | Trusted local HTTPS/dashboard login verified; renewal setup reported successful; phone test declined and approved off-LAN access deferred; remaining exposure/recovery/reporting gates open |
 
+## October 7: Triage Integrity And System Interaction Review
+
+- Read-only SQL/source audit around 21:25 UTC: 37,656 retained alerts, 147
+  observed rule types, 40 historical reviews; 10 cases, nine closed. Forty-three
+  techniques observed, six without a most-frequent-rule review and 21 with an
+  unreviewed fired rule. The latter sets overlap; they are not summed.
+- Confirmed actual case membership is inferred from rule IDs and first-alert
+  through closure/current-time windows, not exact document links. This predicate
+  counts 424 alerts in two cases; intentional shared evidence versus unrelated
+  matches cannot be established by that count alone.
+- Verified alert-level historical-verdict inheritance is blocked: existing
+  public snapshot's 792 selected alerts all have null event verdicts. Its
+  October 3 snapshot and 38 techniques are not the current warehouse. Identified
+  misleading unconditional technique-review wording and top-rule-only labels.
+- Documented source-family readiness and raw-JSON retention limits, plus the
+  inventory/public-validator level-16 mismatch. Added a [plain-English map,
+  examples and completion gates](docs/triage-system-audit.md). No live verdict,
+  case, rule, schema or UI behavior was changed.
+- At 21:29 UTC, the owner ran the corrected administrator diagnostic. Its three
+  private evidence hashes/reader permissions pass; actual settings, pending
+  state and repeated stale-address connection errors are confirmed. VM switch
+  metadata exists but the guest IP list is empty. Target identity, bounded
+  repair and fresh authenticated event flow remain open; no settings changed.
+- Verification: 93 existing focused checks passed (43 reliability/library, 33
+  publication-privacy, 17 diagnostic-helper). Design findings remain open;
+  no event-by-event re-adjudication or actual Power BI refresh was performed.
+
 ## October 7: Collection Health Before Rule Expansion
 
 - SQL and the TLS-verified Indexer independently agree on the Windows cutoff:

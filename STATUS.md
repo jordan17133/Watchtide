@@ -6,10 +6,16 @@ how each step happened; the [roadmap](ROADMAP.md) lists what comes next.
 
 ## Active Work
 
-No active file or live-deployment claim. October 7 collection diagnosis and the
-read-only administrator helper are prepared. Awaiting the owner's elevated
-diagnostic result before a scoped repair; Windows collection is not marked
-healthy. No new rules, live repair or capture were deployed in this review.
+October 7 administrator diagnostic evidence has now been read and its hashes
+and private permissions verified. It confirms a pending agent, hostname-based
+TCP collection settings and repeated attempts to a stale resolved address.
+Windows collection is not marked healthy; scoped repair and a fresh trace remain
+open. No new rules, live repair or capture were deployed in this review.
+
+No active file or live-deployment claim. Read-only classification/case/report
+audit and the plain-English interaction map are documented. No verdict, SQL
+schema, rule, collection, service or UI behavior changed. Scope the collection
+repair and triage improvements separately before deployment.
 
 ## Pickup And Execution Order
 
@@ -19,9 +25,9 @@ this file remains the authoritative status, not the older side-workspace map.
 
 | Order | Work | State / finish line |
 |---|---|---|
-| 0 | Restore current Windows collection | October 7 SQL/Indexer cutoff and stale agent connection attempt independently checked; [read-only administrator diagnostic](docs/collection-health-validation.md) prepared; actual configuration/log review and bounded repair remain open |
+| 0 | Restore current Windows collection | October 7 cutoff, actual protected settings/pending state and repeated stale-destination errors verified; [administrator evidence](docs/collection-health-validation.md) checked; target identity, bounded repair and fresh trace remain open |
 | 1 | Handoff and L0 explanation | Scannable README, private coordination agreement and corrected [packet-to-report lesson](docs/L0-event-to-report-trace.md) applied; 235 selected checks passed; owner explanation stays open |
-| 2 | PowerShell noise review | Existing rule 100100 works within its scope; proposed filename-only expansion is held for a [writer/path and negative-control review](docs/powershell-policy-probe-tuning-review.md), not deployed |
+| 2 | Triage integrity and PowerShell noise review | [Classification/case audit](docs/triage-system-audit.md) finds inferred memberships and incomplete technique reviews; exact evidence links and truthful reporting gates open. Existing rule 100100 retained; filename-only expansion remains held |
 | 3 | Resume TCP/Nmap learning | Build a harmless offline TCP rule/control test, then a separate bounded owned-VM exercise on a verified capture path; [existing baseline](docs/nmap-exposure-baseline.md) is already complete |
 | 4 | Reporting and reliability | Fresh saved-live Power BI rendering when the PC is available; explain source/packet, Wazuh, SQL and refresh times; retain [loader duration follow-up](docs/loader-slow-run-investigation.md) |
 | 5 | Expand network coverage | Supported feed, resource/drop/retention budgets and routine DNS/flow visibility before sustained capture or phone/home coverage claims |
@@ -33,8 +39,9 @@ old verdicts. ET Open is downloaded and field-reviewed only, not deployed.
 Current collection takes priority: SQL and the Indexer agree that the newest
 Windows record is a disconnection alert at 10:49:46.056 UTC, despite running
 services and successful loader outcomes. The agent is attempting an old VM
-address; the current LAN data port is reachable. The protected configuration/log
-review and authenticated reconnection are still unverified. Earlier explicit
+address; the current LAN data port is reachable. Protected settings/state/log
+evidence now confirms that attempt; target identity and authenticated
+reconnection are still unverified. Earlier explicit
 Sysmon drops also need a separate cause/health review. TCP/Nmap remains the
 selected learning track, paused at this prerequisite rather than abandoned.
 
@@ -81,15 +88,35 @@ bounded handshake to the current LAN data port passed. Manager-name resolution
 has both current-subnet and stale results. Protected agent files cannot be read
 by the unelevated tool process; no permissions were bypassed.
 
-A new administrator diagnostic is prepared with 17 synthetic checks, not yet
-executed against protected inputs. It saves selected settings/state/log/network
-metadata privately without changing services or settings. Historical Sysmon
+A new administrator diagnostic passed 17 synthetic checks. At 21:29 UTC, the
+owner ran it; independently checked private artifacts confirm the actual
+hostname-based TCP configuration, pending state and repeated stale-address
+connection errors. Its three evidence-file hashes and reader permissions pass.
+The named VM is on the Default Switch, but its guest IP metadata is empty;
+do not credit this as a complete guest-address identity check. No settings or
+services changed. Historical Sysmon
 Event 255 text explicitly reports dropped registry events; do not sum counters
 or assume a shared cause with this outage. No live repair, new rules, scan or
 capture was performed. See [actual checks and completion gates](docs/collection-health-validation.md).
 Verification: 17 helper, 43 reliability/library and 33 publication-privacy
 checks passed (93 total); all 336 checked local documentation links resolve.
 Private health evidence reader permissions and snapshot hashes were checked.
+
+### Classification And Case Audit (October 7)
+
+Bounded SQL/source review around 21:25 UTC: 37,656 retained alerts, 147 observed
+rule types, 40 historical rule reviews; 10 cases, nine closed. There are 43
+observed ATT&CK techniques, six without a review for the most frequent rule,
+and 21 with at least one unreviewed fired rule (overlapping sets). Current
+case counts infer membership from rules and first-alert-to-close windows;
+424 alerts are counted in two cases, without explicit document membership.
+The older public snapshot has 38 techniques and 792 selected alerts, all with
+null event verdicts. No new verdicts were assigned. The [audit and interaction
+map](docs/triage-system-audit.md) preserve these distinctions and add scoped
+evidence links, clearer labels, level-16 handling and retention/prerequisite
+gates to the existing Stage 7/8 and detection work, not a new parallel build.
+Ninety-three existing focused checks pass; they are not remediation of these
+new design findings or evidence that all historical verdicts are justified.
 
 ### Maintained Rule Library Preparation (October 7)
 

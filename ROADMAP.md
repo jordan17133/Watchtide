@@ -32,9 +32,10 @@ The roadmap is an execution order, not a newly scheduled automation.
 
 | Order | Bounded work | Existing stage | Completion gate |
 |---|---|---|---|
-| 0 | Restore Windows collection and review loss reports | 2, 3, 4 / reliability | Protected settings/log review, necessary bounded repair, authenticated reconnection and a new Windows event traced through normal ingestion; [current outage evidence](docs/collection-health-validation.md) |
+| 0 | Restore Windows collection and review loss reports | 2, 3, 4 / reliability | Actual protected settings/log review passes; verify intended target, make bounded repair, prove authenticated reconnection and a new event trace; [outage evidence](docs/collection-health-validation.md) |
 | 1 | Reconcile drafts and status; add the [L0 explanation](docs/L0-event-to-report-trace.md) | 4, 7, 8 | Current evidence and limits agree; owner explanation not auto-credited |
 | 2 | Review the proposed [PowerShell tune](docs/powershell-policy-probe-tuning-review.md) | Detection maintenance / 4b | Writer/path evidence, installed-engine matches/nonmatches, protected deployment and measured future results; unsafe filename-only draft stays undeployed |
+| 2a | [Triage integrity and interaction review](docs/triage-system-audit.md) | 4 / 7 / 8 | Truthful historical-review labels, exact case/evidence memberships and event dispositions, level-16 compatibility, data prerequisites/retention; no automatic benign inheritance |
 | 3 | Harmless offline TCP fixtures and a rule/control lesson | 5, L1/L2 | Actual installed-engine validation; distinguish SYN burst from proven malicious scanning |
 | 4 | One bounded Nmap exercise against the owned VM | 5, L2/L3 | Sensor sees the chosen path; controlled positive/negative activity, drops/resources, automatic stop and health checks |
 | 5 | Trace any generated test alert and check Power BI when available | 5, 7, 8, L4 | Exact identity and timestamps agree; actual fresh report rendering, not just definitions |
@@ -62,8 +63,9 @@ Do not repeat completed ICMP tests or enable the full feed by default.
 
 **Current prerequisite:** independent October 7 SQL/Indexer checks show a Windows
 disconnection cutoff, and its service process is attempting a stale VM address.
-The current LAN data port is reachable, but protected agent configuration/log
-review and repair remain open. Historical Sysmon drops are separately confirmed.
+The current LAN data port is reachable. The owner's actual elevated diagnostic
+confirms pending state and stale-destination errors; target identity, repair and
+fresh event flow remain open. Historical Sysmon drops are separately confirmed.
 Successful loader runs and running services do not close this gate. Restore and
 verify source collection before progressing the TCP lesson or loading rules;
 leave firewall/Tailscale permissions unchanged unless evidence warrants a

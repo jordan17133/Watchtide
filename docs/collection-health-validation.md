@@ -61,9 +61,21 @@ summary. It does not read enrollment keys or loader credentials, change DNS or
 configuration, restart services, capture packets or scan devices.
 
 Seventeen synthetic helper checks passed, including XML/DTD rejection, bounded
-configuration size, field selection and cautious state parsing. These checks
-are not an actual elevated diagnostic result. An earlier unelevated read was
-denied; the local agent log therefore remains unreviewed.
+configuration size, field selection and cautious state parsing. An earlier
+unelevated read was denied. The owner subsequently ran the actual elevated
+diagnostic at 21:29 UTC, without changing settings. Independent inspection of
+its private output and three file hashes/reader permissions confirms:
+
+- Actual manager configuration uses the local hostname, TCP port 1514.
+- Agent state is pending, and the saved log repeatedly reports connection
+  failure to the stale resolved address; its latest sample is also SYN-sent.
+- The manager hostname resolves to current-subnet and stale IPv4 results.
+- The named SOC VM is attached to the Default Switch, but its IP metadata is
+  empty. This is not a complete current guest-address identity check.
+
+The initial pasted command lacked a closing quote, so PowerShell waited at its
+continuation prompt rather than running it. That was canceled and the complete
+command ran. No diagnostic retry weakened file permissions or changed services.
 
 [Wazuh's connection troubleshooting](https://documentation.wazuh.com/current/user-manual/agent/agent-management/agent-connection.html)
 uses agent state, its local log and an Established data-port connection as
@@ -75,8 +87,9 @@ distinct checks. A service-running result alone is insufficient.
 - [x] Attribute the attempted destination to the actual Wazuh service process.
 - [x] Check current-path data-port reachability without opening permissions.
 - [x] Prepare and test a read-only administrator diagnostic.
-- [ ] Read the actual protected manager configuration, state and agent log;
-  reconcile these with authoritative VM/network metadata.
+- [x] Read and privately verify the actual manager configuration, state and log.
+- [ ] Confirm the intended guest target identity and reconcile network metadata
+  before changing resolution/configuration; the guest metadata IP list is empty.
 - [ ] Confirm the cause, preserve protected rollback evidence and make only the
   necessary bounded repair. DNS cache, agent restart or a configuration edit
   are possibilities to review, not changes already approved or performed.

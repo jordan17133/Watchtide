@@ -560,6 +560,18 @@ remaining limits](docs/reliability-validation.md) are separate from live proof.
 
 Closing or assigning an incident in Watchtide must persist in SQL, and a reporting view must return incident counts without exposing Wazuh or API credentials.
 
+**October 7 triage integrity review:** the current case CLI records rule IDs,
+first-alert time and analyst history, but counts infer membership through case
+closure, not an exact document list. Read the [system interaction map and
+triage audit](docs/triage-system-audit.md) before interpreting those counts as
+verified investigated alerts. Exact memberships, separate incident windows,
+evidence-backed event dispositions and a reviewed migration are new completion
+gates. A rule's historical benign review must not clear future events.
+
+The actual loader copies retained Wazuh alert documents, not every source event,
+packet or ordinary flow. Collection health, alert priority, ATT&CK mapping,
+historical rule research and case verdicts are separate facts.
+
 ## Stage 8: Build the Power BI report
 
 ### Programs and documentation

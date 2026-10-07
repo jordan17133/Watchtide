@@ -1,6 +1,6 @@
 # Watchtide Network SOC Maturity Plan
 
-Updated October 6, 2026. This is the expanded target and acceptance checklist,
+Updated October 7, 2026. This is the expanded target and acceptance checklist,
 not a claim that the planned controls are deployed. The target is a dependable,
 private home SOC that explains observed device activity, detects suspicious
 behavior and supports evidence-based investigation and recovery.
@@ -9,7 +9,11 @@ behavior and supports evidence-based investigation and recovery.
 
 The endpoint SOC and reporting pipeline are working. The controlled offline
 network event is verified through Suricata, Wazuh, the Indexer, SQL and the existing
-Power BI report. Live capture and whole-home coverage are not yet established.
+Power BI report. A bounded live VM-to-host test and packet review also pass;
+its saved-live alert is verified through Wazuh dashboard, Indexer and normal-loader
+SQL. Fresh Power BI verification is deferred. Continuous capture and whole-home
+coverage are not yet established. The [Nmap exposure baseline](nmap-exposure-baseline.md)
+is verified separately; a TCP scan-detection exercise remains planned.
 
 | Existing runbook stage | Evidence-backed status | Remaining boundary |
 |---|---|---|
@@ -20,10 +24,10 @@ Power BI report. Live capture and whole-home coverage are not yet established.
 | 4 Event path | Existing Windows event trace completed | New devices and new telemetry types require separate traces |
 | 4b Posture | Historical CIS improvement from 27.1% to 37.0%; file/logging checks, SOC Python security patch and reviewed Steam access restrictions verified | Other Python workloads, dependency/CVE review, fresh posture inventory, disk/boot and account/exposure gates remain open |
 | 4c Private access | Device-scoped Tailscale SSH/HTTPS grant and trusted local dashboard access verified | Off-network administration deferred; renewal replacement, revocation and other access/recovery gates remain open |
-| 5 Network detection | Suricata 8.0.7 offline positive/negative controls and full reporting trace pass | Live capture, routine network telemetry and wider coverage remain open |
+| 5 Network detection | Offline reporting and bounded live VM-to-host controls pass; saved-live alert verified through Wazuh dashboard/Indexer/normal-loader SQL | Fresh Power BI check, TCP scan detection, continuous capture, routine telemetry and wider coverage remain open |
 | 6 Console | Public sanitized snapshot deployed | Private live analyst API/console not deployed |
 | 7 Warehouse | Scheduled ingestion and read-only report views work; guarded SQL snapshot-read fix enabled | Sustained performance, late-event proof, backup/restore and actual reporting-account review remain open |
-| 8 Power BI | All six existing pages rendered after refresh; network fields/metrics/filter checked | Refresh-duration benchmark and one unpublished visual-schema check remain open |
+| 8 Power BI | All six existing pages rendered during the October 5 offline-record check; live-context definitions updated October 7 | Fresh live-record Desktop check, refresh-duration benchmark and one unpublished visual-schema check remain open |
 
 The October 6 [host exposure audit](host-exposure-validation.md) verified strict,
 loopback-bound loader SSH and subsequent automatic ingestion, interpreted a
@@ -32,7 +36,7 @@ gap. It also identified broad Hyper-V management exceptions for workflow review.
 This is partial host-level coverage evidence, not an inventory or packet feed for
 every device in the home. Firewall, audit and agent settings were unchanged.
 
-A fresh read-only warehouse check found 27,994 accumulated alerts and exactly
+The October 6 read-only warehouse check found 27,994 accumulated alerts and exactly
 one controlled-validation network record. Three recent automatic loads succeeded
 in 3.891, 2.398 and 3.257 seconds. These are point-in-time observations, not a
 sustained availability or performance benchmark. The separately inspected

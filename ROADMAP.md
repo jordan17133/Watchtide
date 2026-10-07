@@ -19,7 +19,7 @@ What is built, what comes next, and why. Each chapter ends the same way: build i
 - [x] Offline Suricata 8.0.7 marker-rule validation: one positive alert, zero alerts on two controls; that engine-only phase did not enable live capture or Wazuh collection ([evidence](docs/suricata-offline-validation.md))
 - [x] Controlled Suricata EVE-to-Wazuh-to-SQL-to-Power BI trace: same labeled event and network fields verified; live coverage remains separate ([evidence](docs/suricata-wazuh-handoff.md))
 - [x] Read-only network reporting view and existing sixth Power BI page verified; four metrics, event fields and context-filter reset checked. Saved model and available schemas checked with an explicit unpublished-schema limit ([evidence](docs/network-reporting-validation.md))
-- [x] Analyst-tool startup: Wireshark/TShark synthetic packet decode and one four-port Nmap Tailscale exposure baseline pass; owner explanations, live capture and later web/test-lab lessons remain open ([learning runbook](docs/analyst-toolkit-runbook.md))
+- [x] Analyst-tool startup: Wireshark/TShark synthetic packet decode and one four-port Nmap Tailscale exposure baseline pass; owner explanations, sustained capture and later web/test-lab lessons remain open ([learning runbook](docs/analyst-toolkit-runbook.md))
 
 ## Current Execution Order
 
@@ -70,6 +70,13 @@ and captures are private investigation evidence; they are not automatically
 ingested by the existing alert loader. The earlier excluded website remains out
 of scope. Every operation gets a purpose, expected result and verification;
 each lesson also requires the owner's explanation.
+
+**Nmap focus while Desktop verification is deferred:** the [worked L2 baseline](docs/nmap-exposure-baseline.md)
+now compares the saved four-port XML with its original private record and explains
+port states, lookup labels and restricted loader access. No new scan ran. The
+subsequent bounded TCP detection exercise requires its own observed path, rule
+and control: the completed ICMP/Hyper-V trial does not observe the earlier
+TCP/Tailscale scan. Actual scan detection and its reporting trace remain open.
 
 ### Existing Platform Gates
 

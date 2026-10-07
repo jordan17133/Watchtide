@@ -19,6 +19,24 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
 | Detection validation | In progress: controlled SSH password-guessing test detected end to end; every Critical alert since tuning explained |
 | 4c. Tailscale private remote access | Trusted local HTTPS/dashboard login verified; renewal setup reported successful; phone test declined and approved off-LAN access deferred; remaining exposure/recovery/reporting gates open |
 
+## October 7: Recheck And Explain The Nmap Baseline
+
+- Read the original private Nmap XML with external XML resolution disabled and
+  compared it with the saved exercise record. Scanner/version, one owned target,
+  TCP-connect scope, four ports, successful completion and all state/reason pairs
+  agree. The saved 4.08-second scan had 22/443 open and 9200/55000 filtered on the
+  Windows-to-VM Tailscale path. No new packets were sent during this review.
+- Documented the real `wap-wsp` label on 9200 as a table lookup, not application
+  identification. Explained why direct Indexer denial coexists with the normal
+  restricted SSH loader tunnel. Operator understanding is still a separate gate.
+- Defined the bounded TCP scan-detection finish line. The completed sensor test
+  captures only direct Hyper-V ICMP requests, while Nmap tested TCP over Tailscale;
+  its filter, rule and path cannot be assumed to see that scan. No capture, rule,
+  firewall, VPN or loader change, and no scan-detection credit added.
+- Corrected the network maturity overview to distinguish the completed bounded
+  live test from unimplemented continuous capture and the deferred fresh Power BI
+  check. See [worked baseline](docs/nmap-exposure-baseline.md).
+
 ## October 7: Verify The Saved-Live Reporting Handoff
 
 - The owner supplied `SURICATA_LIVE_WAZUH_LOCAL_ALERT_VERIFIED`: actual EVE/rule

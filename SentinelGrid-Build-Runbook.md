@@ -19,8 +19,15 @@ What actually happened during the build, including every failure and fix, is rec
 | Detection validation | In progress: controlled SSH password-guessing test detected and written up |
 | 4c. Tailscale private remote access | Trusted local HTTPS/dashboard login verified; renewal setup reported successful; phone remains denied and approved off-LAN testing deferred; remaining exposure/reporting/recovery gates open ([results](docs/private-access-validation.md)) |
 | 6. Watchtide API | Planned |
-| 5. Suricata network telemetry | Partial: controlled offline event verified through dashboard/Indexer/SQL/Power BI; live capture and wider coverage pending ([proof](docs/network-reporting-validation.md)) |
-| Analyst toolkit / lessons L0-L7 | October 6: Wireshark/TShark synthetic interpretation and four-port Nmap baseline pass; owner explanations pending; live and separate Burp/sqlmap/Metasploit lab lessons planned |
+| 5. Suricata network telemetry | Partial: offline reporting and bounded live ICMP controls pass; saved-live dashboard/Indexer/SQL verified, fresh Power BI rendering deferred; TCP exercise, sustained and wider coverage open ([handoff](docs/suricata-live-reporting-handoff.md)) |
+| Analyst toolkit / lessons L0-L7 | Packet inspection, four-port Nmap baseline and bounded ICMP trial pass technically; [L0 guide](docs/L0-event-to-report-trace.md) added, owner explanations open; TCP exercise and separate web/test labs planned |
+| Local SQL recovery | October 7 copy-only backup/disposable restore passed; protected evidence, hash/history and cleanup rechecked; off-machine and Wazuh recovery open ([validation](docs/sql-recovery-validation.md)) |
+
+For the active order, follow [STATUS.md](STATUS.md#pickup-and-execution-order)
+and the [roadmap handoff sequence](ROADMAP.md#october-7-handoff-fits-the-existing-plan).
+Explain what, why, expected result and verification before each operation. The
+new PowerShell tuning draft is [reviewed but held](docs/powershell-policy-probe-tuning-review.md);
+do not load its filename-only exception into the live manager.
 
 ## Lab facts
 
@@ -28,8 +35,8 @@ What actually happened during the build, including every failure and fix, is rec
 |---|---|
 | Wazuh VM | Hyper-V `SentinelGrid-Wazuh`, Ubuntu Server 24.04.5, 4 vCPU, 8 GB fixed RAM, 150 GB disk, Default Switch |
 | Wazuh version | 4.14.8 all-in-one |
-| Address | `soc-vm.mshome.net` (never the raw IP; it changes on VM reboot) |
-| Dashboard | Approved private Tailscale certificate hostname; trusted Windows IPv4 HTTPS and local login verified October 5. Legacy Hyper-V hostname is retained for SSH/loader use, not the new browser certificate identity. |
+| Address | Legacy Hyper-V hostname retained for administration; the loader uses its verified private Tailscale destination from protected settings, avoiding changing NAT addresses. Real addresses stay private. |
+| Dashboard | Approved private Tailscale certificate hostname; trusted Windows IPv4 HTTPS and local login verified October 5. Legacy Hyper-V hostname is not the new browser certificate identity. |
 | SSH | `ssh <ubuntu-user>@soc-vm.mshome.net` |
 | Monitored endpoint | `jordan-pc` (Windows 11, Sysmon64 + Wazuh agent) |
 | Rollback points | Historical checkpoint `sentinelgrid-pre-attack-2026-10-01`; new creation and five active guest services afterward reported October 4 after backup-helper repair under pictured Production-Only settings. New entry metadata and separate restore validation pending ([follow-up](docs/private-access-validation.md#production-checkpoint-recovery-follow-up)); do not apply an older point merely to test availability. |

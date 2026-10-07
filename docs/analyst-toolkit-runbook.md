@@ -11,7 +11,7 @@ completion records; planned exercises are not validated detections.
 | Tool | Question it answers | Place in Watchtide | When to use it |
 |---|---|---|---|
 | Wazuh | What collected activity matched a rule? | Existing endpoint and alert pipeline | Daily health checks and investigations |
-| Suricata | What visible network traffic matched a detection? | Offline reporting trace verified; live sensor pending | Network detection and rule validation |
+| Suricata | What visible network traffic matched a detection? | Offline reporting and bounded live controls verified; permanent capture pending | Network detection and rule validation |
 | Wireshark / TShark | What did the individual packets actually say? | Analyst workbench for saved captures and later bounded live captures | Investigate a network question; TShark is Wireshark's command-line analyzer |
 | Nmap | Which tested services are reachable from this device? | Active exposure checks and controlled scan exercises | Establish a baseline and recheck after access changes |
 | Burp Suite Community | What request did a browser send, and how did a lab app respond? | Separate web-security practice lab | Learn HTTP, authentication, access control and manual testing |
@@ -65,7 +65,7 @@ case each week and explain it without reading the commands.
 
 | Lesson | Work | Proof of completion | Initial status |
 |---|---|---|---|
-| L0: Understand the pipeline | Explain where source events, alerts and report rows come from | Owner can trace one existing alert and distinguish event time from ingest/refresh time | Existing trace available; understanding review open |
+| L0: Understand the pipeline | Explain where source events, alerts and report rows come from | Owner can trace one existing alert and distinguish event time from ingest/refresh time | [Corrected packet-to-report guide available](L0-event-to-report-trace.md); owner explanation open |
 | L1: Read packets | Inspect the existing positive/negative synthetic fixtures in Wireshark/TShark | Explain addresses, ICMP types, payload and the rule's exact match conditions | TShark decode/control checks pass; owner explanation pending |
 | L2: Check service exposure | Use Nmap on four selected TCP ports of one owned SOC VM, from one documented path | Expected/actual table; explain open, closed and filtered; save private XML | [Four-port baseline and saved XML recheck pass](nmap-exposure-baseline.md); explanation documented, owner understanding pending |
 | L3: Prove a capture point | Bounded passive Suricata capture with harmless owned traffic | Packet counts, drops, resource use, positive/negative result and observed scope | [Bounded live trial and independent packet review passed](suricata-live-trial.md); owner explanation pending |
@@ -171,6 +171,16 @@ restricted loader path. It also defines the separate TCP detection exercise;
 the completed ICMP trial is not silently expanded to scan capture.
 
 ## Installation And Evidence Discipline
+
+### Handoff Without Restarting The Lessons
+
+The October 7 Claude handoff adds L0 explanations, a local SQL recovery result and
+a [PowerShell tuning review](powershell-policy-probe-tuning-review.md). None
+replaces the completed packet/port baseline. Resume the separate TCP rule/control
+exercise described in the [Nmap lesson](nmap-exposure-baseline.md). Offline
+preparation can proceed while live tuning and Desktop rendering await their own
+safe window. Do not mark L1-L4 fully understood merely because technical checks
+passed; do not claim the saved-live Power BI rendering from the earlier offline test.
 
 Use official stable releases, match vendor SHA-256 records and inspect publisher
 signatures before execution. Record tool/version/source, purpose, dependencies,

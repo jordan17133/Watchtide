@@ -4,6 +4,30 @@ This page holds the dated, evidence-level status notes for work in progress. The
 [README](README.md) summarizes what is built; the [build log](BUILD-LOG.md) records
 how each step happened; the [roadmap](ROADMAP.md) lists what comes next.
 
+## Active Work
+
+No active file or live-deployment claim. October 7 reconciliation is complete;
+publication is gated on the reviewed source commit and public privacy checks.
+
+## Pickup And Execution Order
+
+Claude's handoff commit `b067d36` was located in its separate workspace worktree,
+not the main SOC checkout. Its drafts were reconciled with this repository;
+this file remains the authoritative status, not the older side-workspace map.
+
+| Order | Work | State / finish line |
+|---|---|---|
+| 1 | Handoff and L0 explanation | Scannable README, private coordination agreement and corrected [packet-to-report lesson](docs/L0-event-to-report-trace.md) applied; 235 selected checks passed; owner explanation stays open |
+| 2 | PowerShell noise review | Existing rule 100100 works within its scope; proposed filename-only expansion is held for a [writer/path and negative-control review](docs/powershell-policy-probe-tuning-review.md), not deployed |
+| 3 | Resume TCP/Nmap learning | Build a harmless offline TCP rule/control test, then a separate bounded owned-VM exercise on a verified capture path; [existing baseline](docs/nmap-exposure-baseline.md) is already complete |
+| 4 | Reporting and reliability | Fresh saved-live Power BI rendering when the PC is available; explain source/packet, Wazuh, SQL and refresh times; retain [loader duration follow-up](docs/loader-slow-run-investigation.md) |
+| 5 | Expand network coverage | Supported feed, resource/drop/retention budgets and routine DNS/flow visibility before sustained capture or phone/home coverage claims |
+
+Off-LAN administration, additional routers/VPN egress and separate web/test VMs
+remain deferred or planned. They do not displace the owner's TCP/Nmap learning
+focus. Resume that track after this reconciliation, rather than redoing the
+completed ICMP trial or Nmap baseline.
+
 ## Current milestones
 
 Updated October 7, 2026. The pipeline and investigations are built; these next milestones have their own validation gates.
@@ -39,11 +63,31 @@ The Windows admin host and Ubuntu VM are enrolled and online. The default allow-
 
 ## Recovery
 
-Hyper-V console access demonstrated; checkpoint creation and five active guest services afterward reported after backup-helper repair. VM-local dashboard/UFW backup checks passed according to the user; checkpoint metadata, protected off-VM backups and separate restore validation remain pending.
+Hyper-V console access demonstrated; checkpoint creation and five active guest
+services afterward reported after backup-helper repair. VM-local dashboard/UFW
+backup checks passed according to the user. Claude's October 7 same-instance SQL
+drill recorded 37,605 restored alerts, 20 readable reporting views, clean CHECKDB,
+matching schema/report grants and a matching controlled-event payload.
+Independent handoff review matched the retained backup hash to both evidence
+files, confirmed SQL backup/restore history, protected folder access, removal of
+the disposable database and the live warehouse's online/multi-user snapshot-reading
+state. No new restore was run. See [local SQL recovery validation](docs/sql-recovery-validation.md).
+Checkpoint metadata, an off-machine copy, other-instance identity recovery,
+Wazuh restoration and backup encryption remain unverified. This closes a local
+SQL recovery test, not whole-PC recovery.
 
 ## Reliability (October 4)
 
 Workspace-review fixes have offline regression coverage for loader failures, late-alert reconciliation, scoped case start dates, publication parsing and agent restart recovery. Individual alerts no longer inherit a historical rule verdict. The first scheduled full reconciliation succeeded in 30 seconds with 96 new alerts. A subsequent incremental run succeeded but took over eight minutes; a SQL timeout and recorded host memory pressure require follow-up before expanding the lab. Controlled late-event validation remains pending. See [validation and limits](docs/reliability-validation.md).
+
+## Reliability Follow-Up (October 7)
+
+October 7 handoff review: the SQL memory ceiling is already 4096 MB. Ten recent
+loads succeeded, but one took 211.527 seconds and two others took 30.397 and
+73.506 seconds; the latest two took 2.052 and 2.452 seconds. Earlier memory
+pressure is documented, but current tail latency is not explained by that alone.
+No memory, scheduler or loader setting changed. The [bounded follow-up](docs/loader-slow-run-investigation.md)
+keeps representative performance and slow-run cause open before sustained capture.
 
 ## Report refresh (October 5)
 

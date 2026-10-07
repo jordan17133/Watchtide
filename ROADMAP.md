@@ -20,8 +20,30 @@ What is built, what comes next, and why. Each chapter ends the same way: build i
 - [x] Controlled Suricata EVE-to-Wazuh-to-SQL-to-Power BI trace: same labeled event and network fields verified; live coverage remains separate ([evidence](docs/suricata-wazuh-handoff.md))
 - [x] Read-only network reporting view and existing sixth Power BI page verified; four metrics, event fields and context-filter reset checked. Saved model and available schemas checked with an explicit unpublished-schema limit ([evidence](docs/network-reporting-validation.md))
 - [x] Analyst-tool startup: Wireshark/TShark synthetic packet decode and one four-port Nmap Tailscale exposure baseline pass; owner explanations, sustained capture and later web/test-lab lessons remain open ([learning runbook](docs/analyst-toolkit-runbook.md))
+- [x] October 7 local SQL copy-only backup and disposable restore: 37,605 restored alerts, clean integrity check and 20 readable views; backup/history/cleanup independently rechecked. Same-PC scope, not Wazuh or disaster recovery ([validation](docs/sql-recovery-validation.md)).
 
 ## Current Execution Order
+
+### October 7 Handoff Fits The Existing Plan
+
+The Claude handoff is documentation, Stage 4/7/8 learning and existing detection
+maintenance. It does not restart the build or replace the selected TCP/Nmap track.
+The roadmap is an execution order, not a newly scheduled automation.
+
+| Order | Bounded work | Existing stage | Completion gate |
+|---|---|---|---|
+| 1 | Reconcile drafts and status; add the [L0 explanation](docs/L0-event-to-report-trace.md) | 4, 7, 8 | Current evidence and limits agree; owner explanation not auto-credited |
+| 2 | Review the proposed [PowerShell tune](docs/powershell-policy-probe-tuning-review.md) | Detection maintenance / 4b | Writer/path evidence, installed-engine matches/nonmatches, protected deployment and measured future results; unsafe filename-only draft stays undeployed |
+| 3 | Harmless offline TCP fixtures and a rule/control lesson | 5, L1/L2 | Actual installed-engine validation; distinguish SYN burst from proven malicious scanning |
+| 4 | One bounded Nmap exercise against the owned VM | 5, L2/L3 | Sensor sees the chosen path; controlled positive/negative activity, drops/resources, automatic stop and health checks |
+| 5 | Trace any generated test alert and check Power BI when available | 5, 7, 8, L4 | Exact identity and timestamps agree; actual fresh report rendering, not just definitions |
+| 6 | Routine network telemetry and wider coverage | 5, maturity B/C | Supported feed, device coverage matrix, retention/resource budgets and measured sustained health |
+
+The tuning deployment and deferred Desktop check need their own execution window;
+they need not block independent offline TCP preparation. Recovery receives credit
+only for its tested local SQL slice. Off-LAN access, phone administration and
+whole-home VPN routing stay deferred; later Burp/sqlmap/Metasploit labs stay
+separate. Every operation includes a short purpose and expected/actual result.
 
 ### Learn And Operate The SOC
 
@@ -91,9 +113,11 @@ The owner deferred extra VPN/router work; browsing-privacy routing is not a
 prerequisite for this pilot. See the [pilot guide](docs/suricata-pilot.md) and
 [network coverage plan](docs/network-coverage-plan.md).
 
-**Owner-selected focus:** continue the first bounded sensor trial after checking
-platform health; retain open hardening/recovery gates without marking them done.
-Recovery was deferred, not passed; no database backup or restore drill ran.
+**Owner-selected focus:** the bounded ICMP trial is complete; continue TCP/Nmap
+learning with independent offline preparation before a separately scoped live
+exercise. Retain open hardening/recovery gates without marking them done.
+Off-machine and Wazuh recovery remain deferred. The later October 7 local SQL
+drill passed and is separately credited above; it does not complete those gates.
 Reviewed private-file permissions passed, with the next automatic ingestion
 still successful. The administrator firewall-logging helper now passed, with
 independent effective-policy readback. Owner-performed read-only checks also
@@ -121,7 +145,7 @@ The following sequence describes the network work after these checks.
 1. Preserve working Tailscale access and leave the phone denied. Check Ubuntu resources/package state; follow up recorded host memory pressure and loader/reporting health before adding sustained load.
 2. Completed: test the alert-only marker rule with a short, isolated benign positive/negative replay. Offline success is not live capture proof.
 3. Completed: collect a genuine saved EVE alert into Wazuh and trace the same record into SQL and the existing Power BI report. Keep raw network logs private and collection bounded.
-4. Validate a limited live capture point, then plan a supported feed for wider coverage. Record each observed device/segment and gaps rather than assuming the NAT VM sees the whole home.
+4. Completed for ICMP only: bounded live VM-to-host capture and independent packet review. Prepare a separate TCP rule/path/control exercise, then plan a supported feed for wider coverage; never assume the NAT VM sees the whole home.
 
 Suricata 8.0.7 is installed, and the starter rule passed isolated engine
 validation in the owner's supplied output. An independent maintenance check

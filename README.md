@@ -1,39 +1,44 @@
 # Watchtide: A Home SOC Built on Wazuh, SQL Server and Power BI
 
-Watchtide is a working security operations lab: a Windows endpoint instrumented with Sysmon, monitored by a self-hosted Wazuh SIEM, with alerts loaded into a SQL Server warehouse and reported in Power BI. It was built, broken, fixed, hardened and tuned by hand, and every step is documented.
+An evidence-led security operations lab and analyst-learning portfolio.
+**Windows/Sysmon -> Wazuh -> SQL Server -> Power BI**, with controlled Suricata
+network tests and documented investigations.
 
 **Author:** Jordan Carven-Bellace
 
 *Formerly named SentinelGrid. Some internal identifiers (the `SentinelGridWarehouse` database, the `SentinelGrid-Wazuh` VM, scheduled task and rule-file names) keep the original name so the running system did not need to change.*
 
-**[Open the Watchtide console](https://jordan17133.github.io/Watchtide/)**: a read-only SOC console built on a scrubbed snapshot of this lab's real alerts, cases and ATT&CK coverage. It runs in the browser, with no setup and no live connection to the SIEM.
+**[Open the Watchtide console](https://jordan17133.github.io/Watchtide/)**:
+read-only, sanitized historical alerts, cases and ATT&CK coverage.
+No live connection to the private SOC. Check the snapshot's date.
 
-## Current work
+## At A Glance
 
-Updated October 7, 2026. The pipeline, investigations and reporting below are built and verified. In progress now:
+Updated October 7, 2026. Results are dated observations, not a security guarantee.
 
-- **Suricata network IDS:** live detection proven in controlled tests; next is sustained capture on real traffic.
-- **Private remote access with Tailscale:** working from the admin PC; off-network testing is next.
-- **Hardening and recovery:** disk encryption, Secure Boot and a tested restore are the open items.
+| Result | Evidence / scope |
+|---|---|
+| **37,605 alerts recovered** | Copy-only SQL backup, disposable restore and clean CHECKDB; same-instance recovery only ([validation](docs/sql-recovery-validation.md)) |
+| **99 Critical vulnerabilities reduced to zero** | Historical remediation baseline; later inventory requires fresh review ([investigation](docs/finding-forgotten-browser.md)) |
+| **94% of the original Critical cluster reclassified** | Narrow tested tuning, not removal of every future Critical alert ([case](triage/2026-09-30-rule-92213-powershell-policy-test-noise.md)) |
+| **Six Power BI pages** | All rendered October 5; fresh October 7 saved-live record rendering remains deferred ([report proof](docs/network-reporting-validation.md)) |
+| **Network rule proved with controls** | One marked live request alerted, one unmarked request did not; no continuous capture ([trial](docs/suricata-live-trial.md)) |
 
-Dated evidence notes, including what is not yet proven, are in [STATUS.md](STATUS.md). The full plan is in [ROADMAP.md](ROADMAP.md).
+[Current state and pickup map](STATUS.md) | [Execution roadmap](ROADMAP.md) |
+[Daily analyst routine](docs/analyst-toolkit-runbook.md#a-daily-routine-you-can-explain)
 
 ![SOC Overview page in Power BI](docs/screenshots/powerbi-soc-overview.jpg)
 
+*Screenshot captured October 1, 2026; values are historical.*
+
 ## Highlights
 
-- **End-to-end detection pipeline.** Sysmon telemetry from a Windows 11 host flows through a Wazuh agent to a Wazuh manager, indexer and dashboard running in a hardened Ubuntu VM.
-- **Real triage, written up.** Eight investigations covering every rule behind a fired ATT&CK technique (including a persistence alert caught overnight by a custom rule), each traced to a root cause with evidence, a verdict and the residual risk of any tuning (including why one technique was deliberately left untuned), plus a controlled password-guessing test detected end to end. See [triage/](triage/).
-- **Detection tuning that was tested before deployment.** Two child rules lower proven noise to level 3 without disabling the parent detections. Before going live, they were replayed against 674 stored alerts: every noise event matched and every real installer event still fired.
-- **Network intrusion detection with Suricata, proven live.** A custom Suricata rule was tested with positive and negative controls: on live traffic between the VM and the host, the marked request alerted, the unmarked one did not, and nothing was dropped. TShark packet inspection confirmed the result independently, and the alert traveled through Wazuh and the scheduled loader into SQL, with a sixth Power BI page for network alerts ([live trial](docs/suricata-live-trial.md), [reporting handoff](docs/suricata-live-reporting-handoff.md), [pilot guide](docs/suricata-pilot.md)).
-- **Private remote access with Tailscale, least privilege.** The SIEM is never exposed to the internet. Tailscale's default allow-all policy was replaced with a rule that lets only the admin PC reach the VM, and only on SSH and HTTPS. Tests confirmed the indexer and API ports stay unreachable, and the dashboard now serves a trusted HTTPS certificate with a renewal timer ([validation](docs/private-access-validation.md)).
-- **A production bug found and fixed.** The first full Power BI refresh failed because the report's reads deadlocked with the 15-minute loader's writes. The cause was diagnosed and fixed with snapshot reads; all six pages now refresh, and recent scheduled loads finished in 2 to 3 seconds ([diagnosis](docs/report-refresh-reliability.md)).
-- **94% of Critical alerts eliminated as noise**, so a genuine Critical stands out. The activity is still recorded, just at the right severity.
-- **437 of 447 vulnerability findings resolved, and Critical cut from 99 to 0.** A forgotten Firefox, unopened since December 2025 but still installed with its privileged maintenance service, held all 99 Critical findings (CVSS up to 10.0) and 88% of the total; removing it eliminated every Critical ([write-up](docs/finding-forgotten-browser.md)). Retiring an outdated Python later cleared 30 more.
-- **A data warehouse that found what the SIEM dashboard hid.** Aggregating alerts in SQL exposed a flat 36-per-hour stream of level 15 alerts from scheduled automation, which led to the second triage report.
-- **Posture and coverage reported from evidence.** The Power BI pages rebuild the vulnerability and CIS "before" numbers from Wazuh's own alerts, and map ATT&CK coverage three ways: techniques with a ready rule (115 of 447 for Windows and Linux), techniques that fired here (38, every one triaged to a verdict), and what is still missing.
-- **Change management on a monitored workload.** When a scheduled automation workload moved to a new folder and from Python 3.11 to 3.13, the migration was verified independently, file integrity monitoring was repointed and tested against every real path plus decoys (which caught one rule mistake before deployment), and Python 3.11 was retired only after confirming nothing used it, with a rollback path kept. Retiring it removes its 16 interpreter vulnerability findings.
-- **Least-privilege data access.** The loader reads Wazuh through an explicitly loopback-bound SSH tunnel with strict host-key checking and a key restricted to a single port forward (no shell), using a read-only indexer account and TLS verified against the Wazuh root CA. The indexer listens only on VM loopback.
+- **Traceable alerts:** source identity follows one event through the SIEM and warehouse ([endpoint trace](docs/event-trace.md), [plain-English packet lesson](docs/L0-event-to-report-trace.md)).
+- **Investigation before suppression:** custom persistence detection, written verdicts and two child rules replayed against 674 stored alerts; unrelated installer alerts retained ([triage](triage/)).
+- **Independent packet proof:** TShark verified the live controls; their saved alert agrees in Wazuh, Indexer and scheduled-loader SQL ([handoff](docs/suricata-live-reporting-handoff.md)).
+- **Least-privilege access:** device-scoped Tailscale SSH/HTTPS and trusted local login, plus a loopback-bound, forwarding-only loader key and read-only Indexer account ([access limits](docs/private-access-validation.md)).
+- **A real concurrency fault fixed:** diagnosed a Power BI/loader deadlock and validated committed-snapshot reads; performance monitoring remains open ([diagnosis](docs/report-refresh-reliability.md)).
+- **Recovery checked, not assumed:** disposable SQL restore, integrity check and schema/payload comparisons, with backup hash and cleanup independently rechecked ([proof](docs/sql-recovery-validation.md)).
 
 ## Architecture
 
@@ -43,7 +48,7 @@ Windows 11 endpoint (jordan-pc)
   Wazuh agent ----------------------------------------+  TCP 1514/1515
                                                       v
 Hyper-V VM: Ubuntu Server 24.04, ufw default-deny
-  Suricata IDS -> eve.json (network alerts)
+  Suricata bounded tests -> saved eve.json (not continuous capture)
        |
        v
   Wazuh manager -> Filebeat -> Wazuh indexer -> Wazuh dashboard (HTTPS 443, Tailscale)
@@ -55,7 +60,7 @@ Windows host                         |
                                      v
   SQL Server 2025: SentinelGridWarehouse
     sg.*  tables (alerts, agents, rules, MITRE, vulnerability snapshots, load runs)
-    rpt.* views  ->  Power BI Desktop (6 pages verified; definitions in powerbi/, data private)
+    rpt.* views  ->  Power BI Desktop (6 pages; Git definitions, private import)
 ```
 
 ## What is in this repo
@@ -81,7 +86,11 @@ Windows host                         |
 | `Enable-SentinelGridHyperV.ps1`, `Create-SentinelGridWazuhVM.ps1` | Host preparation and VM creation |
 | [console/](console/) | The public SOC console (alerts, cases, ATT&CK matrix, pipeline). Static HTML and JavaScript reading `console/data/snapshot.json`: reviewed display text, aggregate metrics and hashed event references, with no raw events or command lines. Hosted on GitHub Pages. [Publication controls](docs/publication-safety.md) record deliberate disclosures and remaining limits. |
 
-## Triage reports
+## Triage Reports
+
+The documented baseline reviewed rules behind 38 observed techniques. New alerts
+and later techniques require fresh review; a rule-level case is not a verdict
+on every event that subsequently matches it.
 
 | Report | Rule | Verdict |
 |---|---|---|
@@ -104,14 +113,17 @@ The private deployed configuration is maintained separately. See
 
 | Control | Implementation |
 |---|---|
-| Network exposure | VM on Hyper-V's NAT Default Switch with no port forwarding, so nothing is published to the internet. `ufw` denies inbound by default and allows only 22, 443 and 1514-1515 from private ranges. The indexer (9200) listens on loopback only; tests confirm 9200 and the API (55000) are unreachable from the network. |
+| Network exposure | Hyper-V NAT; no intentional public forwarding. Default-deny UFW and device-scoped Tailscale access. Indexer on VM loopback. The tested admin path permits 22/443 and filters 9200/55000; direct public exposure and revocation checks remain open. |
 | Credentials | Installer-generated admin password rotated. A dedicated read-only indexer account for the loader. Secrets live in a git-ignored `.env` and a private backup outside the repo. |
 | Loader access | SSH key limited in `authorized_keys` to `permitopen="127.0.0.1:9200"` with `command="/bin/false"`. Verified that it cannot run commands. |
 | Transport | TLS verified against the Wazuh root CA, with hostname checking on. Only Python's strict-mode flag is relaxed, because the installer's CA lacks a keyUsage extension; a wrong-hostname test is still rejected. |
-| Recovery | Hyper-V checkpoints at known-good points and a VM-local configuration backup. An off-VM backup and a tested restore are next ([status](STATUS.md#recovery)). |
+| Recovery | Checkpoints and VM-local config backup; same-instance SQL restore passed. Off-machine, Wazuh and whole-PC recovery remain separate ([status](STATUS.md#recovery)). |
 | Data hygiene | The Power BI file, which embeds alert data, is kept out of Git. |
 
-## Results
+## Historical Results
+
+These are the documented remediation/tuning baselines, not a fresh October 7
+posture scan or a statement that all Critical alerts have disappeared.
 
 | Measure | Before | After |
 |---|---|---|
@@ -125,7 +137,8 @@ The private deployed configuration is maintained separately. See
 
 ### Power BI
 
-Screenshots captured October 1, 2026. For current numbers, open the [console](https://jordan17133.github.io/Watchtide/).
+Screenshots captured October 1, 2026. The [console](https://jordan17133.github.io/Watchtide/)
+has its own dated snapshot, not live numbers.
 
 | | |
 |---|---|
@@ -149,25 +162,15 @@ Screenshots captured October 1, 2026. For current numbers, open the [console](ht
 
 The full plan, with why each chapter matters and when it counts as done, is in [ROADMAP.md](ROADMAP.md).
 
-- [x] Stages 0-4: lab, Wazuh, Sysmon, agent, first event path
-- [x] Stage 7: SQL Server warehouse, scheduled loader and case log (open, assign, close, history)
-- [x] Detection tuning with tested custom rules
-- [x] Stage 4: controlled test that traces one event through every layer ([docs/event-trace.md](docs/event-trace.md))
-- [x] Stage 4b: CIS benchmark baseline and hardening ([docs/cis-baseline.md](docs/cis-baseline.md))
-- [x] Stage 8: Power BI pages for posture, MITRE ATT&CK coverage and pipeline health
-- [x] Least-privilege reporting role, tested: reads `rpt` views, blocked from raw tables and from any change (SQL Server stays Windows-authentication only, so no SQL passwords exist)
-- [x] Stage 4c: Tailscale private access, least-privilege policy, allowed and denied port tests, trusted HTTPS dashboard
-- [ ] Stage 4c follow-up: off-network access tests
-- [ ] One remote endpoint: a benign event traced across networks into Wazuh, SQL and Power BI
-- [ ] Alert notifications for level 12 and above
-- [x] File Integrity Monitoring with who-did-it attribution on secrets, scheduled automation scripts and autostart locations
-- [x] Full event archive with tiered retention at every layer
-- [x] Collect Windows Defender logs (first full and offline scans recorded)
-- [x] Collect PowerShell script block logs (event 4104, deobfuscated)
-- [ ] Attack simulations (Atomic Red Team) with a detection coverage map
-- [x] Stage 6 (first part): public read-only console on a scrubbed snapshot of real data
-- [ ] Stage 6 (second part): private live API/console, with analysts working cases from it; public console stays on a sanitized snapshot
-- [x] Stage 5 (first part): Suricata IDS with a custom rule, proven offline and on live traffic, alerts traced into Wazuh, SQL and Power BI
+| Work | Position |
+|---|---|
+| Core endpoint SOC, warehouse and reports | Built; health, updates and fresh-event checks continue |
+| Analyst learning | Resume the [bounded TCP/Nmap lesson](docs/nmap-exposure-baseline.md); owner explanations stay separate from automated checks |
+| New PowerShell policy-probe tune | [Reviewed and held](docs/powershell-policy-probe-tuning-review.md); filename-only exception is not deployed |
+| Network reporting | Offline record displayed; saved-live dashboard/Indexer/SQL pass; fresh Power BI rendering deferred |
+| Wider network visibility | Capture-path proof, routine DNS/flow collection, budgets and sustained performance before coverage claims |
+| Platform protection | Off-machine/Wazuh recovery, disk encryption, Secure Boot, account/access review and firewall-log SIEM collection remain open |
+| Later lab chapters | Separate Burp/sqlmap/Metasploit lessons, attack validation and private live API; no new tools installed by this handoff |
 
 ## Tools
 

@@ -16,8 +16,43 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
 | 4b. Posture review | Historical baseline: 437 of 447 findings resolved, CIS 27.1% to 37.0%; reviewed file/logging, SOC runtime patch and Steam access checks pass; remaining hardening and fresh posture scan open |
 | 7. SQL Server reporting storage | Done: loader every 15 minutes; case log with history (`warehouse/cases.py`) meets the incident gate |
 | 8. Power BI report | October 5: all six pages rendered, offline network fields/metrics/filter verified; October 7 live-context definitions updated, fresh Desktop verification deferred; imported cache ignored |
-| Detection validation | In progress: controlled SSH password-guessing test detected end to end; every Critical alert since tuning explained |
+| Detection validation | In progress: controlled SSH password-guessing test detected end to end; historical post-tuning clusters reviewed, later alerts need fresh verdicts |
 | 4c. Tailscale private remote access | Trusted local HTTPS/dashboard login verified; renewal setup reported successful; phone test declined and approved off-LAN access deferred; remaining exposure/recovery/reporting gates open |
+
+## October 7: Reconcile Claude's Handoff Without Restarting The Plan
+
+- Located handoff commit `b067d36` in Claude's separate workspace worktree and
+  read all six drafts, the status map and daily routine. Retained the existing
+  SOC source/public-copy boundary; no direct edits to the generated public repo.
+- Adapted the evidence-first README, private agent orientation and one-writer
+  agreement. STATUS remains the shared pickup map; the working agreement's
+  claims are advisory, not a concurrency lock. Private coordination files are
+  explicitly excluded by the publisher, with regression coverage.
+- Corrected L0: the saved-live row uses **Controlled live validation**, and its
+  actual fresh Power BI rendering remains deferred. Owner explanations are
+  not credited from an agent-authored lesson. Integrated the handoff into the
+  existing TCP/Nmap sequence without repeating completed ICMP/port tests.
+- Reviewed the completed local SQL drill: 37,605 restored alerts, clean CHECKDB,
+  20 readable views, schema/report-role and controlled-payload matches recorded.
+  Independently matched backup hash and SQL backup/restore history, protected
+  folder access, disposable cleanup and live online/snapshot-reading state.
+  No new restore ran; same-PC proof does not close Wazuh/off-machine recovery.
+- Held the proposed filename-only 100120 tune: arbitrary programs can write that
+  same name outside Temp. Existing rules remain unchanged. A bounded October 5-7
+  SQL review found 2,272 within-scope level-3 events and 1,410 policy-probe-shaped
+  Critical events with a different writer. Those counts are not individual benign
+  verdicts or a measured weekly post-deployment reduction.
+- Rechecked ten successful loads: latest two took 2.052/2.452 seconds, but another
+  took 211.527 seconds on six fetched alerts. The memory ceiling is already
+  4096 MB. Corrected the draft's blanket "no fix needed" conclusion to an open
+  cause/resource observation gate; no performance settings changed.
+- No new capture, scan, installed package, live rule, firewall, VPN, SSH, loader
+  or report-cache change in this batch. Unrelated workloads were left running.
+- All 235 selected checks passed: 136 Suricata, 23 loader reliability, 33
+  publication privacy, 19 network reporting (11 isolated SQL), ten recovery guards
+  and 14 local tuning-scope controls. The three existing uncommitted recovery
+  helper/test files were read and tested before inclusion; no new backup/restore
+  job or manager engine test was executed.
 
 ## October 7: Recheck And Explain The Nmap Baseline
 

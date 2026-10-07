@@ -26,7 +26,7 @@ is verified separately; a TCP scan-detection exercise remains planned.
 | 4c Private access | Device-scoped Tailscale SSH/HTTPS grant and trusted local dashboard access verified | Off-network administration deferred; renewal replacement, revocation and other access/recovery gates remain open |
 | 5 Network detection | Offline reporting and bounded live VM-to-host controls pass; saved-live alert verified through Wazuh dashboard/Indexer/normal-loader SQL | Fresh Power BI check, TCP scan detection, continuous capture, routine telemetry and wider coverage remain open |
 | 6 Console | Public sanitized snapshot deployed | Private live analyst API/console not deployed |
-| 7 Warehouse | Scheduled ingestion and read-only report views work; guarded SQL snapshot-read fix enabled | Sustained performance, late-event proof, backup/restore and actual reporting-account review remain open |
+| 7 Warehouse | Scheduled ingestion, read-only report views and guarded snapshot reads work; same-instance SQL restore passes | Sustained performance, late-event proof, off-machine/other-instance/Wazuh recovery and actual reporting-account review remain open |
 | 8 Power BI | All six existing pages rendered during the October 5 offline-record check; live-context definitions updated October 7 | Fresh live-record Desktop check, refresh-duration benchmark and one unpublished visual-schema check remain open |
 
 The October 6 [host exposure audit](host-exposure-validation.md) verified strict,
@@ -103,6 +103,10 @@ logger supports it. Public portfolio evidence remains reviewed and sanitized.
 These phases extend the existing runbook; they do not renumber its stages.
 
 ### A Reliability And Recovery
+
+- [x] October 7 same-instance SQL copy-only backup/disposable restore, integrity,
+  schema/grants and controlled-record checks; retained backup hash, history and
+  cleanup independently rechecked ([bounded proof](sql-recovery-validation.md)).
 
 - [x] Diagnose the actual SQL deadlock, test guarded snapshot reads and verify
   the subsequent six-page Desktop report.

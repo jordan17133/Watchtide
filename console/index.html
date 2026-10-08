@@ -38,7 +38,7 @@
 
   <div class="notice" id="notice">
     Every number below comes from a real home lab: one Windows 11 workstation and its Wazuh server.
-    This page is a reviewed snapshot (<span id="snapshotTime">loading</span>), with no connection to the SOC. The SIEM itself stays private, reachable only from the home network or a restricted Tailscale connection.
+    This page is a reviewed snapshot (<span id="snapshotTime">loading</span>), with no live connection to the SOC. Home-network and restricted Tailscale administration have been tested; external exposure and revocation checks remain separate.
   </div>
 
   <main>
@@ -46,7 +46,7 @@
       <div class="start">
         <h2>Start here: three investigations worth a minute</h2>
         <div class="stories">
-          <a class="story" href="#cases/SG-002"><span class="case-num">SG-002</span><strong>Cut a false alarm stream of 36 Critical alerts an hour</strong><span>Traced scheduled scripts that looked like malware, proved they were benign, and wrote a narrow rule so real threats still fire.</span></a>
+          <a class="story" href="#cases/SG-002"><span class="case-num">SG-002</span><strong>Cut a false alarm stream of 36 Critical alerts an hour</strong><span>Investigated scheduled scripts and tested a narrow exception while retaining unrelated installer alerts.</span></a>
           <a class="story" href="#cases/SG-004"><span class="case-num">SG-004</span><strong>Ran a controlled attack and caught it</strong><span>Password guessing against the SIEM server: detected, mapped to MITRE ATT&amp;CK, and a gap in the default rules documented.</span></a>
           <a class="story" href="#cases/SG-005"><span class="case-num">SG-005</span><strong>The SIEM caught a graphics driver crashing at 2 AM</strong><span>Critical alerts led to a real stability problem on the host. Detections find more than attackers.</span></a>
         </div>
@@ -61,7 +61,7 @@
       </div>
       <div class="grid two">
         <div class="panel">
-          <div class="panel-head"><h2>Busiest rules and their triage verdict</h2></div>
+          <div class="panel-head"><h2>Busiest rules and historical reviews</h2></div>
           <div id="topRules"></div>
         </div>
         <div class="panel">

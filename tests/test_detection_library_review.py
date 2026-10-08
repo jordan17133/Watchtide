@@ -59,10 +59,18 @@ class AlertInventoryTests(unittest.TestCase):
             alerts.build_inventory([self.row(count=0)], {"rules": []})
 
     def test_level_bands_and_out_of_range(self):
-        self.assertEqual([alerts.severity(n) for n in (6, 7, 11, 12, 14, 15)],
-                         ["Low", "Medium", "Medium", "High", "High", "Critical"])
-        with self.assertRaises(ValueError):
-            alerts.severity(16)
+        self.assertEqual([alerts.severity(n) for n in (0, 6, 7, 11, 12, 14, 15, 16)],
+                         ["Low", "Low", "Medium", "Medium", "High", "High", "Critical", "Critical"])
+        for level in (-1, 17, True, 15.5, "16", None):
+            with self.subTest(level=level), self.assertRaises(ValueError):
+                alerts.severity(level)
+
+    def test_level_16_inventory_retains_severity_without_assigning_verdict(self):
+        row = self.row(); row.update(lowest_observed_level=16, highest_observed_level=16)
+        result = alerts.build_inventory([row], {"rules": []})
+        self.assertEqual(result["summary"]["rule_types_by_highest_level"], {"Critical": 1})
+        self.assertEqual(result["rules"][0]["highest_observed_level"], 16)
+        self.assertEqual(result["rules"][0]["current_alert_verdict"], "Not adjudicated by this inventory")
 
     def test_markdown_escapes_private_event_text(self):
         text = alerts.markdown_inventory(alerts.build_inventory([self.row()], {"rules": []}))

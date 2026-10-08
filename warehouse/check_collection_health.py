@@ -16,11 +16,13 @@ CONNECTION = (
     "Database=SentinelGridWarehouse;Trusted_Connection=yes;TrustServerCertificate=yes"
 )
 CLOCK_ALLOWANCE = timedelta(minutes=5)
+QUEUE_LOOKBACK_HOURS = 24
 LIMITS = [
     "Alert freshness is not a heartbeat; a quiet endpoint can trigger review.",
     "Recent alerts do not prove every source is collected or that no events were lost.",
     "Agent authentication, Indexer freshness and Power BI refresh are separate checks.",
     "This command does not schedule monitoring or deliver notifications.",
+    "Queue recovery messages do not prove lost events were recovered; source-loss and heartbeats remain separate.",
 ]
 
 
@@ -49,6 +51,28 @@ def freshness(value, now, threshold):
     return {"state": "stale" if delta > threshold else "recent", "age_minutes": round(age, 2)}
 
 
+def queue_check(row, now):
+    check = {"check": "agent_queue_warnings", "agent_id": row["agent_id"],
+             "lookback_hours": QUEUE_LOOKBACK_HOURS}
+    count = row.get("queue_warning_count")
+    if count is None:
+        return {**check, "state": "unknown", "reason": "Queue signal evidence unavailable"}
+    if type(count) is not int or count < 0:
+        raise ValueError("Invalid queue warning count")
+    warning = row.get("latest_queue_warning_utc")
+    recovery = row.get("latest_queue_recovery_utc")
+    if bool(count) != (warning is not None):
+        raise ValueError("Inconsistent queue warning evidence")
+    for value in (warning, recovery):
+        if value is not None and (utc(value) > now + CLOCK_ALLOWANCE or
+                                  utc(value) < now - timedelta(hours=QUEUE_LOOKBACK_HOURS)):
+            return {**check, "state": "unknown", "reason": "Queue signal is outside the observation window"}
+    return {**check, "state": "attention" if count else "no_recent_warning_observed",
+            "warning_count": count,
+            "recovery_message_after_warning": warning is not None and recovery is not None and utc(recovery) > utc(warning),
+            "reason": "Recent queue pressure needs loss review" if count else "No queue warning found in the retained window"}
+
+
 def build_health(snapshot, agent_ids, max_age_minutes=30):
     validate_inputs(agent_ids, max_age_minutes)
     now = utc(snapshot["as_of_utc"])
@@ -75,6 +99,7 @@ def build_health(snapshot, agent_ids, max_age_minutes=30):
         if row["latest_rule_id"] == 504:
             check.update(state="attention", reason="Latest retained record reports disconnection")
         checks.append(check)
+        checks.append(queue_check(row, now))
     states = {check["state"] for check in checks}
     state = "attention" if states & {"stale", "attention"} else "unknown" if "unknown" in states else "recent_observations"
     return {"as_of_utc": now.isoformat(), "state": state, "max_age_minutes": max_age_minutes,
@@ -107,6 +132,18 @@ def read_snapshot(agent_ids):
             snapshot["agents"].append({"agent_id": agent_id,
                                       "latest_alert_utc": None if row is None else row[0],
                                       "latest_rule_id": None if row is None else row[1]})
+            row = cursor.execute("""
+                SELECT COUNT_BIG(CASE WHEN rule_id IN (202, 203, 204) THEN 1 END),
+                       MAX(CASE WHEN rule_id IN (202, 203, 204) THEN alert_ts_utc END),
+                       MAX(CASE WHEN rule_id = 205 THEN alert_ts_utc END)
+                FROM sg.alerts
+                WHERE agent_id = ? AND rule_id IN (202, 203, 204, 205)
+                  AND alert_ts_utc >= DATEADD(hour, -24, ?)
+            """, agent_id, snapshot["as_of_utc"]).fetchone()
+            if row is None:
+                raise ValueError("Queue observation query returned no result")
+            snapshot["agents"][-1].update(zip(
+                ("queue_warning_count", "latest_queue_warning_utc", "latest_queue_recovery_utc"), row))
         return snapshot
     finally:
         connection.close()

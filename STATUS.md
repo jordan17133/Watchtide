@@ -6,11 +6,34 @@ how each step happened; the [roadmap](ROADMAP.md) lists what comes next.
 
 ## Active Work
 
-No active editing/deployment claim. Codex completed the authorized repair's
+No active source-edit claim. The October 7 repository review is complete:
+concise README/evidence navigation, truthful public historical-review/inferred
+case labels, level-16 compatibility, unavailable-metric handling and queue-aware
+manual collection checks. See [review scope, tests and remaining gates](docs/repository-review.md).
+Git history identifies the source/publication revisions; these source checks
+do not imply deployment of new live rules, schema, notifications or capture.
+
+Codex completed the authorized repair's
 exact fresh-event trace, reconciled Claude's handoff and added a tested/manual
 SQL collection check. Continue with the bounded heartbeat/source-health and
 local notification phase in the [completion plan](docs/soc-completion-plan.md).
 Scheduling, delivery and new permissions need their own reviewed scope.
+
+The owner's [27-example attack/defense list](docs/attack-defense-reference.md)
+is now retained and mapped to the existing completion packages, with primary-source
+qualifications and current coverage limits. All 27 entries, 158 local links across
+the five touched documents and 33 publication-privacy regression checks passed.
+This was documentation only, not new detection validation or a live change.
+The reference is included in this reviewed publication batch; it does not
+change the execution order or approve new live operations.
+
+At 9:54 PM Eastern, loader/Windows observations were recent, but the queue-aware
+checker flagged five retained 24-hour warnings as attention. A later recovery
+message does not prove missing events recovered. Complete source-loss health
+remains open. The review passed 324 Python tests (13 optional SQL tests skipped),
+151 Windows PowerShell assertions and all five console views on desktop/mobile,
+including empty, nullable and level-16 fixtures. The historical public snapshot
+is retained; no fresh Power BI import or live export was made.
 
 October 7 recovery: an authenticated, identity-checked guest preflight confirmed
 the intended target. The authorized repair removed one obsolete duplicate
@@ -47,9 +70,9 @@ this file remains the authoritative status, not the older side-workspace map.
 | Order | Work | State / finish line |
 |---|---|---|
 | 0 | Restore current Windows collection | Closed for this outage: identity-checked bounded repair and exact Sysmon/Indexer/normal-loader SQL trace pass; [repair evidence](docs/collection-health-validation.md). Restart durability and historical loss remain separate |
-| 0a | Monitor the monitoring | Read-only SQL collection check tested and manually verified; heartbeat/source-loss checks, scheduling and notification delivery remain open. [Completion plan](docs/soc-completion-plan.md) reconciles Claude's handoff |
+| 0a | Monitor the monitoring | Read-only SQL freshness/queue check tested and manually verified; five retained warnings require review. Heartbeat/full source-loss checks, scheduling and notification delivery remain open. [Completion plan](docs/soc-completion-plan.md) reconciles Claude's handoff |
 | 1 | Handoff and L0 explanation | Scannable README, private coordination agreement and corrected [packet-to-report lesson](docs/L0-event-to-report-trace.md) applied; 235 selected checks passed; owner explanation stays open |
-| 2 | Triage integrity and PowerShell noise review | [Classification/case audit](docs/triage-system-audit.md) finds inferred memberships and incomplete technique reviews; exact evidence links and truthful reporting gates open. Existing rule 100100 retained; filename-only expansion remains held |
+| 2 | Triage integrity and PowerShell noise review | Public historical-review/inferred-count labels and level-16 handling corrected/tested; exact case memberships, dispositions and fresh Power BI gates remain open. [Audit](docs/triage-system-audit.md). Existing rule 100100 retained; filename-only expansion remains held |
 | 3 | Resume TCP/Nmap learning | Build a harmless offline TCP rule/control test, then a separate bounded owned-VM exercise on a verified capture path; [existing baseline](docs/nmap-exposure-baseline.md) is already complete |
 | 4 | Reporting and reliability | Fresh saved-live Power BI rendering when the PC is available; explain source/packet, Wazuh, SQL and refresh times; retain [loader duration follow-up](docs/loader-slow-run-investigation.md) |
 | 5 | Expand network coverage | Supported feed, resource/drop/retention budgets and routine DNS/flow visibility before sustained capture or phone/home coverage claims |

@@ -7,17 +7,60 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
 | Runbook stage | Status |
 |---|---|
 | 0. Prepare the lab (Hyper-V, Ubuntu VM) | Done |
-| 1. Wazuh all-in-one stack | Done and hardened |
+| 1. Wazuh all-in-one stack | Built with reviewed access/file/software controls; complete hardening and recovery gates remain separate |
 | 2. Sysmon on Windows | Done |
 | 3. Wazuh agent on Windows | October 7 stale-name outage repaired; connected state/socket and authenticated dashboard Active verified; loss/reboot durability gates remain |
 | 4. Prove the event path end to end | Historical trace done; October 7 exact benign Sysmon/Indexer/normal-loader SQL/report-view recovery trace verified; fresh Desktop check separate |
 | 5. Suricata network telemetry | Partial: offline reporting, bounded live VM-to-host controls and independent packet review pass; saved-live alert verified in Wazuh dashboard, Indexer and normal-loader SQL; fresh Power BI check deferred, sustained/broader coverage pending |
 | 6. Watchtide API on live Wazuh data | Private live API not started; public console serves a sanitized snapshot of real lab data |
 | 4b. Posture review | Historical baseline: 437 of 447 findings resolved, CIS 27.1% to 37.0%; reviewed file/logging, SOC runtime patch and Steam access checks pass; remaining hardening and fresh posture scan open |
-| 7. SQL Server reporting storage | Done: loader every 15 minutes; case log with history (`warehouse/cases.py`) meets the incident gate |
+| 7. SQL Server reporting storage | Loader every 15 minutes and case history built; exact case-alert membership, evidence dispositions and retention budgets remain open |
 | 8. Power BI report | October 5: all six pages rendered, offline network fields/metrics/filter verified; October 7 live-context definitions updated, fresh Desktop verification deferred; imported cache ignored |
 | Detection validation | In progress: controlled SSH password-guessing test detected end to end; historical post-tuning clusters reviewed, later alerts need fresh verdicts |
 | 4c. Tailscale private remote access | Trusted local HTTPS/dashboard login verified; renewal setup reported successful; phone test declined and approved off-LAN access deferred; remaining exposure/recovery/reporting gates open |
+
+## October 7: Repository Review And Truthful Reporting
+
+- Preserved Claude's scannable, employer-facing README structure; moved detailed
+  investigations, metrics and gallery navigation into the
+  [evidence index](docs/portfolio-evidence.md), with screenshot dates retained.
+- Corrected public historical-review and inferred-case-count labels without
+  classifying new events. Fixed level-16 inventory/schema/UI compatibility and
+  empty/nullable metric export/display handling. Kept all six Power BI pages;
+  no new live export, Desktop refresh, rule deployment or SQL migration.
+- Extended the manual collection checker with a per-agent 24-hour queue-warning
+  query. At 9:54 PM Eastern, loader and Windows records were recent, but five
+  warnings required attention; a recovery message does not recover lost events.
+  A separate bounded Sysmon-error query timed out; complete source health stays
+  open. No schedule, notification delivery, restart or new permission was added.
+- Added a read-only structural repository inventory and five tests. Corrected
+  the data-file-cap description: it is not a whole-drive storage guarantee.
+- Verification: 324 Python tests passed, 13 opt-in disposable-SQL tests skipped;
+  nine Windows PowerShell suites passed 151 assertions. All five console views
+  pass desktop/mobile real, empty, nullable and level-16 fixture checks. Genuine
+  preview image regenerated from the retained snapshot and visually checked.
+- See the [review report and remaining work](docs/repository-review.md). The
+  order remains collection health/warnings, useful bounded traffic records,
+  TCP/Nmap validation, evaluation of Zeek, then forensic lessons. Public
+  publication still requires the sanitized generator and separate secret scan.
+
+## October 7: Preserve Major Attack Lessons In The Existing Plan
+
+- Retained all 27 owner-supplied examples in the
+  [attack/defense reference](docs/attack-defense-reference.md). Preserved their
+  countermeasure themes without adopting the screenshot's year-by-year chronology
+  or claiming a complete incident-history fact check.
+- Checked primary NIST/CISA/Microsoft guidance for framework, prioritization,
+  phishing-resistant MFA and the NotPetya/signed-supply-chain qualifications.
+- Mapped the six recurring defenses and candidate behavior families to the
+  existing completion packages. Existing evidence, unverified coverage and
+  deferred recovery remain separate. Collection health and TCP/Nmap priorities
+  are unchanged; a vendor rule's existence is not a validated detection.
+- Documentation only: no installs, scans, capture, rules/verdict changes, restarts,
+  firewall/VPN changes or notifications. No new runtime coverage was verified.
+- Verification: all 27 distinct references retained; 158 local links across the
+  five touched documents resolve; 33 publication-privacy regression checks pass.
+  Source documentation only; no generated public copy or push in this update.
 
 ## October 7: Restore Windows Collection And Reconcile The Latest Handoff
 

@@ -252,8 +252,9 @@ above are proposed improvements, not capabilities credited to the current schema
 - [x] Restore and verify the current outage's Windows collection (Stages 2-4);
   later repair/source/Indexer/SQL proof is separate from this original audit.
 - [ ] Review earlier drops, reboot durability and actual source-health signals.
-- [ ] Correct misleading rule/technique labels without assigning new verdicts.
-- [ ] Correct/test the source-only level-16 inventory edge case.
+- [x] Correct misleading public-console rule/technique labels without assigning
+  new verdicts; existing Power BI changes/rendering remain separate below.
+- [x] Correct/test level-16 inventory, snapshot-schema and console handling.
 - [ ] Design/test exact case membership and evidence-backed dispositions;
   separately approve and back up any live schema migration (Stage 7).
 - [ ] Reconcile historical cases deliberately; do not auto-backfill memberships
@@ -284,3 +285,13 @@ identified design gaps are fixed or that every historical verdict is justified.
 No actual Power BI refresh, new packet capture, engine replay, rule deployment,
 case write or live SQL migration was performed. The three actual administrator
 diagnostic files have independently matching hashes and private reader grants.
+
+## Reporting Correction Follow-Up
+
+The later [repository review](repository-review.md) implements the two checked
+gates above. Public rule/technique labels now say historical review; case counts
+say inferred rule/time matches. These edits neither assign new event verdicts
+nor reconcile historical cases. All five console views pass real, nullable,
+empty and level-16 snapshot checks on desktop and mobile. Missing timing remains
+unavailable in the exporter and UI. The installed database/rules and the existing
+six-page Power BI definitions were not changed by this correction batch.

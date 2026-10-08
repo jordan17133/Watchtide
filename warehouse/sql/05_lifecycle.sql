@@ -13,7 +13,7 @@
 USE SentinelGridWarehouse;
 GO
 
--- Hard ceiling on the data file so the warehouse can never fill the host drive.
+-- Data-file ceiling only; logs, tempdb and other files need a separate disk budget.
 DECLARE @file sysname = (SELECT name FROM sys.database_files WHERE type_desc = 'ROWS');
 EXEC (N'ALTER DATABASE SentinelGridWarehouse MODIFY FILE (NAME = ' + @file + N', MAXSIZE = 100GB)');
 GO

@@ -17,7 +17,8 @@ def snapshot():
     return {"as_of_utc": NOW, "last_success_utc": NOW - timedelta(minutes=5),
             "latest_run": {"status": "succeeded", "started_at_utc": NOW - timedelta(minutes=5),
                            "finished_at_utc": NOW - timedelta(minutes=5)},
-            "agents": [{"agent_id": "001", "latest_alert_utc": NOW - timedelta(minutes=10), "latest_rule_id": 92032}]}
+            "agents": [{"agent_id": "001", "latest_alert_utc": NOW - timedelta(minutes=10), "latest_rule_id": 92032,
+                        "queue_warning_count": 0, "latest_queue_warning_utc": None, "latest_queue_recovery_utc": None}]}
 
 
 class CollectionHealthTests(unittest.TestCase):
@@ -38,7 +39,7 @@ class CollectionHealthTests(unittest.TestCase):
 
     def test_latest_disconnection_is_not_recent_collection_proof(self):
         data = snapshot(); data["agents"][0]["latest_rule_id"] = 504
-        self.assertEqual(self.result(data)["checks"][-1]["state"], "attention")
+        self.assertEqual(self.result(data)["checks"][-2]["state"], "attention")
 
     def test_stale_loader_detected_with_recent_endpoint(self):
         data = snapshot(); data["last_success_utc"] = NOW - timedelta(minutes=31)
@@ -70,7 +71,47 @@ class CollectionHealthTests(unittest.TestCase):
 
     def test_small_clock_skew_is_not_a_negative_age(self):
         data = snapshot(); data["agents"][0]["latest_alert_utc"] = NOW + timedelta(seconds=30)
-        self.assertEqual(self.result(data)["checks"][-1]["age_minutes"], 0)
+        self.assertEqual(self.result(data)["checks"][-2]["age_minutes"], 0)
+
+    def test_recent_queue_warning_needs_review_despite_fresh_alerts(self):
+        data = snapshot(); data["agents"][0].update(queue_warning_count=5, latest_queue_warning_utc=NOW - timedelta(hours=2))
+        result = self.result(data)
+        self.assertEqual(result["state"], "attention")
+        self.assertEqual(result["checks"][-1]["warning_count"], 5)
+
+    def test_recovery_message_does_not_claim_missing_events_recovered(self):
+        data = snapshot(); data["agents"][0].update(queue_warning_count=1,
+            latest_queue_warning_utc=NOW - timedelta(hours=2), latest_queue_recovery_utc=NOW - timedelta(hours=1))
+        result = self.result(data)
+        self.assertEqual(result["state"], "attention")
+        self.assertTrue(result["checks"][-1]["recovery_message_after_warning"])
+        self.assertIn("do not prove lost events", result["limits"][-1])
+
+    def test_older_recovery_is_not_a_recovery_after_warning(self):
+        data = snapshot(); data["agents"][0].update(queue_warning_count=1,
+            latest_queue_warning_utc=NOW - timedelta(hours=1), latest_queue_recovery_utc=NOW - timedelta(hours=2))
+        self.assertFalse(self.result(data)["checks"][-1]["recovery_message_after_warning"])
+
+    def test_absent_queue_evidence_is_unknown(self):
+        data = snapshot(); del data["agents"][0]["queue_warning_count"]
+        self.assertEqual(self.result(data)["state"], "unknown")
+
+    def test_no_recent_warning_is_not_proof_of_complete_source_health(self):
+        result = self.result()
+        self.assertEqual(result["checks"][-1]["state"], "no_recent_warning_observed")
+        self.assertEqual(result["connection_state"], "not_tested")
+
+    def test_queue_signal_clocks_and_window_fail_unknown(self):
+        for when in (NOW + timedelta(minutes=6), NOW - timedelta(hours=25)):
+            data = snapshot(); data["agents"][0].update(queue_warning_count=1, latest_queue_warning_utc=when)
+            with self.subTest(when=when):
+                self.assertEqual(self.result(data)["state"], "unknown")
+
+    def test_invalid_queue_counts_and_inconsistent_evidence_fail(self):
+        for count, when in ((True, NOW), (-1, NOW), (1, None), (0, NOW), (1.5, NOW)):
+            data = snapshot(); data["agents"][0].update(queue_warning_count=count, latest_queue_warning_utc=when)
+            with self.subTest(count=count, when=when), self.assertRaises(ValueError):
+                self.result(data)
 
     def test_boundary_and_fractional_staleness(self):
         self.assertEqual(health.freshness(NOW - timedelta(minutes=30), health.utc(NOW), timedelta(minutes=30))["state"], "recent")
@@ -127,7 +168,7 @@ class CollectionHealthTests(unittest.TestCase):
 
     def test_read_snapshot_only_selects_with_bound_agent_and_closes(self):
         cursor = Mock(); cursor.execute.return_value = cursor
-        cursor.fetchone.side_effect = [(NOW, NOW), ("succeeded", NOW, NOW), (NOW, 92032)]
+        cursor.fetchone.side_effect = [(NOW, NOW), ("succeeded", NOW, NOW), (NOW, 92032), (0, None, None)]
         connection = Mock(); connection.cursor.return_value = cursor
         driver = Mock(); driver.connect.return_value = connection
         with patch.dict("sys.modules", {"pyodbc": driver}):
@@ -135,6 +176,8 @@ class CollectionHealthTests(unittest.TestCase):
         self.assertEqual(result["agents"][0]["agent_id"], "001")
         self.assertTrue(all(call.args[0].strip().startswith("SELECT") for call in cursor.execute.call_args_list))
         self.assertEqual(cursor.execute.call_args_list[-1].args[1], "001")
+        self.assertEqual(cursor.execute.call_args_list[-1].args[2], NOW)
+        self.assertIn("rule_id IN (202, 203, 204, 205)", cursor.execute.call_args_list[-1].args[0])
         self.assertEqual(connection.timeout, 15)
         connection.close.assert_called_once()
 

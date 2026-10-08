@@ -31,8 +31,17 @@ do not load its filename-only exception into the live manager.
 
 The [dependable SOC completion checklist](docs/soc-completion-plan.md) reconciles
 the latest Claude handoff with these stages. A read-only manual collection check
-now separates endpoint alert freshness from loader success; local Windows
-notifications are selected but no automatic watchdog/delivery is deployed.
+now separates endpoint alert freshness, loader success and retained queue
+warnings; local Windows notifications are selected but no automatic
+watchdog/delivery is deployed. Run it from the private source:
+
+```powershell
+.\.venv\Scripts\python.exe -B -m warehouse.check_collection_health --agent-id 001
+```
+
+This only reads SQL. Exit 0 means recent observations, 1 needs review and 2
+means missing/unavailable evidence; none proves the device safe. See the
+[review scope](docs/repository-review.md) and [actual health results](docs/collection-health-validation.md).
 Earlier queue loss and restart durability remain open after the repaired outage.
 
 ## Lab facts
@@ -341,7 +350,7 @@ sudo systemctl restart wazuh-manager filebeat && sudo filebeat test output
 5. **Make it searchable.** Create the index pattern `wazuh-archives-*` with time field `timestamp`.
 6. **Prove it.** Launch Notepad, then search Discover on `wazuh-archives-*` for `agent.name:jordan-pc and data.win.eventdata.image:*otepad.exe`. A Sysmon event ID 1 must appear even though no rule alerts on it.
 
-The SQL warehouse has its own lifecycle in [warehouse/sql/05_lifecycle.sql](warehouse/sql/05_lifecycle.sql): every alert row is kept, Low-severity raw JSON is trimmed after a year, daily summaries per rule and MITRE technique are permanent, and the data file is capped at 100 GB.
+The SQL warehouse has its own lifecycle in [warehouse/sql/05_lifecycle.sql](warehouse/sql/05_lifecycle.sql): every alert row is kept, Low-severity raw JSON is trimmed after a year, daily summaries per rule and MITRE technique are permanent, and the data file is capped at 100 GB. That cap does not budget logs, tempdb, capture files or other host storage. Resource and retention gates remain separate.
 
 ### Completion gate
 

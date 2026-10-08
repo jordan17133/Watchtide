@@ -56,14 +56,19 @@ framework assessment.
 
 ## Stage Checklist
 
+The owner's [27 attack/countermeasure references](attack-defense-reference.md)
+are retained as lessons mapped to these packages: applicable patching, stronger
+identity checks, recovery, access boundaries, tested detections and human verification.
+Their presence in the plan is not validated detection coverage or deployment approval.
+
 These work packages retain the original numbered build stages. Independent
 offline work can proceed while a separately authorized deployment is waiting.
 
 | Order | Existing stages | Work and finish line | State |
 |---|---|---|---|
 | 1 | 2-4, 7 | Fix the current delivery failure; verify guest identity, agent connection and exact new source/Indexer/normal-loader SQL event | Passed for this outage; reboot durability and missing-event review remain |
-| 2 | 2-4, 7-8 / maturity I | Monitor source/loader/report health; test loss, stale/unknown states, recovery and notifications | Manual SQL freshness checker tested/live-read; automatic watchdog not deployed |
-| 3 | 4, 7-8 | Exact case-alert links, event-specific dispositions and truthful historical-review/ATT&CK labels; correct level-16 compatibility | Audit complete, implementation gates open |
+| 2 | 2-4, 7-8 / maturity I | Monitor source/loader/report health; test loss, stale/unknown states, recovery and notifications | Manual SQL freshness/queue checker tested/live-read; real heartbeat, full source-loss checks and automatic delivery remain open |
+| 3 | 4, 7-8 | Exact case-alert links, event-specific dispositions and truthful historical-review/ATT&CK labels; correct level-16 compatibility | Public labels and level-16 compatibility corrected/tested; exact memberships, event dispositions and fresh Power BI gates remain open |
 | 4 | Detection maintenance, 5 | Small maintained-rule batch with known data prerequisites, engine tests, positive/negative controls, rollback and measured noise | ET Open field-reviewed only; tuning draft held |
 | 5 | 5, lessons L1-L4 | Offline TCP rule lesson, then owned-VM Nmap/capture test on an observed path; trace any alert and render existing Power BI | ICMP/port baseline passes; TCP detection and fresh saved-live Desktop check open |
 | 6 | 4b-4c | Account/MFA, least-privilege exposure, protected credential custody, disk/boot protection, patches and measured capacity | Partial; never activate encryption/firmware changes without recovery preparation |
@@ -75,8 +80,10 @@ offline work can proceed while a separately authorized deployment is waiting.
 The new [manual collection checker](../warehouse/check_collection_health.py)
 does not equate successful SQL loads with a reporting Windows endpoint. Synthetic
 tests catch an eleven-hour stale endpoint even while the loader is succeeding.
-The actual manual query passes after repair. This is useful groundwork, not a
-working automatic watchdog.
+The first manual query passed after repair. The later queue-aware check sees
+recent records but flags five retained warnings for review, even after a
+normal-queue message. See the [review and remaining limits](repository-review.md).
+This is useful groundwork, not a working automatic watchdog.
 
 The owner selected **local Windows notifications first**. No external service
 or notification task is configured. Build and test the following bounded phase:

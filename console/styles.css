@@ -193,4 +193,7 @@ main { padding: 16px 24px 32px; }
   .notice { margin: 12px 16px 0; }
   .filters input { min-width: 0; width: 100%; max-width: none; flex-basis: 100%; }
   .detail dl { grid-template-columns: 1fr; }
+  .grid .panel { min-width: 0; }
+  .panel-head { flex-wrap: wrap; align-items: flex-start; }
+  .legend { flex-wrap: wrap; }
 }

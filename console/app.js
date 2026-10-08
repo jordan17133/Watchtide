@@ -20,8 +20,12 @@ let selectedCase = null;
 const $ = (id) => document.getElementById(id);
 const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const sevOf = (level) => (level >= 15 ? "critical" : level >= 12 ? "high" : level >= 7 ? "medium" : "low");
-const sevTag = (level) => `<span class="sev ${sevOf(level)}" title="Wazuh rule level ${level} of 15. 15 is Critical, 12-14 High, 7-11 Medium, 0-6 Low.">${SEV_LABEL[sevOf(level)]} ${level}</span>`;
+const sevTag = (level) => `<span class="sev ${sevOf(level)}" title="Wazuh rule level ${level} of 16. 15-16 is Critical, 12-14 High, 7-11 Medium, 0-6 Low.">${SEV_LABEL[sevOf(level)]} ${level}</span>`;
 const time = (iso) => (iso ? fmtTime.format(new Date(iso)) : "-");
+const measured = (value, unit) => Number.isFinite(value) ? `${value.toFixed(1)}${unit}` : "Not recorded";
+const caseTiming = (c) => c.hours_to_verdict != null ? `${measured(c.hours_to_verdict, " h")} to verdict`
+  : c.status === "Closed" ? "Verdict timing not recorded"
+  : c.open_age_hours != null ? `open ${measured(c.open_age_hours, " h")}` : "Open age not recorded";
 
 function verdictPill(verdict) {
   if (!verdict) return '<span class="pill">Not triaged</span>';
@@ -71,22 +75,22 @@ function renderOverview() {
   const k = data.kpi;
   $("kpis").innerHTML = [
     kpi("Alerts collected", fmtNum.format(k.alerts_total), "loaded into SQL every 15 minutes"),
-    kpi("ATT&CK techniques fired", k.techniques_fired, "every one triaged at the rule level", true),
+    kpi("ATT&CK techniques fired", k.techniques_fired, "historical rule reviews; not event verdicts", true),
     kpi("Cases", k.cases_open + k.cases_closed, `${k.cases_closed} closed, ${k.cases_open} open`),
-    kpi("Median time to verdict", `${k.median_hours_to_verdict.toFixed(1)} h`, "from first alert to a decision"),
+    kpi("Median time to verdict", measured(k.median_hours_to_verdict, " h"), "from first alert to a decision"),
     kpi("Vulnerability findings", `${k.vulns_all} → ${k.vulns_open}`, `${k.vulns_critical_open} Critical open`, true),
-    kpi("CIS benchmark", `${k.cis_first.toFixed(1)}% → ${k.cis_now.toFixed(1)}%`, "security settings passing, after hardening"),
+    kpi("CIS benchmark", `${measured(k.cis_first, "%")} → ${measured(k.cis_now, "%")}`, "dated benchmark observations"),
   ].join("");
 
   $("hourLegend").innerHTML = SEV_ORDER.map((s) => `<span><i style="background:${SEV_COLOR[s]}"></i>${SEV_LABEL[s]}</span>`).join("");
   renderHourChart();
 
-  const maxRule = Math.max(...data.rules.map((r) => r.total));
+  const maxRule = Math.max(...data.rules.map((r) => r.total), 1);
   $("topRules").innerHTML = data.rules.slice(0, 8).map((r) => `
     <div class="bar-row">
       <div>
         <div>${sevTag(r.level)} <span class="muted">${r.rule_id}</span> ${esc(r.rule)}</div>
-        <div class="verdict">Rule triage: ${r.verdict ? esc(r.verdict) : "Not reviewed"}</div>
+        <div class="verdict">Historical rule review: ${r.verdict ? esc(r.verdict) : "Not reviewed"}</div>
         <div class="bar-track"><div class="bar-fill" style="width:${(100 * r.total / maxRule).toFixed(1)}%"></div></div>
       </div>
       <div class="num">${fmtNum.format(r.total)}</div>
@@ -202,7 +206,7 @@ function renderCases() {
       <div class="row"><span class="case-num">${esc(c.number)}</span>${sevTag({ Critical: 15, High: 12, Medium: 7, Low: 3 }[c.severity]).replace(/ \d+</, "<")}
         <span class="pill ${c.status === "Closed" ? "" : "open"}">${esc(c.status)}</span>${c.status === "Closed" ? verdictPill(c.verdict) : ""}</div>
       <div class="title">${esc(c.title)}</div>
-      <div class="muted">${c.hours_to_verdict != null ? `${c.hours_to_verdict.toFixed(1)} h to verdict` : `open ${c.open_age_hours.toFixed(1)} h`} · ${fmtNum.format(c.alerts)} alerts · rules ${esc(c.rules)}</div>
+      <div class="muted">${caseTiming(c)} · ${fmtNum.format(c.alerts)} rule/time matches · rules ${esc(c.rules)}</div>
     </div>`).join("");
   $("caseList").querySelectorAll(".case-item").forEach((el) => el.addEventListener("click", () => {
     selectedCase = el.dataset.case;
@@ -218,9 +222,9 @@ function renderCases() {
       <dt>Severity</dt><dd>${esc(c.severity)}</dd>
       <dt>Owner</dt><dd>${esc(c.owner || "Unassigned")}</dd>
       <dt>First alert</dt><dd>${time(c.first_alert)} ET</dd>
-      <dt>Time to verdict</dt><dd>${c.hours_to_verdict != null ? `${c.hours_to_verdict.toFixed(1)} hours` : `still open (${c.open_age_hours.toFixed(1)} hours)`}</dd>
+      <dt>Case timing</dt><dd>${caseTiming(c)}</dd>
       <dt>Rules</dt><dd>${esc(c.rules)}</dd>
-      <dt>Alerts in case</dt><dd>${fmtNum.format(c.alerts)}</dd>
+      <dt>Inferred rule/time matches</dt><dd>${fmtNum.format(c.alerts)}</dd>
       <dt>Summary</dt><dd>${esc(c.summary)}</dd>
     </dl>
     ${c.report ? `<p><a href="${esc(c.report)}" target="_blank" rel="noopener">Read the full investigation report</a></p>` : ""}
@@ -232,15 +236,15 @@ function renderCases() {
 
 function renderAttack() {
   const k = data.kpi;
-  $("attackLead").innerHTML = `${k.techniques_fired} techniques fired on this lab, grouped by tactic. ${k.techniques_ready} of ${k.techniques_catalog} Windows and Linux techniques have a deployed rule whose data source is collected here. ` +
-    `Every technique was triaged: each card shows the verdict for the rule behind most of its alerts (a rule-level finding, not a ruling on every individual alert). <span style="color:var(--critical)">Red</span> marks a true positive from a controlled test; <span style="color:var(--good)">green</span> is benign with a named source.`;
+  $("attackLead").innerHTML = `${k.techniques_fired} techniques appear in this historical snapshot, grouped by tactic. The catalog marks ${k.techniques_ready} of ${k.techniques_catalog} techniques as source-ready candidates, not attack-validated coverage. ` +
+    `Cards show historical research on each technique's most frequent rule only. Other matching rules and individual events may be unreviewed. Colors reflect that historical finding, not a verdict on every alert.`;
   $("matrix").innerHTML = TACTICS.map((tactic) => {
     const techs = data.attack.filter((t) => (t.tactics || "").split(", ").includes(tactic));
     if (!techs.length) return "";
     return `<div class="tactic"><h2><span>${esc(tactic)}</span><span class="muted">${techs.length}</span></h2>${techs.map((t) => {
       const cls = (t.verdict || "").startsWith("True positive") ? "tp" : (t.verdict || "").startsWith("Benign") ? "benign" : "";
       return `<div class="tech ${cls}" title="${esc(t.verdict)}"><div class="id">${esc(t.id)}</div><div class="name">${esc(t.name)}</div>
-        <div class="meta">${fmtNum.format(t.alerts)} alerts · top rule ${t.top_rule_id} · rule-level triage</div></div>`;
+        <div class="meta">${fmtNum.format(t.alerts)} alerts · top rule ${t.top_rule_id} · historical review</div></div>`;
     }).join("")}</div>`;
   }).join("");
 }
@@ -250,13 +254,13 @@ function renderAttack() {
 function renderPipeline() {
   const p = data.pipeline;
   $("pipeKpis").innerHTML = [
-    kpi("Loader success, 7 days", `${p.success_rate_7d_pct.toFixed(1)}%`, `${p.runs_24h} runs in the last 24 hours`, true),
-    kpi("Alert to SQL, median", `${p.latency_p50_minutes.toFixed(1)} min`, "scheduled every 15 minutes"),
-    kpi("Alert to SQL, 95th percentile", `${p.latency_p95_minutes.toFixed(1)} min`),
+    kpi("Loader success, 7 days", measured(p.success_rate_7d_pct, "%"), `${p.runs_24h} runs in the last 24 hours`, true),
+    kpi("Alert to SQL, median", measured(p.latency_p50_minutes, " min"), "scheduled every 15 minutes"),
+    kpi("Alert to SQL, 95th percentile", measured(p.latency_p95_minutes, " min")),
     kpi("Alerts loaded, 24 hours", fmtNum.format(p.alerts_loaded_24h)),
-    kpi("Warehouse size", `${fmtNum.format(Math.round(p.data_used_mb))} MB`, "capped at 100 GB"),
+    kpi("Warehouse size", `${fmtNum.format(Math.round(p.data_used_mb))} MB`, "100 GB data-file cap; not a disk budget"),
   ].join("");
   $("endpoints").innerHTML = `<table class="table"><thead><tr><th>Endpoint</th><th class="num">Minutes since last alert</th><th class="num">Alerts, 24 hours</th></tr></thead><tbody>${
-    data.endpoints.map((e) => `<tr><td>${esc(e.name)}</td><td class="num">${fmtNum.format(e.minutes_since_last_alert)}</td><td class="num">${fmtNum.format(e.alerts_24h)}</td></tr>`).join("")}</tbody></table>
+    data.endpoints.map((e) => `<tr><td>${esc(e.name)}</td><td class="num">${measured(e.minutes_since_last_alert, "")}</td><td class="num">${fmtNum.format(e.alerts_24h)}</td></tr>`).join("")}</tbody></table>
     <p class="muted">Figures are as of the snapshot time, not live.</p>`;
 }

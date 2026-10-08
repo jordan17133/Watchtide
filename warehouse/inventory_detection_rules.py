@@ -31,9 +31,9 @@ ORDER BY MAX(a.rule_level) DESC, COUNT_BIG(*) DESC, a.rule_id
 
 
 def severity(level):
-    if not 0 <= level <= 15:
+    if type(level) is not int or not 0 <= level <= 16:
         raise ValueError("Unexpected Wazuh severity")
-    return "Critical" if level == 15 else "High" if level >= 12 else "Medium" if level >= 7 else "Low"
+    return "Critical" if level >= 15 else "High" if level >= 12 else "Medium" if level >= 7 else "Low"
 
 
 def build_inventory(rows, catalog):

@@ -4,14 +4,17 @@ What is built, what comes next, and why. Each chapter ends the same way: build i
 
 ## Done
 
-- [x] Lab: Hyper-V VM, Ubuntu Server 24.04, Wazuh 4.14 all-in-one, hardened (firewall, rotated credentials, backups, checkpoints)
+These are verified build slices and dated results, not completion of every
+hardening, coverage or recovery gate.
+
+- [x] Lab: Hyper-V VM, Ubuntu Server 24.04, Wazuh 4.14 all-in-one; reviewed firewall, credential, local-backup and checkpoint controls; remaining hardening gates below
 - [x] Endpoint telemetry: Sysmon, Windows Security and System logs, Microsoft Defender, PowerShell script-block logging, file integrity monitoring with who-did-it attribution
 - [x] One event traced through every layer ([docs/event-trace.md](docs/event-trace.md))
 - [x] Posture: 437 of 447 vulnerability findings resolved (10 open, zero Critical); CIS Benchmark 27.1% to 37.0% ([docs/cis-baseline.md](docs/cis-baseline.md))
 - [x] Detection tuning with tested custom rules (100100, 100101) and FIM severity rules (100110-100113)
 - [x] SQL Server warehouse with a scheduled loader (every 15 minutes, 99% success) and data lifecycle rules
 - [x] Case log with history; nine investigations closed, one open ([triage/](triage/))
-- [x] Documented baseline's 38 fired MITRE ATT&CK techniques triaged; later observations require fresh review
+- [x] Historical rule research attached to the documented baseline's 38 fired MITRE ATT&CK techniques; not event-by-event triage or validated coverage of every matching rule
 - [x] First controlled attack test: SSH password guessing, detected end to end
 - [x] Least-privilege reporting role, tested
 - [x] All six existing Power BI pages rendered after refresh; definitions and single-table refresh setting kept in Git, imported data excluded
@@ -36,7 +39,7 @@ The roadmap is an execution order, not a newly scheduled automation.
 | 0a | Monitor the monitoring | 2-4, 7-8 / maturity I | Manual SQL collection check tested and verified; real heartbeat/source-loss signals, local Windows delivery, deduplication/recovery and approved scheduling remain open; [completion plan](docs/soc-completion-plan.md) |
 | 1 | Reconcile drafts and status; add the [L0 explanation](docs/L0-event-to-report-trace.md) | 4, 7, 8 | Current evidence and limits agree; owner explanation not auto-credited |
 | 2 | Review the proposed [PowerShell tune](docs/powershell-policy-probe-tuning-review.md) | Detection maintenance / 4b | Writer/path evidence, installed-engine matches/nonmatches, protected deployment and measured future results; unsafe filename-only draft stays undeployed |
-| 2a | [Triage integrity and interaction review](docs/triage-system-audit.md) | 4 / 7 / 8 | Truthful historical-review labels, exact case/evidence memberships and event dispositions, level-16 compatibility, data prerequisites/retention; no automatic benign inheritance |
+| 2a | [Triage integrity and interaction review](docs/triage-system-audit.md) | 4 / 7 / 8 | Public historical-review/inferred-count labels and level-16 compatibility corrected/tested; exact case/evidence memberships, dispositions and fresh Power BI gates remain open; no automatic benign inheritance |
 | 3 | Harmless offline TCP fixtures and a rule/control lesson | 5, L1/L2 | Actual installed-engine validation; distinguish SYN burst from proven malicious scanning |
 | 4 | One bounded Nmap exercise against the owned VM | 5, L2/L3 | Sensor sees the chosen path; controlled positive/negative activity, drops/resources, automatic stop and health checks |
 | 5 | Trace any generated test alert and check Power BI when available | 5, 7, 8, L4 | Exact identity and timestamps agree; actual fresh report rendering, not just definitions |
@@ -71,6 +74,15 @@ open; the manual SQL health checker is not a deployed watchdog. Resume independe
 offline TCP preparation, then review source health before live load expansion.
 No firewall/Tailscale permissions were widened.
 
+**Later repository review:** the manual checker now flags retained queue warnings
+as attention, even when freshness passes. Console labels, missing-metric handling
+and level-16 compatibility have focused tests; the concise README points to a
+separate evidence index. See [review and open gates](docs/repository-review.md).
+The order remains collection/health warnings -> useful bounded traffic records
+-> TCP/Nmap validation -> evaluate Zeek -> forensic lessons. Bounded TCP fixtures
+can proceed independently; sustained capture still needs the broader feed and
+health budgets listed below.
+
 ### Latest Handoff: Dependable Operations
 
 Claude's latest wrap-up is reconciled in the [completion checklist](docs/soc-completion-plan.md).
@@ -81,6 +93,15 @@ remain ahead of unreviewed severity suppression. The unspecified three drafts
 and Defender case are not approved deployments/verdicts. Account/disk/boot,
 off-PC recovery and measured wider coverage retain their original gates.
 No new scheduler, notification service or always-on capture is created by this plan.
+
+### Major Attack Lessons Join Existing Gates
+
+The owner's [complete 27-example defense reference](docs/attack-defense-reference.md)
+is retained, with important chronology/MFA/signature qualifications and an honest
+mapping of the six recurring defenses to current evidence and open work. Choose
+testable behavior families from it when reviewing maintained rules and response
+procedures. It does not add 27 validated detections, reorder TCP/Nmap learning,
+approve live changes or close account, segmentation, monitoring or recovery gates.
 
 ### Learn And Operate The SOC
 

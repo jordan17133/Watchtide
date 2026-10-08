@@ -181,6 +181,26 @@ local documentation links resolve and the retained public snapshot validates.
 
 ## Boundaries
 
+### Queue-Signal Follow-Up
+
+The later [repository review](repository-review.md) extends the manual checker
+to read Wazuh agent queue warnings 202/203/204 and normal-queue message 205 from
+retained SQL alerts, per selected agent over 24 hours. Missing or inconsistent
+evidence stays unknown. Any recent warning needs review, even after a recovery
+message: it cannot establish that dropped records were recovered. These are
+warehouse observations, not direct live agent heartbeats.
+
+The checker now passes 32 tests, including seven queue/read-query regressions.
+At 01:54:02 UTC October 8 (9:54 PM Eastern October 7), loader and endpoint
+observations were recent, but five queue warnings made the overall result
+attention (exit 1). This is expected warning behavior, not a claimed new outage
+or malicious verdict. A separate Sysmon-error aggregation timed out under its
+bounded query limit, so complete source-loss health is not credited. No query
+timeout, memory or service setting was changed. No notification or schedule
+was deployed.
+
+### Deployment Scope
+
 The original diagnostic/audit changed nothing. The later authorized repair
 changed only the obsolete mapping, DNS cache and Windows agent service state.
 No rule deployment, installation, sustained capture, firewall/VPN change or port

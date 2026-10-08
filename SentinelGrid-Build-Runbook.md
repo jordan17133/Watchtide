@@ -56,6 +56,11 @@ check. See [source-loss evidence, notice behavior and finish gates](docs/collect
 Actual heartbeats, cause, a locked private-state runner and approved scheduling
 remain separate work. A quiet source is not automatically disconnected.
 
+Independent Stage 5 preparation now includes a [TCP rule/control lesson](docs/tcp-rule-lesson.md):
+seven saved synthetic examples, independent packet decoding and a separate
+undeployed candidate. Installed-engine verification and a later owned-device
+scan/capture exercise are separate gates. No new browsing visibility is inferred.
+
 ## Lab facts
 
 | Item | Value |

@@ -1,0 +1,2 @@
+# Offline teaching candidate only; not installed or enabled in the live sensor.
+alert tcp any any -> any any (msg:"WATCHTIDE controlled TCP SYN burst lesson"; tcp.flags:S; flow:stateless; threshold:type both, track by_src, count 4, seconds 10; classtype:misc-activity; priority:3; sid:9000002; rev:1;)

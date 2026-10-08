@@ -85,6 +85,15 @@ what result we expect, and how we will check it.** Afterward, compare the result
 with the expectation and ask the owner to explain one observation in their own
 words. AI-assisted execution and the owner's explanation are recorded separately.
 
+### TCP Continuation
+
+The [TCP rule/control lesson](tcp-rule-lesson.md) adds seven saved synthetic
+examples with 31 packets, decoded by the existing TShark. A separate teaching
+candidate counts fast SYN packets, not distinct ports or malicious intent.
+No packets were sent and no scan/capture/rule deployment ran. Installed-engine
+syntax/replay and owner explanation remain open before the separately bounded
+Nmap/capture exercise. This does not repeat the completed four-port baseline.
+
 ## L1: Our First Packet Lesson
 
 Use the same reviewed synthetic fixture generator as the completed offline

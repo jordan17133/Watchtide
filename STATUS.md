@@ -6,6 +6,14 @@ how each step happened; the [roadmap](ROADMAP.md) lists what comes next.
 
 ## Active Work
 
+October 7, 2026 independent offline TCP preparation is complete; Codex's claim
+is released. Seven synthetic files (31 packets), a separate SID 9000002 candidate
+and twelve focused tests are prepared. Actual TShark decoded all seven; private
+hashes/readers pass. Expected alert counts are not Suricata results. See the
+[lesson and controls](docs/tcp-rule-lesson.md). The installed-engine check requires
+a separately bounded authenticated Ubuntu step; no guest execution, scan,
+capture, deployment, schedule, new permission or service change was made.
+
 October 7, 2026 collection-loss/notification preparation is complete for this
 bounded batch; Codex's file claim is released. The extended read-only checker
 flags 40 retained Sysmon errors and five historical queue warnings while fresh
@@ -88,7 +96,7 @@ this file remains the authoritative status, not the older side-workspace map.
 | 0a | Monitor the monitoring | Read-only freshness/queue/Sysmon/source observations verified; generic notice planning and one test API call pass. Visible delivery, actual heartbeat, loss cause, private-state runner and scheduling remain open. [Latest evidence](docs/collection-loss-and-notifications.md) |
 | 1 | Handoff and L0 explanation | Scannable README, private coordination agreement and corrected [packet-to-report lesson](docs/L0-event-to-report-trace.md) applied; 235 selected checks passed; owner explanation stays open |
 | 2 | Triage integrity and PowerShell noise review | Public historical-review/inferred-count labels and level-16 handling corrected/tested; exact case memberships, dispositions and fresh Power BI gates remain open. [Audit](docs/triage-system-audit.md). Existing rule 100100 retained; filename-only expansion remains held |
-| 3 | Resume TCP/Nmap learning | Build a harmless offline TCP rule/control test, then a separate bounded owned-VM exercise on a verified capture path; [existing baseline](docs/nmap-exposure-baseline.md) is already complete |
+| 3 | Resume TCP/Nmap learning | Seven harmless TCP fixtures/candidate prepared and decoded; installed-engine syntax/replay remains open, then a separately bounded owned-VM exercise. [Lesson](docs/tcp-rule-lesson.md); [existing baseline](docs/nmap-exposure-baseline.md) already complete |
 | 4 | Reporting and reliability | Fresh saved-live Power BI rendering when the PC is available; explain source/packet, Wazuh, SQL and refresh times; retain [loader duration follow-up](docs/loader-slow-run-investigation.md) |
 | 5 | Expand network coverage | Supported feed, resource/drop/retention budgets and routine DNS/flow visibility before sustained capture or phone/home coverage claims |
 

@@ -19,6 +19,28 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
 | Detection validation | In progress: controlled SSH password-guessing test detected end to end; historical post-tuning clusters reviewed, later alerts need fresh verdicts |
 | 4c. Tailscale private remote access | Trusted local HTTPS/dashboard login verified; renewal setup reported successful; phone test declined and approved off-LAN access deferred; remaining exposure/recovery/reporting gates open |
 
+## October 7: Continue With Independent TCP Lesson Preparation
+
+- Prepared a separate undeployed TCP SYN-burst candidate, SID 9000002, and
+  seven deterministic saved controls (31 packets). Kept ICMP SID 9000001 and
+  the completed four-port Nmap baseline unchanged. This teaching rule counts
+  packets, not unique ports or malicious intent; same-port control exposes that.
+- Twelve focused tests pass. Actual TShark decodes all seven files, including
+  flags, sources/ports, timing and zero payload. Eight input hashes and private
+  reader checks pass. An initial timestamp-format read stopped before writing
+  its review; structured ISO parsing fixed that read without changing fixtures.
+- Read-only follow-up: at 11:36 PM Eastern, agent service Running with one
+  Established data-port connection; protected state unreadable, not credited
+  as authenticated heartbeat. At 11:40 PM, SQL loader/endpoint observations
+  were 12.35/13.04 minutes old; historical five queue warnings/40 errors remain.
+- [Lesson, expected counts and finish gates](docs/tcp-rule-lesson.md) join the
+  existing runbook/roadmap. Expected counts are not engine validation. Installed
+  Suricata syntax/replay requires a separately bounded authenticated Ubuntu step.
+- Full regression: 371 Python tests passed, 13 opt-in SQL tests skipped; structural
+  inventory checked 294 files and 439 local file links with no errors.
+- No guest execution, network scan, capture, rule deployment, restart, new
+  permission, schedule, firewall/VPN or report-refresh change.
+
 ## October 7: Source-Loss Observations And Local Notice Preparation
 
 - Extended the bounded read-only SQL checker with materialized-column Sysmon

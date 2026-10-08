@@ -6,7 +6,22 @@ how each step happened; the [roadmap](ROADMAP.md) lists what comes next.
 
 ## Active Work
 
-No active source-edit claim. The October 7 repository review is complete:
+October 7, 2026 collection-loss/notification preparation is complete for this
+bounded batch; Codex's file claim is released. The extended read-only checker
+flags 40 retained Sysmon errors and five historical queue warnings while fresh
+Windows records still arrive. Six named channels have alert observations, not
+raw-source heartbeat proof. All 40 privately reviewed descriptions report
+registry drops; cause and unique missing-event counts are not established.
+
+Notice planning, cooldown/retry/recovery and temporary-icon cleanup are tested.
+The owner approved one generic test: Windows accepted its API call; visual
+delivery is unconfirmed. The SQL preview sends/saves nothing. No task, new
+permission, restart, rule/buffer/network change or capture was made. See the
+[dated results and remaining gates](docs/collection-loss-and-notifications.md).
+Continue actual heartbeat/buffer/source review and a scoped, locked private-state
+runner before approved scheduling. Offline TCP preparation can proceed separately.
+
+The October 7 repository review is complete:
 concise README/evidence navigation, truthful public historical-review/inferred
 case labels, level-16 compatibility, unavailable-metric handling and queue-aware
 manual collection checks. See [review scope, tests and remaining gates](docs/repository-review.md).
@@ -70,7 +85,7 @@ this file remains the authoritative status, not the older side-workspace map.
 | Order | Work | State / finish line |
 |---|---|---|
 | 0 | Restore current Windows collection | Closed for this outage: identity-checked bounded repair and exact Sysmon/Indexer/normal-loader SQL trace pass; [repair evidence](docs/collection-health-validation.md). Restart durability and historical loss remain separate |
-| 0a | Monitor the monitoring | Read-only SQL freshness/queue check tested and manually verified; five retained warnings require review. Heartbeat/full source-loss checks, scheduling and notification delivery remain open. [Completion plan](docs/soc-completion-plan.md) reconciles Claude's handoff |
+| 0a | Monitor the monitoring | Read-only freshness/queue/Sysmon/source observations verified; generic notice planning and one test API call pass. Visible delivery, actual heartbeat, loss cause, private-state runner and scheduling remain open. [Latest evidence](docs/collection-loss-and-notifications.md) |
 | 1 | Handoff and L0 explanation | Scannable README, private coordination agreement and corrected [packet-to-report lesson](docs/L0-event-to-report-trace.md) applied; 235 selected checks passed; owner explanation stays open |
 | 2 | Triage integrity and PowerShell noise review | Public historical-review/inferred-count labels and level-16 handling corrected/tested; exact case memberships, dispositions and fresh Power BI gates remain open. [Audit](docs/triage-system-audit.md). Existing rule 100100 retained; filename-only expansion remains held |
 | 3 | Resume TCP/Nmap learning | Build a harmless offline TCP rule/control test, then a separate bounded owned-VM exercise on a verified capture path; [existing baseline](docs/nmap-exposure-baseline.md) is already complete |

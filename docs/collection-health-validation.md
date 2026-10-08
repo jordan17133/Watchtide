@@ -199,6 +199,17 @@ bounded query limit, so complete source-loss health is not credited. No query
 timeout, memory or service setting was changed. No notification or schedule
 was deployed.
 
+### Sysmon And Notification Follow-Up
+
+The [later bounded review](collection-loss-and-notifications.md) resolved the
+aggregation timeout by querying existing materialized event/channel columns,
+without changing SQL settings. Forty retained Sysmon errors explicitly report
+registry drops; five queue warnings remain historical, while new Windows
+alerts arrive. Named-source observations, generic notice planning and one
+owner-approved test API invocation are now checked. Visible delivery, actual
+heartbeat/loss cause, private-state runner and scheduling remain open. Earlier
+test counts/results above retain their dated scope, not the latest checker total.
+
 ### Deployment Scope
 
 The original diagnostic/audit changed nothing. The later authorized repair

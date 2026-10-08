@@ -17,12 +17,19 @@ CONNECTION = (
 )
 CLOCK_ALLOWANCE = timedelta(minutes=5)
 QUEUE_LOOKBACK_HOURS = 24
+SOURCE_CHANNELS = {
+    "Microsoft-Windows-Sysmon/Operational": "sysmon",
+    "Microsoft-Windows-Windows Defender/Operational": "defender",
+    "Microsoft-Windows-PowerShell/Operational": "powershell",
+    "Security": "security", "System": "system", "Application": "application",
+}
 LIMITS = [
     "Alert freshness is not a heartbeat; a quiet endpoint can trigger review.",
     "Recent alerts do not prove every source is collected or that no events were lost.",
     "Agent authentication, Indexer freshness and Power BI refresh are separate checks.",
     "This command does not schedule monitoring or deliver notifications.",
     "Queue recovery messages do not prove lost events were recovered; source-loss and heartbeats remain separate.",
+    "Source counts are retained alert observations, not raw-event totals or source heartbeats.",
 ]
 
 
@@ -73,6 +80,50 @@ def queue_check(row, now):
             "reason": "Recent queue pressure needs loss review" if count else "No queue warning found in the retained window"}
 
 
+def sysmon_check(row, now):
+    check = {"check": "sysmon_error_observation", "agent_id": row["agent_id"],
+             "lookback_hours": QUEUE_LOOKBACK_HOURS}
+    count = row.get("sysmon_error_count")
+    latest = row.get("latest_sysmon_error_utc")
+    if count is None:
+        return {**check, "state": "unknown", "reason": "Sysmon error evidence unavailable"}
+    if type(count) is not int or count < 0 or bool(count) != (latest is not None):
+        raise ValueError("Inconsistent Sysmon error evidence")
+    if latest is not None and (utc(latest) > now + CLOCK_ALLOWANCE or
+                              utc(latest) < now - timedelta(hours=QUEUE_LOOKBACK_HOURS)):
+        return {**check, "state": "unknown", "reason": "Sysmon error is outside the observation window"}
+    return {**check, "state": "attention" if count else "no_recent_error_observed",
+            "error_record_count": count,
+            "reason": "Recent Sysmon Event 255 records need review" if count else
+                      "No Sysmon error found; this does not prove the source is collected"}
+
+
+def source_observations(row, now):
+    sources = row.get("source_alerts")
+    if sources is None:
+        return {"agent_id": row["agent_id"], "state": "unknown", "sources": []}
+    grouped = {}
+    for source in sources:
+        label = SOURCE_CHANNELS.get(source["channel"], "uncategorized" if source["channel"] is None else "other")
+        count, latest = source["alert_count"], source["latest_alert_utc"]
+        if type(count) is not int or count <= 0 or latest is None:
+            raise ValueError("Invalid source observation")
+        stamp = utc(latest)
+        if stamp > now + CLOCK_ALLOWANCE or stamp < now - timedelta(hours=QUEUE_LOOKBACK_HOURS):
+            raise ValueError("Source observation outside window")
+        previous = grouped.get(label, {"alert_count": 0, "latest": stamp})
+        grouped[label] = {"alert_count": previous["alert_count"] + count,
+                          "latest": max(previous["latest"], stamp)}
+    result = []
+    for label in sorted(set(SOURCE_CHANNELS.values()) | set(grouped)):
+        observed = grouped.get(label)
+        result.append({"source": label, "state": "observed_in_window" if observed else "no_alert_observation",
+                       "alert_count": observed["alert_count"] if observed else 0,
+                       "last_alert_age_minutes": round(max(0, (now - observed["latest"]).total_seconds() / 60), 2)
+                       if observed else None})
+    return {"agent_id": row["agent_id"], "state": "retained_alert_observations", "sources": result}
+
+
 def build_health(snapshot, agent_ids, max_age_minutes=30):
     validate_inputs(agent_ids, max_age_minutes)
     now = utc(snapshot["as_of_utc"])
@@ -93,6 +144,7 @@ def build_health(snapshot, agent_ids, max_age_minutes=30):
     agents = snapshot["agents"]
     if len(agents) != len(agent_ids) or {r["agent_id"] for r in agents} != set(agent_ids):
         raise ValueError("Snapshot does not match the requested agent set")
+    observed_sources = []
     for row in agents:
         check = {"check": "endpoint_alert_observation", "agent_id": row["agent_id"],
                  **freshness(row["latest_alert_utc"], now, threshold)}
@@ -100,10 +152,16 @@ def build_health(snapshot, agent_ids, max_age_minutes=30):
             check.update(state="attention", reason="Latest retained record reports disconnection")
         checks.append(check)
         checks.append(queue_check(row, now))
+        checks.append(sysmon_check(row, now))
+        observed = source_observations(row, now)
+        observed_sources.append(observed)
+        checks.append({"check": "source_alert_query", "agent_id": row["agent_id"],
+                       "state": "unknown" if observed["state"] == "unknown" else "available"})
     states = {check["state"] for check in checks}
     state = "attention" if states & {"stale", "attention"} else "unknown" if "unknown" in states else "recent_observations"
     return {"as_of_utc": now.isoformat(), "state": state, "max_age_minutes": max_age_minutes,
-            "checks": checks, "connection_state": "not_tested", "limits": list(LIMITS)}
+            "checks": checks, "source_observations": observed_sources,
+            "connection_state": "not_tested", "limits": list(LIMITS)}
 
 
 def read_snapshot(agent_ids):
@@ -144,6 +202,23 @@ def read_snapshot(agent_ids):
                 raise ValueError("Queue observation query returned no result")
             snapshot["agents"][-1].update(zip(
                 ("queue_warning_count", "latest_queue_warning_utc", "latest_queue_recovery_utc"), row))
+            row = cursor.execute("""
+                SELECT COUNT_BIG(*), MAX(alert_ts_utc)
+                FROM sg.alerts
+                WHERE agent_id = ? AND win_event_id = 255 AND event_channel = ?
+                  AND alert_ts_utc >= DATEADD(hour, -24, ?)
+            """, agent_id, "Microsoft-Windows-Sysmon/Operational", snapshot["as_of_utc"]).fetchone()
+            if row is None:
+                raise ValueError("Sysmon observation query returned no result")
+            snapshot["agents"][-1].update(zip(("sysmon_error_count", "latest_sysmon_error_utc"), row))
+            rows = cursor.execute("""
+                SELECT event_channel, COUNT_BIG(*), MAX(alert_ts_utc)
+                FROM sg.alerts
+                WHERE agent_id = ? AND alert_ts_utc >= DATEADD(hour, -24, ?)
+                GROUP BY event_channel
+            """, agent_id, snapshot["as_of_utc"]).fetchall()
+            snapshot["agents"][-1]["source_alerts"] = [dict(zip(
+                ("channel", "alert_count", "latest_alert_utc"), source)) for source in rows]
         return snapshot
     finally:
         connection.close()

@@ -31,9 +31,9 @@ do not load its filename-only exception into the live manager.
 
 The [dependable SOC completion checklist](docs/soc-completion-plan.md) reconciles
 the latest Claude handoff with these stages. A read-only manual collection check
-now separates endpoint alert freshness, loader success and retained queue
-warnings; local Windows notifications are selected but no automatic
-watchdog/delivery is deployed. Run it from the private source:
+now separates endpoint alert freshness, loader success, retained queue/Sysmon
+warnings and named-source alert observations. Local notice planning is tested
+but no automatic watchdog/delivery is deployed. Run it from the private source:
 
 ```powershell
 .\.venv\Scripts\python.exe -B -m warehouse.check_collection_health --agent-id 001
@@ -43,6 +43,18 @@ This only reads SQL. Exit 0 means recent observations, 1 needs review and 2
 means missing/unavailable evidence; none proves the device safe. See the
 [review scope](docs/repository-review.md) and [actual health results](docs/collection-health-validation.md).
 Earlier queue loss and restart durability remain open after the repaired outage.
+
+Preview the notice plan without sending a popup or saving state:
+
+```powershell
+.\.venv\Scripts\python.exe -B -m warehouse.health_notifications --agent-id 001
+```
+
+The same exit codes apply. One owner-approved generic popup API test passed,
+but visual delivery remains unconfirmed; do not make popup tests part of every
+check. See [source-loss evidence, notice behavior and finish gates](docs/collection-loss-and-notifications.md).
+Actual heartbeats, cause, a locked private-state runner and approved scheduling
+remain separate work. A quiet source is not automatically disconnected.
 
 ## Lab facts
 

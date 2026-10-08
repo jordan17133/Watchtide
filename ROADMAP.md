@@ -36,7 +36,7 @@ The roadmap is an execution order, not a newly scheduled automation.
 | Order | Bounded work | Existing stage | Completion gate |
 |---|---|---|---|
 | 0 | Restore Windows collection and review loss reports | 2, 3, 4 / reliability | Current outage repair and exact source/Indexer/normal-loader SQL trace pass; reboot durability and historical queue-loss review remain; [repair evidence](docs/collection-health-validation.md) |
-| 0a | Monitor the monitoring | 2-4, 7-8 / maturity I | Manual SQL collection check tested and verified; real heartbeat/source-loss signals, local Windows delivery, deduplication/recovery and approved scheduling remain open; [completion plan](docs/soc-completion-plan.md) |
+| 0a | Monitor the monitoring | 2-4, 7-8 / maturity I | Freshness/queue/Sysmon/source reads and notice planner tested; one approved generic test API call accepted. Visible delivery, actual heartbeat/loss cause, locked private-state runner and approved scheduling remain open; [results](docs/collection-loss-and-notifications.md) |
 | 1 | Reconcile drafts and status; add the [L0 explanation](docs/L0-event-to-report-trace.md) | 4, 7, 8 | Current evidence and limits agree; owner explanation not auto-credited |
 | 2 | Review the proposed [PowerShell tune](docs/powershell-policy-probe-tuning-review.md) | Detection maintenance / 4b | Writer/path evidence, installed-engine matches/nonmatches, protected deployment and measured future results; unsafe filename-only draft stays undeployed |
 | 2a | [Triage integrity and interaction review](docs/triage-system-audit.md) | 4 / 7 / 8 | Public historical-review/inferred-count labels and level-16 compatibility corrected/tested; exact case/evidence memberships, dispositions and fresh Power BI gates remain open; no automatic benign inheritance |
@@ -82,6 +82,15 @@ The order remains collection/health warnings -> useful bounded traffic records
 -> TCP/Nmap validation -> evaluate Zeek -> forensic lessons. Bounded TCP fixtures
 can proceed independently; sustained capture still needs the broader feed and
 health budgets listed below.
+
+**Source-loss/notice follow-up:** the checker now uses existing materialized
+columns to read Sysmon errors successfully within the bounded query limit.
+It flags 40 historical error records alongside five queue warnings, while
+new endpoint alerts continue. Six named-channel observations are not complete
+source health. Generic notice planning passes cooldown, failure/recovery and
+clock tests; the owner's one test API call was accepted, with visibility still
+unconfirmed. No monitor task or state-writing/delivery runner is deployed.
+See [actual results, commands and open gates](docs/collection-loss-and-notifications.md).
 
 ### Latest Handoff: Dependable Operations
 

@@ -67,7 +67,7 @@ offline work can proceed while a separately authorized deployment is waiting.
 | Order | Existing stages | Work and finish line | State |
 |---|---|---|---|
 | 1 | 2-4, 7 | Fix the current delivery failure; verify guest identity, agent connection and exact new source/Indexer/normal-loader SQL event | Passed for this outage; reboot durability and missing-event review remain |
-| 2 | 2-4, 7-8 / maturity I | Monitor source/loader/report health; test loss, stale/unknown states, recovery and notifications | Manual SQL freshness/queue checker tested/live-read; real heartbeat, full source-loss checks and automatic delivery remain open |
+| 2 | 2-4, 7-8 / maturity I | Monitor source/loader/report health; test loss, stale/unknown states, recovery and notifications | Freshness/queue/Sysmon/source reads and notice planner tested; one test API call accepted. Visible delivery, heartbeat/cause, locked private-state runner and automatic delivery remain open |
 | 3 | 4, 7-8 | Exact case-alert links, event-specific dispositions and truthful historical-review/ATT&CK labels; correct level-16 compatibility | Public labels and level-16 compatibility corrected/tested; exact memberships, event dispositions and fresh Power BI gates remain open |
 | 4 | Detection maintenance, 5 | Small maintained-rule batch with known data prerequisites, engine tests, positive/negative controls, rollback and measured noise | ET Open field-reviewed only; tuning draft held |
 | 5 | 5, lessons L1-L4 | Offline TCP rule lesson, then owned-VM Nmap/capture test on an observed path; trace any alert and render existing Power BI | ICMP/port baseline passes; TCP detection and fresh saved-live Desktop check open |
@@ -85,6 +85,13 @@ recent records but flags five retained warnings for review, even after a
 normal-queue message. See the [review and remaining limits](repository-review.md).
 This is useful groundwork, not a working automatic watchdog.
 
+The [later source-loss/notification slice](collection-loss-and-notifications.md)
+adds actual bounded Sysmon/source reads and tested generic notice planning.
+Forty retained errors explicitly reported registry drops; five queue warnings
+are historical, and new alerts still arrive. A single approved test API call
+was accepted, not confirmed visible. Planner previews do not send or save.
+Cause, authenticated heartbeat and persistent delivery remain separate gates.
+
 The owner selected **local Windows notifications first**. No external service
 or notification task is configured. Build and test the following bounded phase:
 
@@ -95,7 +102,9 @@ or notification task is configured. Build and test the following bounded phase:
 - Send generic local health/review messages with no raw command lines, users,
   destinations or credentials; distinguish health failures from security incidents.
 - Use a state transition, cooldown and one recovery message; test duplicates,
-  delivery failure, reboot/logon and cleanup. Notifications must not flood.
+  delivery failure, reboot/logon and cleanup. Planner and fake-transport tests
+  pass; locked/atomic private state, a bounded runner and actual logon/reboot
+  tests remain to implement. Notifications must not flood.
 - Add reviewed high-priority detection notifications only after health delivery
   works. Rule level is priority, not a confirmed incident or permission to block.
 - Verify execution identity and granted read scope before approving a schedule;

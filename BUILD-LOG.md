@@ -19,6 +19,34 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
 | Detection validation | In progress: controlled SSH password-guessing test detected end to end; historical post-tuning clusters reviewed, later alerts need fresh verdicts |
 | 4c. Tailscale private remote access | Trusted local HTTPS/dashboard login verified; renewal setup reported successful; phone test declined and approved off-LAN access deferred; remaining exposure/recovery/reporting gates open |
 
+## October 7: Source-Loss Observations And Local Notice Preparation
+
+- Extended the bounded read-only SQL checker with materialized-column Sysmon
+  Event 255 aggregation and safe named-source counts; no new database grant,
+  schema or settings. Actual reads pass where the earlier JSON query timed out.
+- At 11:12 PM Eastern, successful loader/endpoint observations were 14.97/15.26
+  minutes old. Forty retained Sysmon error records and five overnight queue
+  warnings correctly produced attention, not a malicious verdict. All 40
+  descriptions reviewed privately report registry drops; unique missing counts,
+  root cause and complete source health are not inferred. Six named channels
+  have retained alerts; absent channel values remain uncategorized.
+- Added pure local-notice planning and read-only preview: stable warning
+  fingerprints, reminder/retry cooldown, one recovery, corrupt/clock-state
+  rejection and no raw details. No state-writing runner or schedule deployed.
+- After safety tests, ran exactly one owner-approved generic Windows popup test.
+  API accepted, temporary icon cleaned up; visual delivery unconfirmed. No task,
+  registration, new permissions or SOC changes. Actual preview sends/saves nothing.
+- Verification: 42 collection and 25 notice-planner tests plus 24 PowerShell
+  fake-transport assertions pass. Actual SQL evidence/preview have two checked
+  hashes and restricted-reader checks on all four private paths. No raw evidence
+  is published. [Detailed report and remaining gates](docs/collection-loss-and-notifications.md).
+- Full regression: 359 Python tests passed, 13 opt-in SQL tests skipped; ten
+  PowerShell suites passed 175 checks and 21 scripts parse. Structural review
+  checked 290 files and 428 local file links with no errors; no fresh UI rendering.
+- Continuation remains heartbeat/buffer/source cause review and scoped private
+  state/delivery before an approved watchdog; independent offline TCP work can
+  proceed. No rule deployment, restart, firewall/VPN change or capture.
+
 ## October 7: Repository Review And Truthful Reporting
 
 - Preserved Claude's scannable, employer-facing README structure; moved detailed

@@ -43,7 +43,7 @@ Updated October 7, 2026. Results are dated observations, not a security guarante
   committed-snapshot reads; [diagnosis](docs/report-refresh-reliability.md).
 - **Collection recovery:** fixed an obsolete VM-name mapping and matched two new
   Sysmon records through the normal loader to SQL. Manual health checks now flag
-  fresh data and recent queue-pressure warnings separately; [proof and limits](docs/collection-health-validation.md).
+  fresh data, queue warnings and Sysmon errors separately; [proof and limits](docs/collection-loss-and-notifications.md).
 
 ## Architecture
 
@@ -88,7 +88,7 @@ The full plan, with why each chapter matters and when it counts as done, is in [
 
 | Work | Position |
 |---|---|
-| Collection reliability | Manual freshness/queue check verified; real heartbeats, complete source-loss checks and tested local notification delivery remain open |
+| Collection reliability | Freshness/queue/Sysmon checks verified; local notice logic tested, automatic delivery and real heartbeat/cause checks still open |
 | Useful Suricata records | Explain bounded traffic on a proved path before routine DNS/flow or browsing-coverage claims |
 | TCP/Nmap validation | Small maintained-rule batch, harmless controls and exact reporting trace; fresh saved-live Power BI check remains deferred |
 | Broader analysis | Evaluate Zeek after a useful feed/resource budget, then forensic and isolated web/test-lab lessons |

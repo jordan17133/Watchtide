@@ -6,6 +6,21 @@ how each step happened; the [roadmap](ROADMAP.md) lists what comes next.
 
 ## Active Work
 
+October 8, 2026 owner-requested handoff to Claude: Codex's claim is released;
+no active Codex deployment or publication job remains after this wrap-up.
+Private pickup notes are in `publish/handoffs/claude-2026-10-08.md` in the
+source checkout, excluded from publication. Read the dated reports below before
+continuing. This wrap-up changes documentation only, not runtime health.
+
+Latest runtime observations remain October 7 Eastern (October 8 UTC), not a new
+October 8 check. Continue actual heartbeat/source-loss review and bounded local
+notice execution; the automatic watchdog is not deployed. The independent TCP
+lesson is prepared and decoded, but its Ubuntu engine-check job is not yet
+prepared or run. The pending preparation question was unanswered; the owner
+requested this handoff instead. No new scan, capture or live change is authorized
+by the handoff. The one generic notification test's visible delivery also remains
+unconfirmed; do not repeat it merely to close that gate.
+
 October 7, 2026 independent offline TCP preparation is complete; Codex's claim
 is released. Seven synthetic files (31 packets), a separate SID 9000002 candidate
 and twelve focused tests are prepared. Actual TShark decoded all seven; private

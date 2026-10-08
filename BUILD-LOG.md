@@ -19,6 +19,19 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
 | Detection validation | In progress: controlled SSH password-guessing test detected end to end; historical post-tuning clusters reviewed, later alerts need fresh verdicts |
 | 4c. Tailscale private remote access | Trusted local HTTPS/dashboard login verified; renewal setup reported successful; phone test declined and approved off-LAN access deferred; remaining exposure/recovery/reporting gates open |
 
+## October 8: Owner-Requested Handoff To Claude
+
+- Recorded a private source-only pickup note and released Codex's claim. Kept
+  the concise README, roadmap order and existing runtime configuration unchanged.
+- Distinguished the prepared/decoded TCP controls from the unprepared Ubuntu
+  engine job, and the accepted generic notification API call from unconfirmed
+  visible delivery. Actual heartbeat, source-loss cause and automatic monitoring
+  remain open; earlier runtime observations are dated evidence, not fresh checks.
+- Wrap-up scope is documentation, source commit and sanitized publication checks
+  only. No scan, capture, deployment, restart, scheduling or report refresh.
+- Wrap-up checks: 36 publication-privacy tests pass; structural review checks
+  295 source files and 439 local links with no errors; whitespace checks pass.
+
 ## October 7: Continue With Independent TCP Lesson Preparation
 
 - Prepared a separate undeployed TCP SYN-burst candidate, SID 9000002, and

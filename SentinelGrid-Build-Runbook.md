@@ -11,8 +11,8 @@ What actually happened during the build, including every failure and fix, is rec
 | 0. Prepare the lab | Done 2026-09-30 |
 | 1. Wazuh all-in-one stack | Done and hardened 2026-09-30 |
 | 2. Sysmon | Done 2026-09-30 |
-| 3. Windows Wazuh agent | Done 2026-09-30 |
-| 4. First real event path | Done 2026-09-30 |
+| 3. Windows Wazuh agent | Installed September 30; October 7 stale-name outage repaired, connected state/socket and dashboard Active verified; loss/reboot durability gates open |
+| 4. First real event path | Historical trace complete; October 7 exact Sysmon/Indexer/normal-loader SQL recovery trace passes ([validation](docs/collection-health-validation.md)); fresh Desktop check separate |
 | 4b. Review posture findings | Done 2026-10-01 (437 of 447 findings resolved, 10 open; CIS 27.1% to 37.0%) |
 | 7. SQL Server warehouse (moved ahead of Stage 6) | Done 2026-09-30; case log added 2026-10-01 (`warehouse/cases.py`) |
 | 8. Power BI report | All six existing pages rendered after October 5 refresh; network fields/metrics/filter verified; definitions kept in Git, imported data private; sustained performance open |
@@ -28,6 +28,12 @@ and the [roadmap handoff sequence](ROADMAP.md#october-7-handoff-fits-the-existin
 Explain what, why, expected result and verification before each operation. The
 new PowerShell tuning draft is [reviewed but held](docs/powershell-policy-probe-tuning-review.md);
 do not load its filename-only exception into the live manager.
+
+The [dependable SOC completion checklist](docs/soc-completion-plan.md) reconciles
+the latest Claude handoff with these stages. A read-only manual collection check
+now separates endpoint alert freshness from loader success; local Windows
+notifications are selected but no automatic watchdog/delivery is deployed.
+Earlier queue loss and restart durability remain open after the repaired outage.
 
 ## Lab facts
 

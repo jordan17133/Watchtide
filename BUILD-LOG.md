@@ -9,8 +9,8 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
 | 0. Prepare the lab (Hyper-V, Ubuntu VM) | Done |
 | 1. Wazuh all-in-one stack | Done and hardened |
 | 2. Sysmon on Windows | Done |
-| 3. Wazuh agent on Windows | Installed; October 7 current collection gate open: latest Windows record reports disconnection, service attempting a stale VM address |
-| 4. Prove the event path end to end | Historical trace done (docs/event-trace.md); new Windows event trace required after collection repair |
+| 3. Wazuh agent on Windows | October 7 stale-name outage repaired; connected state/socket and authenticated dashboard Active verified; loss/reboot durability gates remain |
+| 4. Prove the event path end to end | Historical trace done; October 7 exact benign Sysmon/Indexer/normal-loader SQL/report-view recovery trace verified; fresh Desktop check separate |
 | 5. Suricata network telemetry | Partial: offline reporting, bounded live VM-to-host controls and independent packet review pass; saved-live alert verified in Wazuh dashboard, Indexer and normal-loader SQL; fresh Power BI check deferred, sustained/broader coverage pending |
 | 6. Watchtide API on live Wazuh data | Private live API not started; public console serves a sanitized snapshot of real lab data |
 | 4b. Posture review | Historical baseline: 437 of 447 findings resolved, CIS 27.1% to 37.0%; reviewed file/logging, SOC runtime patch and Steam access checks pass; remaining hardening and fresh posture scan open |
@@ -18,6 +18,48 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
 | 8. Power BI report | October 5: all six pages rendered, offline network fields/metrics/filter verified; October 7 live-context definitions updated, fresh Desktop verification deferred; imported cache ignored |
 | Detection validation | In progress: controlled SSH password-guessing test detected end to end; historical post-tuning clusters reviewed, later alerts need fresh verdicts |
 | 4c. Tailscale private remote access | Trusted local HTTPS/dashboard login verified; renewal setup reported successful; phone test declined and approved off-LAN access deferred; remaining exposure/recovery/reporting gates open |
+
+## October 7: Restore Windows Collection And Reconcile The Latest Handoff
+
+- Authenticated the current guest using the already-trusted SSH host identity and
+  verified Indexer TLS/read access over the restricted loader forward. Empty
+  Hyper-V IP metadata is not credited as a recovered identity source.
+- Confirmed duplicate current/obsolete manager-name mappings in the actual ICS
+  file. First apply stopped before writes because an unrelated existing fragment
+  failed the parser; a read-only reproduction and regression test preceded the
+  corrected bounded retry. No guard was disabled to force a result.
+- Authorized normal-UAC repair: protected configuration/ICS backups and hashes,
+  remove exactly one obsolete line while preserving other bytes/permissions,
+  clear DNS cache and restart only WazuhSvc. At 6:07 PM Eastern, connected state
+  and the service's Established data-port socket passed. Agent config unchanged;
+  rollback not needed. No rule, firewall, VPN, loader or unrelated workload change.
+- Generated one harmless marked command/identity query. Exact two protected
+  Sysmon records, process GUIDs/times and Indexer documents match; SQL raw payloads,
+  IDs/rules/times and report-view identities match. Normal scheduled loading at
+  6:12 PM provided the SQL rows; no concurrent manual loader was started.
+- At 8:37 PM Eastern, Windows records still arrived in the verified Indexer and
+  the refreshed authenticated dashboard showed Active. Three recent successful
+  loads took 2.235-3.873 seconds. No fresh Power BI rendering or recovery of all
+  previously missing events is inferred. [Repair/trace evidence](docs/collection-health-validation.md)
+  keeps queue-loss and reboot-durability gates open.
+- Preserved the owner's `0f73f6c` repair/helper commit. Reconciled Claude's latest
+  handoff into the existing stages and added a [completion plan](docs/soc-completion-plan.md)
+  using the current six-function NIST framework, not an unverified detection grade.
+  Unspecified drafts and the mentioned Defender case remain evidence gates.
+- Added a read-only SQL collection checker with 25 synthetic checks: independent
+  endpoint/loader freshness, latest disconnection/failure/stuck load, unknown data,
+  clock bounds, parameterized SELECTs, cleanup and redacted errors. Manual query
+  passed at 8:40 PM Eastern (12.75-minute loader age, 13.43-minute endpoint alert
+  age). Protected repair/trace/check hashes and reader permissions pass.
+- Owner selected local Windows notifications first. No schedule or delivery
+  service is deployed; this same-PC checker cannot observe total PC shutdown.
+  Real heartbeat/source-health signals and tested delivery remain open.
+- Verification: 163 focused checks passed (33 repair, 12 source trace, 17
+  diagnostic, 25 collection, 43 reliability/library, 33 privacy); all 372 checked
+  local documentation links resolve and the retained snapshot validates. Initial
+  default temporary-fixture writes were denied by the sandbox; the unchanged
+  suites passed with disposable fixtures in the allowed workspace. No live
+  integration scope was expanded or product guard relaxed.
 
 ## October 7: Triage Integrity And System Interaction Review
 

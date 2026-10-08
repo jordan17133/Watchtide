@@ -39,6 +39,7 @@ Updated October 7, 2026. Results are dated observations, not a security guarante
 - **Least-privilege access:** device-scoped Tailscale SSH/HTTPS and trusted local login, plus a loopback-bound, forwarding-only loader key and read-only Indexer account ([access limits](docs/private-access-validation.md)).
 - **A real concurrency fault fixed:** diagnosed a Power BI/loader deadlock and validated committed-snapshot reads; performance monitoring remains open ([diagnosis](docs/report-refresh-reliability.md)).
 - **Recovery checked, not assumed:** disposable SQL restore, integrity check and schema/payload comparisons, with backup hash and cleanup independently rechecked ([proof](docs/sql-recovery-validation.md)).
+- **Collection fault investigated:** repaired an obsolete VM-name mapping and matched two new Sysmon records through Indexer/normal-loader SQL; manual health checks now distinguish loader success from endpoint freshness ([proof and limits](docs/collection-health-validation.md)).
 
 ## Architecture
 
@@ -165,6 +166,7 @@ The full plan, with why each chapter matters and when it counts as done, is in [
 | Work | Position |
 |---|---|
 | Core endpoint SOC, warehouse and reports | Built; health, updates and fresh-event checks continue |
+| Monitor the monitoring | Read-only freshness check tested and manually verified; heartbeat/source-loss signals, local notifications and scheduling remain open ([completion checklist](docs/soc-completion-plan.md)) |
 | Analyst learning | Resume the [bounded TCP/Nmap lesson](docs/nmap-exposure-baseline.md); owner explanations stay separate from automated checks |
 | New PowerShell policy-probe tune | [Reviewed and held](docs/powershell-policy-probe-tuning-review.md); filename-only exception is not deployed |
 | Network reporting | Offline record displayed; saved-live dashboard/Indexer/SQL pass; fresh Power BI rendering deferred |

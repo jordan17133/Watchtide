@@ -5,6 +5,12 @@ October 7, 2026. Read-only source review and bounded live SQL checks, around
 This is a review of the current classification path, not a declaration that
 every stored event has been investigated or that all live components are healthy.
 
+**Later October 7 update:** the collection repair and exact benign
+Sysmon/Indexer/normal-loader SQL trace now pass. See the
+[dated repair evidence](collection-health-validation.md). The findings below
+retain the original audit's counts/time; case-membership and labeling gaps are
+not fixed by repairing the agent connection.
+
 ## The Main Distinction
 
 **A rule says what matched. An investigation decides what it means.**
@@ -44,8 +50,8 @@ flowchart TD
     H -.->|separately tested and approved tuning| M
 ```
 
-The agent-to-manager connection is currently an open reliability gate, not a
-healthy arrow. The permanent Suricata service remains masked: the network branch
+The agent-to-manager connection failed at this audit's time; its later repair
+is independently verified above. The permanent Suricata service remains masked: the network branch
 above describes completed bounded tests and saved-event handoffs, not continuous
 capture. See [collection status](collection-health-validation.md) and
 [packet-to-report evidence](L0-event-to-report-trace.md).
@@ -86,7 +92,7 @@ provides the behavior vocabulary. Neither replaces analysis of the actual event.
 
 ## Verified Findings
 
-### 1. Current Endpoint Collection Is Not Healthy
+### 1. Endpoint Collection Failed At The Audit Time
 
 The fresh SQL check still shows the Windows endpoint's newest retained alert at
 10:49:46.056 UTC. Manager records are newer. Earlier independent Indexer/socket
@@ -243,7 +249,9 @@ above are proposed improvements, not capabilities credited to the current schema
 
 ## Finish Gates In The Existing Plan
 
-- [ ] Restore and verify current Windows collection (Stages 2-4).
+- [x] Restore and verify the current outage's Windows collection (Stages 2-4);
+  later repair/source/Indexer/SQL proof is separate from this original audit.
+- [ ] Review earlier drops, reboot durability and actual source-health signals.
 - [ ] Correct misleading rule/technique labels without assigning new verdicts.
 - [ ] Correct/test the source-only level-16 inventory edge case.
 - [ ] Design/test exact case membership and evidence-backed dispositions;

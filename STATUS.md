@@ -6,14 +6,35 @@ how each step happened; the [roadmap](ROADMAP.md) lists what comes next.
 
 ## Active Work
 
-October 7 administrator diagnostic evidence has now been read and its hashes
-and private permissions verified. It confirms a pending agent, hostname-based
-TCP collection settings and repeated attempts to a stale resolved address.
-Windows collection is not marked healthy; scoped repair and a fresh trace remain
-open. No new rules, live repair or capture were deployed in this review.
+No active editing/deployment claim. Codex completed the authorized repair's
+exact fresh-event trace, reconciled Claude's handoff and added a tested/manual
+SQL collection check. Continue with the bounded heartbeat/source-health and
+local notification phase in the [completion plan](docs/soc-completion-plan.md).
+Scheduling, delivery and new permissions need their own reviewed scope.
 
-No active file or live-deployment claim. Read-only classification/case/report
-audit and the plain-English interaction map are documented. No verdict, SQL
+October 7 recovery: an authenticated, identity-checked guest preflight confirmed
+the intended target. The authorized repair removed one obsolete duplicate
+manager-name entry, preserved the agent configuration and restarted only
+WazuhSvc. The agent connected at 6:07 PM Eastern. Two benign Sysmon records
+match their Indexer documents, SQL raw payloads and reporting-view identities;
+the normal scheduled loader imported them at 6:12 PM. Protected evidence,
+hashes and reader permissions pass. No firewall, tailnet or rule changes.
+
+At 8:37 PM Eastern, new Windows records still arrived in the TLS-verified
+Indexer; the authenticated dashboard showed Active. A new read-only collection
+check passed against SQL at 8:40 PM. This closes the current outage/fresh-event
+trace, not restart durability, earlier queue loss or every source's health.
+An automatic watchdog and notification delivery are not deployed. The owner
+selected local Windows notifications first; no external service is connected.
+
+Verification: 163 focused checks passed (33 repair, 12 exact trace, 17 diagnostic,
+25 collection health, 43 reliability/library and 33 publication privacy). All
+372 checked local documentation links resolve. Protected evidence hashes/readers
+and the existing sanitized snapshot validator pass; no new public snapshot or
+Power BI import was generated.
+
+The previous read-only classification/case/report audit and the plain-English
+interaction map are documented. In that audit, no verdict, SQL
 schema, rule, collection, service or UI behavior changed. Scope the collection
 repair and triage improvements separately before deployment.
 
@@ -25,7 +46,8 @@ this file remains the authoritative status, not the older side-workspace map.
 
 | Order | Work | State / finish line |
 |---|---|---|
-| 0 | Restore current Windows collection | October 7 cutoff, actual protected settings/pending state and repeated stale-destination errors verified; [administrator evidence](docs/collection-health-validation.md) checked; target identity, bounded repair and fresh trace remain open |
+| 0 | Restore current Windows collection | Closed for this outage: identity-checked bounded repair and exact Sysmon/Indexer/normal-loader SQL trace pass; [repair evidence](docs/collection-health-validation.md). Restart durability and historical loss remain separate |
+| 0a | Monitor the monitoring | Read-only SQL collection check tested and manually verified; heartbeat/source-loss checks, scheduling and notification delivery remain open. [Completion plan](docs/soc-completion-plan.md) reconciles Claude's handoff |
 | 1 | Handoff and L0 explanation | Scannable README, private coordination agreement and corrected [packet-to-report lesson](docs/L0-event-to-report-trace.md) applied; 235 selected checks passed; owner explanation stays open |
 | 2 | Triage integrity and PowerShell noise review | [Classification/case audit](docs/triage-system-audit.md) finds inferred memberships and incomplete technique reviews; exact evidence links and truthful reporting gates open. Existing rule 100100 retained; filename-only expansion remains held |
 | 3 | Resume TCP/Nmap learning | Build a harmless offline TCP rule/control test, then a separate bounded owned-VM exercise on a verified capture path; [existing baseline](docs/nmap-exposure-baseline.md) is already complete |
@@ -36,14 +58,12 @@ The owner's maintained-library request now has a [separate inventory and rollout
 guide](docs/detection-library-plan.md). All 147 observed alert types are indexed
 privately; 40 have historical rule reviews and 107 do not, without inheriting
 old verdicts. ET Open is downloaded and field-reviewed only, not deployed.
-Current collection takes priority: SQL and the Indexer agree that the newest
-Windows record is a disconnection alert at 10:49:46.056 UTC, despite running
-services and successful loader outcomes. The agent is attempting an old VM
-address; the current LAN data port is reachable. Protected settings/state/log
-evidence now confirms that attempt; target identity and authenticated
-reconnection are still unverified. Earlier explicit
-Sysmon drops also need a separate cause/health review. TCP/Nmap remains the
-selected learning track, paused at this prerequisite rather than abandoned.
+The earlier SQL/Indexer cutoff was a disconnection alert at 10:49:46.056 UTC,
+despite running services and successful loader outcomes. That outage is now
+repaired and traced independently. Explicit Sysmon drops still need a separate
+cause/health review; missing records are not presumed recovered. Establish
+source-health signals before increasing live detection load. Independent
+offline TCP preparation can resume; TCP/Nmap remains the selected learning track.
 
 Off-LAN administration, additional routers/VPN egress and separate web/test VMs
 remain deferred or planned. They do not displace the owner's TCP/Nmap learning
@@ -79,6 +99,11 @@ The SOC's existing environment now uses Python 3.14.8; candidate and installed-r
 
 ### Windows Collection Gate (October 7)
 
+**Later result:** the authorized repair and exact source/Indexer/normal-loader
+SQL trace pass. The authenticated dashboard shows Active, and the subsequent
+manual SQL health check passes. See the [repair and remaining gates](docs/collection-health-validation.md).
+The following paragraphs record the earlier diagnostic, not current outage state.
+
 At approximately 20:55-21:01 UTC, read-only SQL and TLS-verified Indexer checks
 found the same Windows cutoff at 10:49:46.056 UTC, with 34,124 retained Windows
 alerts; its latest rule 504 reports disconnection. New manager records continue
@@ -97,7 +122,7 @@ do not credit this as a complete guest-address identity check. No settings or
 services changed. Historical Sysmon
 Event 255 text explicitly reports dropped registry events; do not sum counters
 or assume a shared cause with this outage. No live repair, new rules, scan or
-capture was performed. See [actual checks and completion gates](docs/collection-health-validation.md).
+capture was performed in that diagnostic batch. See [actual checks and completion gates](docs/collection-health-validation.md).
 Verification: 17 helper, 43 reliability/library and 33 publication-privacy
 checks passed (93 total); all 336 checked local documentation links resolve.
 Private health evidence reader permissions and snapshot hashes were checked.

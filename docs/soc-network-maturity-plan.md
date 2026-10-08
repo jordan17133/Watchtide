@@ -7,7 +7,9 @@ behavior and supports evidence-based investigation and recovery.
 
 ## Current Position
 
-The endpoint SOC and reporting pipeline are working. The controlled offline
+The endpoint pipeline is built; the October 7 delivery outage is now
+[repaired and independently traced](collection-health-validation.md). Earlier
+queue loss and reboot durability still need checks. The controlled offline
 network event is verified through Suricata, Wazuh, the Indexer, SQL and the existing
 Power BI report. A bounded live VM-to-host test and packet review also pass;
 its saved-live alert is verified through Wazuh dashboard, Indexer and normal-loader
@@ -20,8 +22,8 @@ is verified separately; a TCP scan-detection exercise remains planned.
 | 0 Lab | Hyper-V/Ubuntu lab built; production-only checkpoint creation and five active services afterward reported | Separate restore and off-VM backup validation remain open |
 | 1 Wazuh | Manager, Indexer and dashboard deployed; trusted local dashboard login verified | Availability, recovery and access reviews continue |
 | 2 Sysmon | Windows endpoint telemetry established | Do not assume every desired event type is collected |
-| 3 Agent | Existing Windows agent/log collection established | Every additional endpoint needs its own health and event-path proof |
-| 4 Event path | Existing Windows event trace completed | New devices and new telemetry types require separate traces |
+| 3 Agent | October 7 stale-name outage repaired; authenticated Active state and fresh collection verified | Earlier loss, reboot durability and independent health signals remain open |
+| 4 Event path | Historical trace plus exact new Sysmon/Indexer/normal-loader SQL/report-view recovery trace pass | Fresh Desktop check, new devices and new telemetry types require separate traces |
 | 4b Posture | Historical CIS improvement from 27.1% to 37.0%; file/logging checks, SOC Python security patch and reviewed Steam access restrictions verified | Other Python workloads, dependency/CVE review, fresh posture inventory, disk/boot and account/exposure gates remain open |
 | 4c Private access | Device-scoped Tailscale SSH/HTTPS grant and trusted local dashboard access verified | Off-network administration deferred; renewal replacement, revocation and other access/recovery gates remain open |
 | 5 Network detection | Offline reporting and bounded live VM-to-host controls pass; saved-live alert verified through Wazuh dashboard/Indexer/normal-loader SQL | Fresh Power BI check, TCP scan detection, continuous capture, routine telemetry and wider coverage remain open |
@@ -272,6 +274,9 @@ closed without exposing private evidence or flooding notifications.
 
 ### I Monitor The Monitoring
 
+- [x] Test and manually run the read-only SQL collection check: per-agent alert
+  observations and loader outcomes evaluated separately; unknown/error/clock
+  states retained. This is not a heartbeat or automatic watchdog.
 - [ ] Detect missing agent/sensor heartbeats, capture drops, alert-queue loss,
   collector lag, loader failures, stale reports, disk pressure and certificate
   expiry. Distinguish a quiet network from a dead feed.
@@ -306,9 +311,12 @@ evidence, and the public portfolio demonstrates actual scope and remaining gaps.
 
 ## Immediate Next Step
 
-Start with a read-only capture-point and resource review for Phase C, alongside
-the inventory in Phase B and reliability gates in Phase A. Then prepare the
-bounded live trial for separate review. This plan does not activate a sensor,
+Follow the [current completion order](soc-completion-plan.md#stage-checklist):
+actual heartbeat/source-loss signals and tested local Windows notification
+delivery join Phase I after the repaired outage. Independent offline TCP
+preparation can resume; do not repeat the completed ICMP trial. Inventory in
+Phase B and reliability gates in Phase A remain prerequisites for sustained
+network load. This plan does not activate a sensor,
 change SSH/Tailscale/firewall policy, collect household browsing data or authorize
 automatic blocking. Each command should be explained before execution: what it
 checks or changes, why it is needed, and what result would stop the next step.

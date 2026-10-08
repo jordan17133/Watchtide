@@ -32,7 +32,8 @@ The roadmap is an execution order, not a newly scheduled automation.
 
 | Order | Bounded work | Existing stage | Completion gate |
 |---|---|---|---|
-| 0 | Restore Windows collection and review loss reports | 2, 3, 4 / reliability | Actual protected settings/log review passes; verify intended target, make bounded repair, prove authenticated reconnection and a new event trace; [outage evidence](docs/collection-health-validation.md) |
+| 0 | Restore Windows collection and review loss reports | 2, 3, 4 / reliability | Current outage repair and exact source/Indexer/normal-loader SQL trace pass; reboot durability and historical queue-loss review remain; [repair evidence](docs/collection-health-validation.md) |
+| 0a | Monitor the monitoring | 2-4, 7-8 / maturity I | Manual SQL collection check tested and verified; real heartbeat/source-loss signals, local Windows delivery, deduplication/recovery and approved scheduling remain open; [completion plan](docs/soc-completion-plan.md) |
 | 1 | Reconcile drafts and status; add the [L0 explanation](docs/L0-event-to-report-trace.md) | 4, 7, 8 | Current evidence and limits agree; owner explanation not auto-credited |
 | 2 | Review the proposed [PowerShell tune](docs/powershell-policy-probe-tuning-review.md) | Detection maintenance / 4b | Writer/path evidence, installed-engine matches/nonmatches, protected deployment and measured future results; unsafe filename-only draft stays undeployed |
 | 2a | [Triage integrity and interaction review](docs/triage-system-audit.md) | 4 / 7 / 8 | Truthful historical-review labels, exact case/evidence memberships and event dispositions, level-16 compatibility, data prerequisites/retention; no automatic benign inheritance |
@@ -61,15 +62,25 @@ the historical recovery message does not recover any lost events. Sigma remains
 a later, separately mapped log-detection gap analysis, not a plug-in install.
 Do not repeat completed ICMP tests or enable the full feed by default.
 
-**Current prerequisite:** independent October 7 SQL/Indexer checks show a Windows
-disconnection cutoff, and its service process is attempting a stale VM address.
-The current LAN data port is reachable. The owner's actual elevated diagnostic
-confirms pending state and stale-destination errors; target identity, repair and
-fresh event flow remain open. Historical Sysmon drops are separately confirmed.
-Successful loader runs and running services do not close this gate. Restore and
-verify source collection before progressing the TCP lesson or loading rules;
-leave firewall/Tailscale permissions unchanged unless evidence warrants a
-separately reviewed change.
+**October 7 prerequisite result:** the stale duplicate manager-name mapping was
+removed after authenticated guest-identity checks and protected rollback copies.
+Only WazuhSvc restarted; exact benign Sysmon/Indexer/SQL payloads and reporting
+IDs now match through the normal scheduled loader. Windows collection remains
+active in the later check. Historical Sysmon drops and restart durability stay
+open; the manual SQL health checker is not a deployed watchdog. Resume independent
+offline TCP preparation, then review source health before live load expansion.
+No firewall/Tailscale permissions were widened.
+
+### Latest Handoff: Dependable Operations
+
+Claude's latest wrap-up is reconciled in the [completion checklist](docs/soc-completion-plan.md).
+The repair commit is preserved and current-event proof is checked separately.
+Collection-health warnings and the owner's selected local Windows notification
+channel join existing reliability work; exact case evidence and rule controls
+remain ahead of unreviewed severity suppression. The unspecified three drafts
+and Defender case are not approved deployments/verdicts. Account/disk/boot,
+off-PC recovery and measured wider coverage retain their original gates.
+No new scheduler, notification service or always-on capture is created by this plan.
 
 ### Learn And Operate The SOC
 

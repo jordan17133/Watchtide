@@ -6,7 +6,7 @@ network tests and documented investigations.
 
 **Author:** Jordan Carven-Bellace
 
-*Formerly SentinelGrid; existing database, VM, task and rule-file names retain that identity.*
+*Formerly SentinelGrid; existing database, report and rule-file names retain that identity. The Hyper-V VM is now named Watchtide.*
 
 **[Open the Watchtide console](https://jordan17133.github.io/Watchtide/)**:
 read-only, sanitized historical alerts, cases and ATT&CK coverage.
@@ -16,10 +16,11 @@ No live connection to the private SOC. Check the snapshot's date.
 
 ## At A Glance
 
-Updated October 7, 2026. Results are dated observations, not a security guarantee.
+Updated October 11, 2026. Results are dated observations, not a security guarantee.
 
 | Result | Evidence / scope |
 |---|---|
+| **Local collection watchdog deployed** | Runs every 15 minutes while the owner is logged on; first-day notices traced, permission/policy and reboot review open ([record](docs/collection-watchdog.md)) |
 | **37,605 alerts recovered** | Copy-only SQL backup, disposable restore and clean CHECKDB; same-instance recovery only ([validation](docs/sql-recovery-validation.md)) |
 | **99 Critical vulnerabilities reduced to zero** | Historical remediation baseline; later inventory requires fresh review ([investigation](docs/finding-forgotten-browser.md)) |
 | **94% of the original Critical cluster reclassified** | Narrow tested tuning, not removal of every future Critical alert ([case](triage/2026-09-30-rule-92213-powershell-policy-test-noise.md)) |
@@ -44,11 +45,14 @@ Updated October 7, 2026. Results are dated observations, not a security guarante
 - **Collection recovery:** fixed an obsolete VM-name mapping and matched two new
   Sysmon records through the normal loader to SQL. Manual health checks now flag
   fresh data, queue warnings and Sysmon errors separately; [proof and limits](docs/collection-loss-and-notifications.md).
+- **Monitoring the monitoring:** the watchdog's first day exposed SQL Server memory
+  paging (fixed with Lock Pages in Memory) and full-table scans (two indexes cut
+  reads about 1,000x); [deployment and results](docs/collection-watchdog.md).
 
 ## Architecture
 
 ```text
-Windows: Sysmon / Security / Defender / PowerShell / file changes
+Windows: Sysmon / Security / Defender / PowerShell / file changes / firewall logs
     -> Wazuh agent -> Ubuntu Hyper-V VM
                      Wazuh manager -> Filebeat -> Indexer -> Wazuh dashboard
                                                   |
@@ -88,7 +92,7 @@ The full plan, with why each chapter matters and when it counts as done, is in [
 
 | Work | Position |
 |---|---|
-| Collection reliability | Freshness/queue/Sysmon checks verified; local notice logic tested, automatic delivery and real heartbeat/cause checks still open |
+| Collection reliability | Watchdog deployed; current task checked October 11. Notification-policy/read-scope, heartbeat/cause and reboot checks remain open |
 | Useful Suricata records | Explain bounded traffic on a proved path before routine DNS/flow or browsing-coverage claims |
 | TCP/Nmap validation | Small maintained-rule batch, harmless controls and exact reporting trace; fresh saved-live Power BI check remains deferred |
 | Broader analysis | Evaluate Zeek after a useful feed/resource budget, then forensic and isolated web/test-lab lessons |

@@ -1,6 +1,6 @@
 #Requires -RunAsAdministrator
 <#
-  Grows the SentinelGrid-Wazuh VM's virtual disk. Safe to run while the VM is
+  Grows the selected VM's virtual disk (default: Watchtide). Can run while the VM is
   running (Generation 2 VMs support expanding a SCSI-attached VHDX online).
 
   Hyper-V cannot resize a disk that has checkpoints, because the VM is then
@@ -12,10 +12,12 @@
 #>
 param(
     [int]$NewSizeGB = 150,
-    [switch]$RemoveCheckpoints
+    [switch]$RemoveCheckpoints,
+    [ValidateNotNullOrEmpty()]
+    [ValidateScript({-not [string]::IsNullOrWhiteSpace($_) -and -not [Management.Automation.WildcardPattern]::ContainsWildcardCharacters($_)})]
+    [string]$VMName = 'Watchtide'
 )
 $ErrorActionPreference = 'Stop'
-$vmName = 'SentinelGrid-Wazuh'
 
 $vm = Get-VM -Name $vmName
 $checkpoints = @(Get-VMCheckpoint -VM $vm)

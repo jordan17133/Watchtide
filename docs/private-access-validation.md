@@ -4,6 +4,12 @@
 
 **Status:** partial validation; private-access milestone remains open.
 
+**October 11 reconciliation:** the sections below record dated tests, not an
+instruction to restore old listeners, password authentication or checkpoints.
+Owner reports keys-only guest SSH and deleted historical checkpoints; the
+loader's current route uses its verified private Tailscale destination. See
+[current state and remaining checks](current-state-reconciliation.md).
+
 ## Initial scope and method
 
 The Ubuntu client's status output listed both the Linux SOC VM and Windows admin host in the tailnet. A separate check with the Windows client's `status --json` confirmed the client is Running, the Windows device is online, and the SOC peer is online.

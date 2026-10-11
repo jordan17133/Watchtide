@@ -206,9 +206,11 @@ aggregation timeout by querying existing materialized event/channel columns,
 without changing SQL settings. Forty retained Sysmon errors explicitly report
 registry drops; five queue warnings remain historical, while new Windows
 alerts arrive. Named-source observations, generic notice planning and one
-owner-approved test API invocation are now checked. Visible delivery, actual
-heartbeat/loss cause, private-state runner and scheduling remain open. Earlier
-test counts/results above retain their dated scope, not the latest checker total.
+owner-approved test API invocation were checked in the October 7 preparation.
+Owner confirmation and the October 8 [deployed runner](collection-watchdog.md)
+supersede the earlier delivery/runner/scheduling gaps. Actual heartbeat/loss
+cause, policy/read-scope and reboot review remain open. Earlier test counts and
+results retain their dated scope, not the latest checker total.
 
 ### Deployment Scope
 

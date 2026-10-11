@@ -3,6 +3,12 @@
 Prepared October 7, 2026 Eastern. This is the independent offline portion of
 the existing Stage 5 / TCP-Nmap learning track, not an enabled detection.
 
+October 11 access reconciliation: the owner reports keys-only Ubuntu SSH. The
+bounded engine job is still not run; preparation approval recorded in the private
+handoff is not execution or deployment. Use a verified administration key with
+local sudo authentication, never the forwarding-only loader key or an older
+password-only activation job. See [current state](current-state-reconciliation.md).
+
 ## What We Are Doing And Why
 
 A TCP **SYN** is a request to start a connection. We are preparing small saved

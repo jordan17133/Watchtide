@@ -8,12 +8,13 @@ param([ValidateSet('Preview','Test','Library')][string]$Mode='Preview')
 $ErrorActionPreference='Stop'
 
 function Get-WatchtideNotificationText {
-    param([ValidateSet('Test','Attention','Unknown','Recovery')][string]$Kind)
+    param([ValidateSet('Test','Attention','Unknown','Recovery','Security')][string]$Kind)
     $messages=@{
         Test=@{title='Watchtide notification test';body='One-time local delivery test. No security incident.'}
         Attention=@{title='Watchtide: collection needs review';body='A freshness or loss check needs review. This is not a confirmed security incident.'}
         Unknown=@{title='Watchtide: collection check unavailable';body='Some monitoring evidence is unavailable. Inspect the local check; no incident verdict is implied.'}
         Recovery=@{title='Watchtide: observations recovered';body='Checked observations are recent again. Earlier missing events are not proved recovered.'}
+        Security=@{title='Watchtide: security alert to review';body='A high-priority detection fired. Review it before deciding anything; this is not a confirmed security incident.'}
     }
     return [pscustomobject]$messages[$Kind]
 }
@@ -39,7 +40,7 @@ function Wait-WatchtideNotification {
 }
 
 function Show-WatchtideLocalNotification {
-    param([ValidateSet('Test','Attention','Unknown','Recovery')][string]$Kind,
+    param([ValidateSet('Test','Attention','Unknown','Recovery','Security')][string]$Kind,
           [ValidateRange(1,10)][int]$DisplaySeconds=8)
     if (-not [Environment]::UserInteractive) {throw 'An interactive user session is required.'}
     $text=Get-WatchtideNotificationText $Kind

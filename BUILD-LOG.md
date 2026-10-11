@@ -2,7 +2,10 @@
 
 A running record of how the Watchtide home SOC lab was built, what broke, and how it was fixed. The step-by-step plan lives in [SentinelGrid-Build-Runbook.md](SentinelGrid-Build-Runbook.md). Alert investigations live in [triage/](triage/).
 
-## Status at a glance (2026-10-07)
+Current supported state is in [STATUS](STATUS.md#current-snapshot); the tables
+and entries below retain their dated scope.
+
+## Historical stage snapshot (2026-10-07)
 
 | Runbook stage | Status |
 |---|---|
@@ -18,6 +21,50 @@ A running record of how the Watchtide home SOC lab was built, what broke, and ho
 | 8. Power BI report | October 5: all six pages rendered, offline network fields/metrics/filter verified; October 7 live-context definitions updated, fresh Desktop verification deferred; imported cache ignored |
 | Detection validation | In progress: controlled SSH password-guessing test detected end to end; historical post-tuning clusters reviewed, later alerts need fresh verdicts |
 | 4c. Tailscale private remote access | Trusted local HTTPS/dashboard login verified; renewal setup reported successful; phone test declined and approved off-LAN access deferred; remaining exposure/recovery/reporting gates open |
+
+## October 11: Reconcile Current State And Active VM Targets
+
+- Separated the current pickup map from historical updates; reconciled the
+  roadmap, runbook, completion plan and evidence navigation with Claude's
+  watchdog, firewall-source, tuning and hardening handoff. Reported deployments
+  remain distinct from independent checks; historical values were not overwritten.
+- Parameterized three Hyper-V helpers with `-VMName`, default `Watchtide`.
+  Updated active command examples and private playbook; retained legacy disk,
+  database/report filenames and dated build history. No VM operation was run.
+- Added focused parameter-binding/AST and current-documentation regressions.
+  Extended tracked-text publication preflight and neutralized one private
+  workload description in the publisher, without changing notification logic.
+- Recorded the unresolved notification-policy gap, guard/read-scope/reboot
+  gates, unsupported firewall records and remaining TCP/Power BI validation in
+  the [reconciliation report](docs/current-state-reconciliation.md).
+- Verification: 433 Python tests pass, 13 opt-in database-changing tests skipped;
+  52 VM parameter/AST and 17 diagnostic library checks pass under Windows
+  PowerShell 5.1. All 26 PowerShell scripts parse. Structural review checks
+  310 source files and 488 local links without errors; current navigation anchors
+  have focused regression tests. Source history secret scan passes.
+- No live rule, task, service, network, SSH, disk, capture, popup, report-refresh
+  or public snapshot change. Public regeneration/secret scans remain a separate
+  publishing step; the generator does not certify live deployment or safety.
+
+## October 8-9: Claude Deploys The Collection Watchdog
+
+- Deployed the [collection watchdog](docs/collection-watchdog.md) at the owner's
+  request: health popups every 15 minutes (two sightings before a new warning,
+  4-hour reminders, one recovery notice) and security popups for a short
+  watchlist plus never-reviewed level 12+ rules. Commits `ecfedff`, `b26eb35`,
+  `a45585a`. Codex's post-deployment review is open.
+- First day: five popups, each traced. SQL Server paging (event 17890, up to
+  199 a day since September 30) caused the first Unknown; the owner applied
+  Lock Pages in Memory and paging stopped. A Tailscale service crash cut the
+  loader's route for about 2 hours; the watchdog warned, and run 803 loaded
+  the backlog with nothing lost.
+- Two indexes on `sg.alerts` (`f037d29`), tested on a disposable restored copy
+  first, cut the watchdog's reads from about 20,000 pages to under 100.
+- Closed case SG-011 (`ff91e5e`): four Defender detections were Claude's own
+  detection-drafting files, benign and controlled. Defender was not bypassed.
+- Fixed confirmation during a growing outage: it now matches the problem kind,
+  not the exact failing checks (one popup came 15 minutes late). Two
+  regression tests added.
 
 ## October 8: Owner-Requested Handoff To Claude
 
@@ -888,6 +935,12 @@ Windows host                         |
 - [x] Deployed `wazuh/rules/sentinelgrid_tuning.xml` (rules 100100 and 100101) after replaying them against 674 stored alerts: every watchdog and sdbinst event matched, every installer event still fired. Live check: the last watchdog alert at level 15 was 19:22:03; from 19:22:53 the same activity arrives as rule 100100 at level 3, with zero new 92213 alerts.
 - [x] Confirmed rule 100101 live: 21 matches at level 3 since 2026-09-30 23:53, no new 92058 alerts.
 - [x] Traced all 51 Critical (92213) alerts since tuning: AMD Bug Report Tool after graphics driver crashes, PowerShell `Add-Type` compiles by the build tooling (left at Critical on purpose), one Windows troubleshooter ([report](triage/2026-10-01-rules-92213-92217-after-tuning.md)). Host finding: update the AMD graphics driver.
+- [x] Deployed rules 100102-100104 (2026-10-10 21:12 UTC), each pinned to the exact image, parent or user and path so a lookalike still alerts: SYSTEM PowerShell's policy-test file (child of 92205; 272/272 stored positives, none of Codex's `pwsh`), Tailscale re-adding its own two inbound firewall rules (child of 92043; 23/23), and the Codex Store app re-registering its Chrome native-messaging host (child of 92041; 33/33, Discord's own registration still fires). Live: within 15 minutes 3 matches each for 100102 and 100103 at level 3 and zero new 92205 or 92043. The Tailscale guard task created that afternoon had been adding one 92205 every 5 minutes.
+- [x] Lesson: `wazuh-logtest` on stdin decodes Windows eventchannel JSON as plain `json`, so stock and tuned Windows rules never fire there. Windows rules were verified live through the warehouse instead (config test first, backup, one-command undo).
+- [x] Confirmed 100104 live: the Codex app's hourly registration at 21:43:32 UTC arrived at level 3, no new 92041. By 21:57 UTC: 100102 x11, 100103 x3, 100104 x1, zero of their parent alerts.
+- [x] Windows Firewall packet logs collected (2026-10-11): the agent reads the three profile logs and drops header and mDNS lines; rules 100141-100146 are children of stock rule 4101 because `wazuh-logtest` showed the stock `windows-firewall` decoder claims every dated DROP line before any custom decoder. Proven end to end by a temporary outbound block on TCP 40001 (Windows logged it; rule 100144 fired). Lessons: a Python replay passed a rule file `wazuh-analysisd -t` refused (static fields need their own tags), and a knock from the VM is not a valid inbound test here (dropped unlogged on the Hyper-V switch).
+- [x] Deployed tunes 100105 and 100106 (2026-10-11 21:53 UTC): Codex's bundled `pwsh.exe` writing PowerShell's execution-policy probe file to the user's Temp (child of 92213, pinned to the exact runtime path and probe-name pattern; 3,691/3,691 stored, none of the other 1,007) and Phone Link's `backgroundTaskHost.exe` with no resolvable parent (child of 61634, pinned to the System32 image, original file name, the Microsoft-published package folder and the AppX command line; 95/95). Ten mutated lookalikes still alert. Live check 21:53-22:12 UTC: 100105 and 100106 each fired at level 3, zero new 61634, and the only 92213 came from another program (EdgeWebView2), still at level 15.
+- [ ] Live inbound test of 100142/100143 from a LAN device; a week of volume before adding 100143 to the popup watchlist.
 
 ### Archive volume
 - [x] Filtered the dashboard's own web logs out of the archive (logins and denied requests kept).

@@ -2,6 +2,17 @@
 
 **Owner:** Jordan Carven-Bellace
 
+**Current pickup, reconciled October 11:** use
+[STATUS](../STATUS.md#current-snapshot) and the
+[reconciliation record](current-state-reconciliation.md). Owner reports keys-only
+guest SSH and the Hyper-V display name `Watchtide`; historical password-only
+activation jobs must not be rerun. The loader now uses its verified private
+Tailscale destination, not the initial NAT target described below. The owner
+reports deleting old checkpoints October 9; establish current rollback/merge
+availability before risky changes. This note does not change tailnet policy.
+
+## October 5 Access Baseline (Historical)
+
 **Updated:** October 5, 2026
 
 **Status:** Windows admin host, Ubuntu VM and test phone enrolled. The reviewed policy still permits only Windows-to-VM TCP 22/443, with four accepted policy tests. Local management/data-port checks and post-policy SQL ingestion passed. Trusted Windows IPv4 HTTPS and an authenticated dashboard overview are verified; the overview showed one Active agent and zero Disconnected agents. The user reported successful renewal setup, an initial service run and an enabled daily timer. Its first automatic trigger and actual replacement remain unverified. The owner declined temporary phone access; the phone stays denied and approved off-LAN administration is deferred/unverified. The current priority is the bounded [Suricata pilot](suricata-pilot.md); extra VPN/router work is deferred. Reported VM-local configuration-backup checks and checkpoint creation do not prove full recovery. Checkpoint metadata, backup-reader/storage review, remaining exposure/revocation and controlled SQL/Power BI checks stay open. IPv6 dashboard support is absent and local enrollment TCP 1515 needs diagnosis before new enrollment. See [private-access-validation.md](private-access-validation.md).
@@ -92,7 +103,7 @@ For every test, record the date, source role, destination/service, expected resu
 | Current Access controls policy reviewed | Existing permissions and required access reviewed; exact original saved privately before an approved change | Verified 2026-10-03; narrow replacement saved with four policy tests; new checkpoint creation reported October 4; current backup/restore and live exposure verification remain open |
 | Supplied VM filter-table configuration reviewed | Complete IPv4/IPv6 filter exports reviewed with rule precedence and exceptions recorded | Reviewed 2026-10-04 from user-provided output; live exposure, exact private backups and recovery validation remain pending |
 | VM-console recovery route available | Authenticated Ubuntu console through Hyper-V VMConnect | Demonstrated in user-provided screenshot on October 4; separate backup/restore test still pending |
-| Current production checkpoint | Production-Only settings and successful creation, checkpoint metadata and post-creation health recorded | Settings screenshot, user-reported creation and five active guest services afterward on October 4; name/timestamp/type pending |
+| Current production checkpoint | Current point, merge state and recovery scope checked before risky work | October 4 creation is historical; owner reports deleting old points October 9. No current point or restore is credited; [latest boundary](current-state-reconciliation.md) |
 | Current private configuration backups | Exact current copies with intended readers/storage protection reviewed and recovery tested | Current VM-local dashboard/UFW checks passed according to the user; original installer archive has extra local-group read access requiring review; protected off-VM copies and restore validation pending |
 | Local trusted dashboard access and renewal setup | Normal HTTPS trust, authenticated overview, successful initial renewal-service run and enabled daily timer | Windows HTTPS and authenticated overview verified October 5; renewal setup reported successful; automatic trigger, actual rotation and live failure recovery unproven |
 | Approved admin access off-LAN | Successful SSH login and dashboard login with verified HTTPS identity | Deferred/unverified: owner declined temporary phone access and moved on to the Suricata pilot |

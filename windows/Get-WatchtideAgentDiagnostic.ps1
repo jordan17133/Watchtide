@@ -4,7 +4,12 @@ protected agent files. Only new private evidence files are written; no agent,
 DNS, service, firewall, VPN or existing-file permissions are changed.
 #>
 [CmdletBinding()]
-param([ValidateSet('Audit','Library')][string]$Mode='Audit')
+param(
+    [ValidateSet('Audit','Library')][string]$Mode='Audit',
+    [ValidateNotNullOrEmpty()]
+    [ValidateScript({-not [string]::IsNullOrWhiteSpace($_) -and -not [Management.Automation.WildcardPattern]::ContainsWildcardCharacters($_)})]
+    [string]$VMName='Watchtide'
+)
 $ErrorActionPreference='Stop'
 
 function Read-WatchtideManagerSettings {
@@ -84,7 +89,7 @@ try {
     })
     $adapters=@();$vm=@()
     try {
-        $vm=@(Get-VMNetworkAdapter -VMName 'SentinelGrid-Wazuh' -ErrorAction Stop |
+        $vm=@(Get-VMNetworkAdapter -VMName $VMName -ErrorAction Stop |
             Select-Object VMName,SwitchName,Status,IPAddresses)
         $adapters=@(Get-NetIPAddress -InterfaceAlias 'vEthernet (Default Switch)' -AddressFamily IPv4 |
             Select-Object InterfaceAlias,IPAddress,PrefixLength)

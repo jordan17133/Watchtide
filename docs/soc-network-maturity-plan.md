@@ -1,6 +1,6 @@
 # Watchtide Network SOC Maturity Plan
 
-Updated October 7, 2026. This is the expanded target and acceptance checklist,
+Current position reconciled October 11, 2026. This is the expanded target and acceptance checklist,
 not a claim that the planned controls are deployed. The target is a dependable,
 private home SOC that explains observed device activity, detects suspicious
 behavior and supports evidence-based investigation and recovery.
@@ -17,16 +17,22 @@ SQL. Fresh Power BI verification is deferred. Continuous capture and whole-home
 coverage are not yet established. The [Nmap exposure baseline](nmap-exposure-baseline.md)
 is verified separately; a TCP scan-detection exercise remains planned.
 
+The [deployed local watchdog](collection-watchdog.md) has an independently checked
+task, with policy/read-scope and reboot review still open. Owner reports selected
+Windows firewall-file collection and five additional tuning rules live; these
+are host-level evidence, not continuous Suricata or whole-home coverage. See
+[current state and reported-versus-checked boundaries](current-state-reconciliation.md).
+
 | Existing runbook stage | Evidence-backed status | Remaining boundary |
 |---|---|---|
-| 0 Lab | Hyper-V/Ubuntu lab built; production-only checkpoint creation and five active services afterward reported | Separate restore and off-VM backup validation remain open |
+| 0 Lab | Hyper-V/Ubuntu lab built; display name now Watchtide, owner-reported | Earlier checkpoints reportedly deleted October 9; current rollback, restore and off-VM backup need checks |
 | 1 Wazuh | Manager, Indexer and dashboard deployed; trusted local dashboard login verified | Availability, recovery and access reviews continue |
 | 2 Sysmon | Windows endpoint telemetry established | Do not assume every desired event type is collected |
 | 3 Agent | October 7 stale-name outage repaired; authenticated Active state and fresh collection verified | Earlier loss, reboot durability and independent health signals remain open |
 | 4 Event path | Historical trace plus exact new Sysmon/Indexer/normal-loader SQL/report-view recovery trace pass | Fresh Desktop check, new devices and new telemetry types require separate traces |
-| 4b Posture | Historical CIS improvement from 27.1% to 37.0%; file/logging checks, SOC Python security patch and reviewed Steam access restrictions verified | Other Python workloads, dependency/CVE review, fresh posture inventory, disk/boot and account/exposure gates remain open |
+| 4b Posture | Historical 27.1% to 37.0% baseline retained; owner reports later PC/VM CIS 63.2%/66.2%, audit controls and keys-only SSH | Independent posture/access review, other workloads, disk/boot and recovery remain open; audit controls are not blocking |
 | 4c Private access | Device-scoped Tailscale SSH/HTTPS grant and trusted local dashboard access verified | Off-network administration deferred; renewal replacement, revocation and other access/recovery gates remain open |
-| 5 Network detection | Offline reporting and bounded live VM-to-host controls pass; saved-live alert verified through Wazuh dashboard/Indexer/normal-loader SQL | Fresh Power BI check, TCP scan detection, continuous capture, routine telemetry and wider coverage remain open |
+| 5 Network detection | Offline/ICMP/saved-live trace retained; seven TCP controls decoded; owner reports selected Windows firewall-file collection in Wazuh | Firewall inbound/volume/exact trace, TCP engine results, fresh Power BI, continuous capture and wider coverage remain open |
 | 6 Console | Public sanitized snapshot deployed | Private live analyst API/console not deployed |
 | 7 Warehouse | Scheduled ingestion, read-only report views and guarded snapshot reads work; same-instance SQL restore passes | Sustained performance, late-event proof, off-machine/other-instance/Wazuh recovery and actual reporting-account review remain open |
 | 8 Power BI | All six existing pages rendered during the October 5 offline-record check; live-context definitions updated October 7 | Fresh live-record Desktop check, refresh-duration benchmark and one unpublished visual-schema check remain open |

@@ -5,6 +5,17 @@ firewall-logging, bounded software and loader SSH checks, not the entire hardeni
 work was deferred by the owner; no database backup or restore drill was performed
 during this check.
 
+### Later State (Reconciled October 11)
+
+The baseline below is dated. Owner-reported October 10 controls include keys-only
+guest SSH, credential rotation, Defender ASR/network/CFA in audit and CIS results
+of Windows 63.2% / VM 66.2%. Firewall-folder repair and the October 11 firewall-file
+source supersede the earlier visibility gap. These are not newly applied or
+rescanned here. See [current state and evidence boundaries](current-state-reconciliation.md).
+Audit is not blocking; disk/boot, access review, source budgets and independent
+recovery remain open. Earlier checkpoint creation does not prove availability
+after the owner's reported October 9 checkpoint deletion.
+
 ## What This Means
 
 - Private credentials and evidence should not be readable by unrelated local accounts.
@@ -109,6 +120,18 @@ log-output check based on owner-supplied output, not independent inspection of
 the raw records. It does not mean 163 attackers or confirmed attacks, identify
 each packet's origin, or prove collection in Wazuh. Counts are from a bounded
 sample, not an incident metric or a complete network-traffic inventory.
+
+**October 9 regression (Claude, read-only):** blocked-traffic logging stopped at
+the October 6, 2:20 PM Eastern restart. Effective policy now names batch 1's
+per-profile files (`domainfw.log`, `privatefw.log`, `publicfw.log`); none exist,
+and `pfirewall.log` was last written at 2:20:54 PM, seconds before the logged
+shutdown. The log folder has only inherited permissions, with no entry for the
+firewall service `NT SERVICE\mpssvc`, which matches
+[Microsoft's documented cause](https://learn.microsoft.com/en-us/windows/security/operating-system-security/network-security/windows-firewall/configure-logging)
+when log paths are set by policy. The CIS checks still pass because they read
+the setting, not the output. The fix (Full Control for `mpssvc` on the folder,
+then a restart) needs the owner's administrator approval; it is prepared, not
+applied. Until then the October 5 log-output check no longer holds.
 
 The October 6 independent administrator audit subsequently parsed 2,000 valid
 `DROP` records, of which 1,978 were UDP 5353 multicast, consistent with local

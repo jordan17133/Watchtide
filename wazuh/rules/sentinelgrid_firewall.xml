@@ -1,0 +1,62 @@
+<!--
+  Watchtide: Windows Defender Firewall packet-log rules.
+  Manager path: /var/ossec/etc/rules/sentinelgrid_firewall.xml   IDs 100141-100146.
+
+  wazuh-logtest (2026-10-10) showed that Wazuh's stock decoders already read this log:
+  "windows-date-format" takes every dated line and its child "windows-firewall" extracts action,
+  protocol, srcip, dstip, srcport and dstport from DROP lines, which stock rule 4101 ("Firewall
+  drop event", level 5) catches. A custom parent decoder can never win against them, so these
+  rules are children of 4101 instead. ALLOW lines stop at "windows-date-format" with no rule:
+  they stay in the 30-day archive without an alert.
+
+  The stock decoder has no direction field, so RECEIVE/SEND is read from the line. action,
+  protocol and dstport are Wazuh static fields and take their own tags, never <field>.
+  Sibling order matters: the quiet rules (100141, 100146) come before the alerting ones.
+-->
+<group name="windows,windows_firewall,watchtide_firewall,">
+
+  <!-- Multicast and broadcast: 98.9% of the October 6 sample was UDP 5353 multicast. -->
+  <rule id="100141" level="0">
+    <if_sid>4101</if_sid>
+    <regex type="pcre2">^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} DROP \S+ \S+ (?:22[4-9]\.|23\d\.|255\.255\.255\.255 |ff0[0-9a-f]:)</regex>
+    <description>Windows Firewall: multicast or broadcast packet dropped (local discovery, expected)</description>
+  </rule>
+
+  <!-- Unicast name discovery: NetBIOS, SSDP, LLMNR, mDNS ports. -->
+  <rule id="100146" level="0">
+    <if_sid>4101</if_sid>
+    <protocol type="pcre2">^UDP$</protocol>
+    <dstport type="pcre2">^(?:137|138|1900|5353|5355)$</dstport>
+    <description>Windows Firewall: name-discovery packet dropped (expected)</description>
+  </rule>
+
+  <rule id="100142" level="5">
+    <if_sid>4101</if_sid>
+    <protocol type="pcre2">^TCP$</protocol>
+    <regex type="pcre2">\sRECEIVE(?:\s|$)</regex>
+    <description>Windows Firewall blocked an inbound TCP connection attempt to port $(dstport) from $(srcip)</description>
+  </rule>
+
+  <rule id="100143" level="10" frequency="12" timeframe="120">
+    <if_matched_sid>100142</if_matched_sid>
+    <same_srcip />
+    <description>Windows Firewall blocked 12 or more inbound TCP attempts from $(srcip) within 2 minutes: possible port scan</description>
+    <mitre>
+      <id>T1046</id>
+    </mitre>
+    <group>recon,</group>
+  </rule>
+
+  <rule id="100144" level="3">
+    <if_sid>4101</if_sid>
+    <regex type="pcre2">\sSEND(?:\s|$)</regex>
+    <description>Windows Firewall blocked an outbound $(protocol) packet to $(dstip) port $(dstport)</description>
+  </rule>
+
+  <rule id="100145" level="5">
+    <decoded_as>windows-date-format</decoded_as>
+    <match>INFO-EVENTS-LOST</match>
+    <description>Windows Firewall log reports lost events: logging could not keep up</description>
+  </rule>
+
+</group>

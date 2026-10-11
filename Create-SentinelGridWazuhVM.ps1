@@ -1,6 +1,12 @@
+[CmdletBinding()]
+param(
+    [ValidateNotNullOrEmpty()]
+    [ValidateScript({-not [string]::IsNullOrWhiteSpace($_) -and -not [Management.Automation.WildcardPattern]::ContainsWildcardCharacters($_)})]
+    [string]$VMName = 'Watchtide'
+)
 $ErrorActionPreference = "Stop"
 
-$vmName = "SentinelGrid-Wazuh"
+# Retain the original disk location; the VM display name is independent.
 $vmRoot = "C:\Hyper-V\SentinelGrid-Wazuh"
 $vhdPath = Join-Path $vmRoot "SentinelGrid-Wazuh.vhdx"
 $isoPath = "C:\Users\SOC-USER\Downloads\ubuntu-24.04.5-live-server-amd64.iso"

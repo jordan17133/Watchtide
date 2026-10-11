@@ -4,16 +4,20 @@ This runbook builds Watchtide in layers so that every alert can be traced back t
 
 What actually happened during the build, including every failure and fix, is recorded in [BUILD-LOG.md](BUILD-LOG.md).
 
+Current instructions reconciled October 11, 2026. Read
+[STATUS](STATUS.md#current-snapshot) for latest supported state; the original
+installation chapters and dated evidence are not requests to reinstall the lab.
+
 ## Progress
 
 | Stage | Status |
 |---|---|
 | 0. Prepare the lab | Done 2026-09-30 |
-| 1. Wazuh all-in-one stack | Done and hardened 2026-09-30 |
+| 1. Wazuh all-in-one stack | Built September 30; later controls recorded separately, complete hardening/recovery gates remain open |
 | 2. Sysmon | Done 2026-09-30 |
 | 3. Windows Wazuh agent | Installed September 30; October 7 stale-name outage repaired, connected state/socket and dashboard Active verified; loss/reboot durability gates open |
 | 4. First real event path | Historical trace complete; October 7 exact Sysmon/Indexer/normal-loader SQL recovery trace passes ([validation](docs/collection-health-validation.md)); fresh Desktop check separate |
-| 4b. Review posture findings | Done 2026-10-01 (437 of 447 findings resolved, 10 open; CIS 27.1% to 37.0%) |
+| 4b. Review posture findings | October 1 remediation baseline retained; later owner reports PC CIS 63.2%, VM 66.2%. Audit-mode restrictions, disk/boot and recovery still have separate gates ([current record](docs/current-state-reconciliation.md)) |
 | 7. SQL Server warehouse (moved ahead of Stage 6) | Done 2026-09-30; case log added 2026-10-01 (`warehouse/cases.py`) |
 | 8. Power BI report | All six existing pages rendered after October 5 refresh; network fields/metrics/filter verified; definitions kept in Git, imported data private; sustained performance open |
 | Detection validation | In progress: controlled SSH password-guessing test detected and written up |
@@ -24,7 +28,7 @@ What actually happened during the build, including every failure and fix, is rec
 | Local SQL recovery | October 7 copy-only backup/disposable restore passed; protected evidence, hash/history and cleanup rechecked; off-machine and Wazuh recovery open ([validation](docs/sql-recovery-validation.md)) |
 
 For the active order, follow [STATUS.md](STATUS.md#pickup-and-execution-order)
-and the [roadmap handoff sequence](ROADMAP.md#october-7-handoff-fits-the-existing-plan).
+and the [roadmap handoff sequence](ROADMAP.md#october-11-reconciliation-fits-the-existing-plan).
 Explain what, why, expected result and verification before each operation. The
 new PowerShell tuning draft is [reviewed but held](docs/powershell-policy-probe-tuning-review.md);
 do not load its filename-only exception into the live manager.
@@ -32,8 +36,10 @@ do not load its filename-only exception into the live manager.
 The [dependable SOC completion checklist](docs/soc-completion-plan.md) reconciles
 the latest Claude handoff with these stages. A read-only manual collection check
 now separates endpoint alert freshness, loader success, retained queue/Sysmon
-warnings and named-source alert observations. Local notice planning is tested
-but no automatic watchdog/delivery is deployed. Run it from the private source:
+warnings and named-source alert observations. The
+[automatic watchdog](docs/collection-watchdog.md) has run since October 8;
+its notification-policy/read-scope and reboot review remain open. For a manual
+read-only check, run from the private source:
 
 ```powershell
 .\.venv\Scripts\python.exe -B -m warehouse.check_collection_health --agent-id 001
@@ -50,11 +56,19 @@ Preview the notice plan without sending a popup or saving state:
 .\.venv\Scripts\python.exe -B -m warehouse.health_notifications --agent-id 001
 ```
 
-The same exit codes apply. One owner-approved generic popup API test passed,
-but visual delivery remains unconfirmed; do not make popup tests part of every
-check. See [source-loss evidence, notice behavior and finish gates](docs/collection-loss-and-notifications.md).
-Actual heartbeats, cause, a locked private-state runner and approved scheduling
-remain separate work. A quiet source is not automatically disconnected.
+The same exit codes apply. The owner confirmed the earlier generic test was
+visible; do not repeat popup tests on every check. The planner's preview is not
+the deployed runner's four-hour reminder policy. To preview that runner without
+notifying or writing state, use:
+
+```powershell
+.\.venv\Scripts\python.exe -B -m warehouse.collection_watchdog --dry-run
+```
+
+See [source-loss evidence](docs/collection-loss-and-notifications.md) and
+[runner behavior and limits](docs/collection-watchdog.md). Actual heartbeats,
+loss cause and reboot/logon proof remain separate. A quiet source is not
+automatically disconnected; task exit 0 alone does not prove every check passed.
 
 Independent Stage 5 preparation now includes a [TCP rule/control lesson](docs/tcp-rule-lesson.md):
 seven saved synthetic examples, independent packet decoding and a separate
@@ -65,13 +79,13 @@ scan/capture exercise are separate gates. No new browsing visibility is inferred
 
 | Item | Value |
 |---|---|
-| Wazuh VM | Hyper-V `SentinelGrid-Wazuh`, Ubuntu Server 24.04.5, 4 vCPU, 8 GB fixed RAM, 150 GB disk, Default Switch |
+| Wazuh VM | Hyper-V display name `Watchtide` (owner renamed October 10); Ubuntu Server 24.04.5, 4 vCPU, 8 GB fixed RAM, 150 GB disk, Default Switch. Existing disk paths retain the original name |
 | Wazuh version | 4.14.8 all-in-one |
 | Address | Legacy Hyper-V hostname retained for administration; the loader uses its verified private Tailscale destination from protected settings, avoiding changing NAT addresses. Real addresses stay private. |
 | Dashboard | Approved private Tailscale certificate hostname; trusted Windows IPv4 HTTPS and local login verified October 5. Legacy Hyper-V hostname is not the new browser certificate identity. |
-| SSH | `ssh <ubuntu-user>@soc-vm.mshome.net` |
+| SSH | `ssh <ubuntu-user>@soc-vm.mshome.net`; owner reports keys-only login October 10. Use the verified administration key; sudo still prompts locally. The restricted loader key cannot administer the guest |
 | Monitored endpoint | `jordan-pc` (Windows 11, Sysmon64 + Wazuh agent) |
-| Rollback points | Historical checkpoint `sentinelgrid-pre-attack-2026-10-01`; new creation and five active guest services afterward reported October 4 after backup-helper repair under pictured Production-Only settings. New entry metadata and separate restore validation pending ([follow-up](docs/private-access-validation.md#production-checkpoint-recovery-follow-up)); do not apply an older point merely to test availability. |
+| Rollback points | Owner reports deleting all five checkpoints October 9; current merge/rollback availability not independently checked. Earlier creation is historical proof only. Establish an appropriate current rollback/backup before risky work; separate restore validation remains open ([record](docs/current-state-reconciliation.md)) |
 | Pre-VPN firewall exceptions | 22, 443, 1514-1515 from private ranges (10/8, 172.16/12, 192.168/16); Tailscale path checked separately below |
 | Tailscale path, rechecked 2026-10-05 | Local IPv4 TCP 22/443 reachable and 9200/55000 unreachable; earlier direct 1514/1515 probes failed. Trusted local HTTPS/login verified, renewal setup reported successful. Phone remains denied; IPv6 dashboard has no listener. Approved off-network and remaining denied-path checks pending; see [validation report](docs/private-access-validation.md). |
 
@@ -191,7 +205,7 @@ sudo ufw enable
 9. Verify from Windows that 22, 443, 1514 and 1515 are reachable and 9200 and 55000 are not, then create a VM checkpoint named `wazuh-clean`:
 
 ```powershell
-Checkpoint-VM -Name SentinelGrid-Wazuh -SnapshotName "wazuh-clean"
+Checkpoint-VM -Name 'Watchtide' -SnapshotName "wazuh-clean"
 ```
 
 ### If the install fails partway
@@ -646,8 +660,8 @@ Reached on 2026-09-30.
 
 - **Daily analyst routine:** check health/freshness, investigate one question, choose supporting evidence and record a verdict or uncertainty. Follow the [practical routine](docs/analyst-toolkit-runbook.md#a-daily-routine-you-can-explain); Nmap and web-lab testing are used for specific questions, not automatically every day.
 - **Startup:** Sysmon and the Wazuh agent start with Windows. Hyper-V saves the VM when Windows shuts down and resumes it at boot if it was running. The dashboard can take up to 3 minutes after a cold VM boot.
-- **If the dashboard will not load after a Windows restart:** the Default Switch may have moved to a new subnet (observed: 172.26.176.0/20 to 192.168.160.0/20) while the resumed VM kept its old IP. Restart the VM from an elevated PowerShell with `Restart-VM -Name SentinelGrid-Wazuh -Force` and wait 3 minutes.
-- **Turning the lab off:** `Stop-VM -Name SentinelGrid-Wazuh` shuts it down cleanly, and it stays off across Windows restarts until `Start-VM -Name SentinelGrid-Wazuh`.
+- **If the dashboard will not load after a Windows restart:** the Default Switch can change subnets. First check guest address, name resolution and services through the trusted Hyper-V console. Do not automatically force-restart the VM to diagnose a browser failure; plan any restart and verify collection afterward.
+- **Turning the lab off:** after reviewing the interruption, `Stop-VM -Name 'Watchtide'` requests guest shutdown; verify completion. To resume, use `Start-VM -Name 'Watchtide'` and verify guest services and fresh ingestion. Current helper defaults use that display name; `-VMName` selects another lab explicitly.
 - **SQL Server starts about 2-3 minutes after boot** (Automatic, Delayed Start). Loader runs in that window fail and are logged in `sg.load_runs`; the next run catches up on everything queued.
 - **Resource cost:** the VM reserves 8 GB of RAM while running. Sysmon and the agent are negligible.
 - **Do not** run `do-release-upgrade` on the VM. Stay on Ubuntu 24.04 until Wazuh supports a newer release.

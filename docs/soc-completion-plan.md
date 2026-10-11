@@ -1,6 +1,6 @@
 # Dependable SOC Completion Plan
 
-October 7, 2026. Claude's latest handoff joins the existing runbook, not a new
+Reconciled October 11, 2026. Claude's latest handoff joins the existing runbook, not a new
 project. The immediate collection outage is now repaired and traced. This plan
 sets ambitious, testable finish lines without promising complete privacy or
 visibility into encrypted content. Ongoing patching and review never disappear.
@@ -28,12 +28,15 @@ See the [full interaction/triage map](triage-system-audit.md).
 - The earlier filename-only PowerShell exception remains
   [held](powershell-policy-probe-tuning-review.md). A familiar filename or a
   historical benign cluster cannot approve every future event.
-- "Three verified drafts" needs exact files, installed-engine results and live
-  scope review. The supplied handoff does not identify all three; none was
-  deployed from that sentence.
-- The mentioned Defender event needs its exact identity, time, action and
-  supporting evidence before a controlled-test case or incident verdict. No
-  case was invented or closed from the summary.
+- The later private handoff identifies the registry-ignore, specific SYSTEM
+  PowerShell and recovery-inhibition drafts. They are separate from the earlier
+  unsafe filename-only proposal. Owner reports 100102-100106 deployed/live;
+  stored replay does not close installed-engine negative testing. Registry-ignore
+  and recovery-inhibition drafts are not credited as deployed.
+- The Defender drafting event now has a named SG-011 report, with follow-on
+  lockout/query reports SG-012 through SG-014 in the
+  [evidence index](portfolio-evidence.md#investigations). These are scoped verdicts,
+  not inherited benign classifications for future alerts.
 - Use evidence states instead of the handoff's blanket "Strong" grade. The
   latest audit has 147 observed rule types, 40 historical reviews and 107
   without one; these are not 147 validated attack detections.
@@ -49,9 +52,9 @@ framework assessment.
 |---|---|---|
 | Govern | What are the rules and who approves changes? | Private/public separation, handoff and working agreement exist; record retention, accepted blind spots and notification scope |
 | Identify | What are we protecting and what can we see? | PC and iPhone are the chosen scope, with Ubuntu inside the PC; device/address/source coverage matrix remains incomplete |
-| Protect | Are access and stored data protected? | Reviewed private access/file/software controls; disk encryption, host boot protection, account/MFA and exposure gates remain open |
+| Protect | Are access and stored data protected? | Reviewed private access/file/software controls; later owner-reported keys-only SSH, credential custody and audit-mode restrictions; independent access review, disk/boot and recovery remain open |
 | Detect | Can we observe and validate suspicious behavior? | Windows flow repaired, historical SSH test and bounded Suricata controls pass; source-loss health and additional rule/control coverage remain open |
-| Respond | Can we make and act on a supported verdict? | Case workflow exists; exact alert memberships, scoped verdicts, tested notifications and containment procedure need work |
+| Respond | Can we make and act on a supported verdict? | Case workflow and local notices exist; notification-policy/read-scope, exact alert memberships, event-specific verdicts and containment tests remain open |
 | Recover | Can we restore what matters? | Same-PC SQL restore verified; off-PC copy and Wazuh/other-instance restore remain open |
 
 ## Stage Checklist
@@ -67,11 +70,11 @@ offline work can proceed while a separately authorized deployment is waiting.
 | Order | Existing stages | Work and finish line | State |
 |---|---|---|---|
 | 1 | 2-4, 7 | Fix the current delivery failure; verify guest identity, agent connection and exact new source/Indexer/normal-loader SQL event | Passed for this outage; reboot durability and missing-event review remain |
-| 2 | 2-4, 7-8 / maturity I | Monitor source/loader/report health; test loss, stale/unknown states, recovery and notifications | Freshness/queue/Sysmon/source reads and notice planner tested; one test API call accepted. Visible delivery, heartbeat/cause, locked private-state runner and automatic delivery remain open |
+| 2 | 2-4, 7-8 / maturity I | Review deployed source/loader health and local notices; test loss, stale/unknown, recovery and reboot | [Watchdog deployed](collection-watchdog.md); October 11 task metadata checked. Notification-policy/read-scope, heartbeat/loss cause and actual logon/reboot remain open |
 | 3 | 4, 7-8 | Exact case-alert links, event-specific dispositions and truthful historical-review/ATT&CK labels; correct level-16 compatibility | Public labels and level-16 compatibility corrected/tested; exact memberships, event dispositions and fresh Power BI gates remain open |
-| 4 | Detection maintenance, 5 | Small maintained-rule batch with known data prerequisites, engine tests, positive/negative controls, rollback and measured noise | ET Open field-reviewed only; tuning draft held |
+| 4 | Detection maintenance, 5 | Small maintained-rule batch with prerequisites, engine matches/nonmatches, rollback and measured noise | ET Open field-reviewed only; owner reports tuning 100102-100106 live. Filename-only expansion remains held; additional engine controls remain open |
 | 5 | 5, lessons L1-L4 | Offline TCP rule lesson, then owned-VM Nmap/capture test on an observed path; trace any alert and render existing Power BI | ICMP/port baseline passes; [seven TCP fixtures decoded](tcp-rule-lesson.md), installed-engine results and fresh saved-live Desktop check open |
-| 6 | 4b-4c | Account/MFA, least-privilege exposure, protected credential custody, disk/boot protection, patches and measured capacity | Partial; never activate encryption/firmware changes without recovery preparation |
+| 6 | 4b-4c | Account/MFA, least-privilege exposure, protected credential custody, disk/boot, patches and measured capacity | Owner-reported PC/VM CIS 63.2%/66.2%, keys-only SSH and audit controls; independent review remains. No encryption/firmware change without recovery preparation |
 | 7 | 0-1, 7 / maturity A | Protected off-PC backup, separate Wazuh/SQL restore and an explained recovery procedure | Local SQL slice passes; separate recovery still deferred |
 | 8 | 5 / maturity B-F | Device/path matrix, supported routine DNS/flow feed, drop/resource/retention budgets and measured sustained coverage | Planned; no phone/browsing or whole-home visibility claim |
 
@@ -83,17 +86,21 @@ tests catch an eleven-hour stale endpoint even while the loader is succeeding.
 The first manual query passed after repair. The later queue-aware check sees
 recent records but flags five retained warnings for review, even after a
 normal-queue message. See the [review and remaining limits](repository-review.md).
-This is useful groundwork, not a working automatic watchdog.
+The manual checker remains read-only; the separately deployed
+[automatic watchdog](collection-watchdog.md) uses it. Do not reinstall the runner
+merely because an October 7 report says it was not deployed then.
 
 The [later source-loss/notification slice](collection-loss-and-notifications.md)
 adds actual bounded Sysmon/source reads and tested generic notice planning.
 Forty retained errors explicitly reported registry drops; five queue warnings
 are historical, and new alerts still arrive. A single approved test API call
-was accepted, not confirmed visible. Planner previews do not send or save.
-Cause, authenticated heartbeat and persistent delivery remain separate gates.
+was initially accepted but not confirmed visible; the owner confirmed visibility
+October 8. Planner previews still do not send or save. Loss cause, authenticated
+heartbeat, notification policy/read scope and reboot durability remain separate.
 
-The owner selected **local Windows notifications first**. No external service
-or notification task is configured. Build and test the following bounded phase:
+The owner selected **local Windows notifications first**. The local task is
+deployed; no external notification service is connected. Review the existing
+implementation and finish these gates:
 
 - Read real agent heartbeat/status and source-loss signals alongside per-agent
   alert observations; silence alone is not a disconnection verdict.
@@ -103,12 +110,14 @@ or notification task is configured. Build and test the following bounded phase:
   destinations or credentials; distinguish health failures from security incidents.
 - Use a state transition, cooldown and one recovery message; test duplicates,
   delivery failure, reboot/logon and cleanup. Planner and fake-transport tests
-  pass; locked/atomic private state, a bounded runner and actual logon/reboot
-  tests remain to implement. Notifications must not flood.
-- Add reviewed high-priority detection notifications only after health delivery
-  works. Rule level is priority, not a confirmed incident or permission to block.
-- Verify execution identity and granted read scope before approving a schedule;
-  do not give a notification helper unrestricted SSH or administrative rights.
+  pass; locked/atomic private state and the bounded runner exist. Actual
+  logon/reboot tests and permission review remain open. Notifications must not flood.
+- Review the deployed security tier: a past rule review/case link must not act
+  as a blanket exclusion for unrelated future high-priority events. Level is
+  priority, not a confirmed incident or permission to block.
+- Verify the existing task's execution identity and granted read scope; review
+  any schedule change separately. No unrestricted SSH or administrative rights
+  for a notification helper.
 
 A monitor on this PC cannot notify while this PC is off. Without an independently
 running observer, that failure mode stays an accepted and documented blind spot.

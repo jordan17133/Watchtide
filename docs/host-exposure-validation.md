@@ -5,6 +5,12 @@ independently reviewed Windows firewall visibility and listening services. It
 did not change firewall rules, audit policy, Wazuh collection, guest SSH policy
 or Tailscale permissions. Detailed host metadata and raw logs remain private.
 
+**Later result, reconciled October 11:** owner-reported firewall-folder repair and
+firewall-file deployment now provide selected Windows packet records in Wazuh.
+The collection-gap section below is the October 6 baseline, not current state.
+Inbound/volume/reporting and unsupported-record limits remain; see
+[current result and boundaries](current-state-reconciliation.md).
+
 ## In Plain English
 
 - The loader uses a private connection to fetch alerts. Its local entrance is
@@ -78,7 +84,7 @@ Two initial elevated attempts stopped at an unsupported audit-policy query.
 The corrected read-only category query succeeded; no policy permissions were
 weakened and no settings were changed by any attempt.
 
-## SIEM Collection Gap: Confirmed, Not Fixed
+## October 6 SIEM Collection Gap (Historical)
 
 The actual local and shared Windows agent configurations have no `pfirewall`
 file source. The Security-channel query explicitly excludes events 5152 and

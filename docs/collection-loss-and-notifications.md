@@ -1,9 +1,12 @@
 # Collection Loss And Local Notifications
 
-October 7, 2026 Eastern; SQL observations extend into October 8 UTC.
+October 7, 2026 Eastern; SQL observations extend into October 8 UTC. Deployment
+status reconciled October 11; the original SQL observations were not rerun.
 This follows the [collection repair](collection-health-validation.md) and
 [repository review](repository-review.md). It advances the existing health
-work, not the scope of network capture or detection-rule deployment.
+work, not the scope of network capture or detection-rule deployment. The
+[watchdog deployed October 8](collection-watchdog.md) supersedes the preparation
+phase's "not deployed" and initially unconfirmed visible-delivery gates.
 
 ## In Plain English
 
@@ -21,7 +24,7 @@ Windows activity
 
 Manual SQL health check: freshness + retained loss/error signals + source counts
 Prepared notice planner: generic warning, cooldown, retry and recovery logic
-Automatic monitor: not deployed
+Automatic monitor: deployed October 8; permission/policy and reboot review open
 ```
 
 Suricata adds evidence only on its tested capture path. Neither this checker
@@ -94,9 +97,10 @@ No task, registry registration, new permissions or permanent tray process.
 The owner approved exactly one real Test invocation after safety tests. It
 returned `ONE_TIME_NOTIFICATION_API_ACCEPTED` with successful temporary-icon
 cleanup. Windows API acceptance does **not** prove the popup was displayed or
-seen; visual delivery remains unconfirmed. Games/notification settings may hide
-it. This was not a health alert, an incident or authorization for recurring
-delivery. No second popup was attempted.
+seen. Visibility was unconfirmed during this October 7 step, then confirmed by
+the owner October 8. Games/notification settings can still hide later notices.
+This test was not a health alert, incident or approval of recurring delivery;
+the later watchdog had separate approval. No second test was attempted here.
 
 The real SQL-backed notification preview planned **attention**, with
 `state_saved`, `delivery_attempted` and `schedule_created` all false. Private
@@ -123,6 +127,17 @@ Inspect the named checks before deciding whether there is an outage. An error
 message count is neither an attack count nor a recovered-event count. These
 commands do not refresh Power BI, capture traffic or change rules.
 
+Preview the separately deployed runner (four-hour health reminders) without
+delivery or state/log writes:
+
+```powershell
+.\.venv\Scripts\python.exe -B -m warehouse.collection_watchdog --dry-run
+```
+
+Its health and security tiers have separate outcomes; exit 0 alone is not proof
+that every read or notification succeeded. See the
+[deployed behavior and remaining review](collection-watchdog.md).
+
 ## Verification And Finish Lines
 
 The collection checker passes 42 synthetic tests, the planner 25, and the
@@ -141,14 +156,20 @@ no errors. It is not a line-by-line security audit or fresh application renderin
 - [x] Query named-source alert observations without labeling silence an outage.
 - [x] Prepare/test generic notice planning and temporary transport cleanup.
 - [x] Run one approved test API invocation and a non-delivering SQL preview.
-- [ ] Confirm visible Windows delivery; no repeated popup without scoped approval.
+- [x] Confirm visible Windows delivery (owner, October 8).
 - [ ] Read actual agent status/heartbeat and installed buffer/source settings
   through a reviewed read identity; establish cause and representative health.
-- [ ] Implement locked, atomic private state storage and a bounded runner;
-  test concurrency, delivery failures, total execution budget and logon/reboot.
-- [ ] Review execution identity, read permissions, delivery and scheduling scope
-  before deploying an automatic watchdog. This PC cannot warn while powered off.
+- [x] Implement locked, atomic private state storage and a bounded runner;
+  test concurrency, delivery failures and the execution budget (October 8).
+- [ ] Logon/reboot test of the scheduled runner.
+- [ ] Review execution identity, read permissions, delivery and scheduling scope.
+  The owner had the watchdog deployed before this review (October 8); the review
+  is still owed. This PC cannot warn while powered off.
 - [ ] Recheck repaired name resolution/reconnection after a planned restart.
+
+**October 8 update:** the automatic watchdog is deployed and delivered five
+popups on its first day. Results, fixes and open gates:
+[collection watchdog](collection-watchdog.md).
 
 Independent offline TCP preparation remains possible. Expanded live detection
 and routine DNS/flow capture still require measured source/drop/resource and

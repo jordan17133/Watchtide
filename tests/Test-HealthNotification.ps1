@@ -7,7 +7,7 @@ if ($errors.Count) {throw 'Notification helper did not parse.'}
 $script:checks=0
 function Assert-Check {param([bool]$Condition) if(-not $Condition){throw 'Notification safety check failed.'};$script:checks++}
 function Assert-Rejected {param([scriptblock]$Action) $rejected=$false;try{& $Action | Out-Null}catch{$rejected=$true};Assert-Check $rejected}
-foreach ($kind in @('Test','Attention','Unknown','Recovery')) {
+foreach ($kind in @('Test','Attention','Unknown','Recovery','Security')) {
     $text=Get-WatchtideNotificationText $kind
     Assert-Check ($text.title.StartsWith('Watchtide') -and $text.title.Length -le 63)
     Assert-Check ($text.body.Length -le 255)
@@ -15,6 +15,8 @@ foreach ($kind in @('Test','Attention','Unknown','Recovery')) {
 }
 Assert-Check ((Get-WatchtideNotificationText Test).body -match 'No security incident')
 Assert-Check ((Get-WatchtideNotificationText Recovery).body -match 'not proved recovered')
+Assert-Check ((Get-WatchtideNotificationText Security).body -match 'not a confirmed security incident')
+Assert-Check ((Get-WatchtideNotificationText Security).body -notmatch 'rule|level|\d')
 Assert-Rejected {Get-WatchtideNotificationText 'private-message'}
 $script:waits=0;$script:icon=$null;$script:failShow=$false;$script:failWait=$false
 function New-WatchtideNotificationIcon {
@@ -33,6 +35,9 @@ Assert-Check ($script:icon.calls -eq 1 -and $script:waits -eq 1)
 Assert-Check ($script:icon.disposed -and -not $script:icon.Visible)
 Assert-Check ($result.api_accepted -and -not $result.display_confirmed -and -not $result.user_confirmed)
 Assert-Check (-not $result.schedule_created -and -not $result.registry_registration -and -not $result.permissions_changed)
+$result=Show-WatchtideLocalNotification Security
+Assert-Check ($result.kind -eq 'Security' -and $script:icon.BalloonTipTitle -eq 'Watchtide: security alert to review')
+Assert-Check ($script:icon.disposed -and -not $script:icon.Visible)
 $script:failShow=$true
 Assert-Rejected {Show-WatchtideLocalNotification Attention}
 Assert-Check ($script:icon.disposed -and -not $script:icon.Visible)

@@ -8,7 +8,9 @@ Dates and scope matter: historical research does not adjudicate later events.
 
 | Area | Evidence and boundary |
 |---|---|
+| Current state and naming | [October 11 reconciliation](current-state-reconciliation.md): current instructions separated from history; VM targets updated without moving existing disk/report files |
 | Endpoint collection | [Original trace](event-trace.md), [October 7 recovery and health checks](collection-health-validation.md); outage recovery is not proof that all historical drops were recovered |
+| Monitoring the monitoring | [Automatic watchdog and its first day](collection-watchdog.md): five popups traced to causes, SQL paging and full-table scans fixed; reboot test and identity review open |
 | Analyst understanding | [Plain-English L0 trace](L0-event-to-report-trace.md), [toolkit lessons](analyst-toolkit-runbook.md), [interaction/triage audit](triage-system-audit.md) |
 | Network detection | [Offline validation](suricata-offline-validation.md), [controlled reporting handoff](suricata-wazuh-handoff.md), [bounded live trial](suricata-live-trial.md), [saved-live reporting](suricata-live-reporting-handoff.md); no continuous or phone/browsing coverage claim |
 | Power BI | [Six-page report verification](network-reporting-validation.md), [refresh deadlock fix](report-refresh-reliability.md); imported caches private, fresh October 7 saved-live rendering deferred |
@@ -47,6 +49,10 @@ not automatic benign verdicts on all future alerts from those rules.
 | [Scheduled-task creation](../triage/2026-10-02-rule-60228-scheduled-task-creation.md) | Reviewed update and authorized migration |
 | [Failed Edge logons](../triage/2026-10-02-rule-60122-edge-password-prompt.md) | Owner-confirmed mistyped Windows password |
 | [SSH password-guessing validation](../triage/2026-10-01-ssh-failed-logins-wazuh-server.md) | Controlled true-positive exercise; threshold gap documented |
+| [Defender detection of drafting files](../triage/2026-10-07-rule-62123-defender-controlled-drafting.md) | Controlled benign true positive; Defender not bypassed (SG-011) |
+| [Account lockout from Edge's prompt](../triage/2026-10-07-rule-60115-edge-password-lockout.md) | Held for owner confirmation because it reached lockout; confirmed (SG-012) |
+| [Keyword rule matched the analyst's search](../triage/2026-10-09-rule-91822-analyst-query-keyword-match.md) | Watchdog popup traced to the analyst's own query (SG-013) |
+| [Account lockout from a WebView2 prompt](../triage/2026-10-10-rule-60115-webview2-password-lockout.md) | Same pattern from a different host process; held and owner-confirmed (SG-014) |
 
 ## Screenshot Gallery
 

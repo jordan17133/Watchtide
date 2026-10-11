@@ -10,10 +10,10 @@ hardening, coverage or recovery gate.
 - [x] Lab: Hyper-V VM, Ubuntu Server 24.04, Wazuh 4.14 all-in-one; reviewed firewall, credential, local-backup and checkpoint controls; remaining hardening gates below
 - [x] Endpoint telemetry: Sysmon, Windows Security and System logs, Microsoft Defender, PowerShell script-block logging, file integrity monitoring with who-did-it attribution
 - [x] One event traced through every layer ([docs/event-trace.md](docs/event-trace.md))
-- [x] Posture: 437 of 447 vulnerability findings resolved (10 open, zero Critical); CIS Benchmark 27.1% to 37.0% ([docs/cis-baseline.md](docs/cis-baseline.md))
+- [x] Historical posture baseline: 437 of 447 findings resolved; CIS 27.1% to 37.0% ([baseline](docs/cis-baseline.md)); later owner-reported scores are dated separately in [current status](STATUS.md#current-snapshot), not a new vulnerability-resolution count
 - [x] Detection tuning with tested custom rules (100100, 100101) and FIM severity rules (100110-100113)
 - [x] SQL Server warehouse with a scheduled loader (every 15 minutes, 99% success) and data lifecycle rules
-- [x] Case log with history; nine investigations closed, one open ([triage/](triage/))
+- [x] Case log with history and named investigation reports ([triage/](triage/)); current totals require a fresh warehouse read, not the older snapshot
 - [x] Historical rule research attached to the documented baseline's 38 fired MITRE ATT&CK techniques; not event-by-event triage or validated coverage of every matching rule
 - [x] First controlled attack test: SSH password guessing, detected end to end
 - [x] Least-privilege reporting role, tested
@@ -27,26 +27,28 @@ hardening, coverage or recovery gate.
 
 ## Current Execution Order
 
-### October 7 Handoff Fits The Existing Plan
+### October 11 Reconciliation Fits The Existing Plan
 
-The Claude handoff is documentation, Stage 4/7/8 learning and existing detection
-maintenance. It does not restart the build or replace the selected TCP/Nmap track.
-The roadmap is an execution order, not a newly scheduled automation.
+Read [STATUS's current snapshot](STATUS.md#current-snapshot) for supported state
+and [reconciliation limits](docs/current-state-reconciliation.md) for reported
+versus independently checked results. The watchdog and firewall collection are
+deployed; the remaining work is review and validation, not installing them again.
+The roadmap is an execution order, not permission to change a running system.
 
 | Order | Bounded work | Existing stage | Completion gate |
 |---|---|---|---|
-| 0 | Restore Windows collection and review loss reports | 2, 3, 4 / reliability | Current outage repair and exact source/Indexer/normal-loader SQL trace pass; reboot durability and historical queue-loss review remain; [repair evidence](docs/collection-health-validation.md) |
-| 0a | Monitor the monitoring | 2-4, 7-8 / maturity I | Freshness/queue/Sysmon/source reads and notice planner tested; one approved generic test API call accepted. Visible delivery, actual heartbeat/loss cause, locked private-state runner and approved scheduling remain open; [results](docs/collection-loss-and-notifications.md) |
+| 0 | Reconcile current instructions and VM targets | All stages / maintenance | One current pickup map, dated historical results, explicit VM-name parameters, focused tests and sanitized publication; [record](docs/current-state-reconciliation.md) |
+| 0a | Review the deployed monitoring | 2-4, 7-8 / maturity I | Watchdog task independently checked; notification-policy/read-scope, actual heartbeat/loss cause and logon/reboot remain open. Reported guard control does not close route resilience; [watchdog](docs/collection-watchdog.md) |
 | 1 | Reconcile drafts and status; add the [L0 explanation](docs/L0-event-to-report-trace.md) | 4, 7, 8 | Current evidence and limits agree; owner explanation not auto-credited |
-| 2 | Review the proposed [PowerShell tune](docs/powershell-policy-probe-tuning-review.md) | Detection maintenance / 4b | Writer/path evidence, installed-engine matches/nonmatches, protected deployment and measured future results; unsafe filename-only draft stays undeployed |
+| 2 | Review deployed tuning and remaining candidate controls | Detection maintenance / 4b | Owner reports 100102-100106 deployed/live; stored replay is not installed-engine negative testing. Earlier filename-only [draft stays held](docs/powershell-policy-probe-tuning-review.md) |
 | 2a | [Triage integrity and interaction review](docs/triage-system-audit.md) | 4 / 7 / 8 | Public historical-review/inferred-count labels and level-16 compatibility corrected/tested; exact case/evidence memberships, dispositions and fresh Power BI gates remain open; no automatic benign inheritance |
-| 3 | Harmless offline TCP fixtures and a rule/control lesson | 5, L1/L2 | [Seven fixtures/candidate prepared and decoded](docs/tcp-rule-lesson.md); actual installed-engine syntax/replay open; distinguish SYN burst from proven malicious scanning |
+| 3 | Complete offline TCP engine validation | 5, L1/L2 | [Seven fixtures/candidate prepared and decoded](docs/tcp-rule-lesson.md); bounded keys-authenticated installed-engine syntax/replay open; distinguish SYN burst from malicious intent |
 | 4 | One bounded Nmap exercise against the owned VM | 5, L2/L3 | Sensor sees the chosen path; controlled positive/negative activity, drops/resources, automatic stop and health checks |
 | 5 | Trace any generated test alert and check Power BI when available | 5, 7, 8, L4 | Exact identity and timestamps agree; actual fresh report rendering, not just definitions |
 | 6 | Routine network telemetry and wider coverage | 5, maturity B/C | Supported feed, device coverage matrix, retention/resource budgets and measured sustained health |
 
-The tuning deployment and deferred Desktop check need their own execution window;
-they need not block independent offline TCP preparation. Recovery receives credit
+Any new tuning change and deferred Desktop check need their own execution window;
+they need not block separately bounded offline TCP validation. Recovery receives credit
 only for its tested local SQL slice. Off-LAN access, phone administration and
 whole-home VPN routing stay deferred; later Burp/sqlmap/Metasploit labs stay
 separate. Every operation includes a short purpose and expected/actual result.
@@ -70,7 +72,8 @@ removed after authenticated guest-identity checks and protected rollback copies.
 Only WazuhSvc restarted; exact benign Sysmon/Indexer/SQL payloads and reporting
 IDs now match through the normal scheduled loader. Windows collection remains
 active in the later check. Historical Sysmon drops and restart durability stay
-open; the manual SQL health checker is not a deployed watchdog. Resume independent
+open; the manual SQL health checker is not a deployed watchdog (October 8: the
+[automatic watchdog](docs/collection-watchdog.md) now runs on top of it). Resume independent
 offline TCP preparation, then review source health before live load expansion.
 No firewall/Tailscale permissions were widened.
 
@@ -88,20 +91,22 @@ columns to read Sysmon errors successfully within the bounded query limit.
 It flags 40 historical error records alongside five queue warnings, while
 new endpoint alerts continue. Six named-channel observations are not complete
 source health. Generic notice planning passes cooldown, failure/recovery and
-clock tests; the owner's one test API call was accepted, with visibility still
-unconfirmed. No monitor task or state-writing/delivery runner is deployed.
-See [actual results, commands and open gates](docs/collection-loss-and-notifications.md).
+clock tests. The October 7 preparation did not deploy a monitor; the later
+owner-confirmed delivery and October 8 deployed runner supersede that gate.
+Review its current policy/read scope and reboot behavior, not a second installation.
+See [deployment results and open gates](docs/collection-watchdog.md).
 
 ### Latest Handoff: Dependable Operations
 
 Claude's latest wrap-up is reconciled in the [completion checklist](docs/soc-completion-plan.md).
 The repair commit is preserved and current-event proof is checked separately.
-Collection-health warnings and the owner's selected local Windows notification
-channel join existing reliability work; exact case evidence and rule controls
-remain ahead of unreviewed severity suppression. The unspecified three drafts
-and Defender case are not approved deployments/verdicts. Account/disk/boot,
-off-PC recovery and measured wider coverage retain their original gates.
-No new scheduler, notification service or always-on capture is created by this plan.
+Local watchdog and firewall-source deployments join existing reliability work;
+their outstanding reviews are explicit. Named SG-011 through SG-014 reports are
+in the [evidence index](docs/portfolio-evidence.md#investigations), not automatic
+verdicts on later events. Undeployed recovery-inhibition drafts still need engine
+controls. Disk/boot, off-PC recovery and measured wider coverage retain their
+gates. No new schedule, notification policy or always-on capture is authorized
+by this documentation plan.
 
 ### Major Attack Lessons Join Existing Gates
 

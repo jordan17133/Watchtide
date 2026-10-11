@@ -35,4 +35,64 @@
     <description>Tuned 92058: hourly PcaSvc background merge of the compatibility database (benign Windows maintenance)</description>
   </rule>
 
+  <!-- Windows PowerShell running as SYSTEM writes its execution-policy test script
+       to C:\Windows\SystemTemp. Writer is TrustedInstaller-only; SystemTemp's
+       permissions are not readable from an unelevated session. Investigated
+       2026-10-07: 272 events in 7 days, all SYSTEM, 268 from the 32-bit build. -->
+  <rule id="100102" level="3">
+    <if_sid>92205</if_sid>
+    <field name="win.eventdata.image" type="pcre2">(?i)^C:\\\\Windows\\\\(System32|SysWOW64)\\\\WindowsPowerShell\\\\v1\.0\\\\powershell\.exe$</field>
+    <field name="win.eventdata.targetFilename" type="pcre2">(?i)^C:\\\\Windows\\\\SystemTemp\\\\__PSScriptPolicyTest_[a-z0-9]{8}\.[a-z0-9]{3}\.ps1$</field>
+    <field name="win.eventdata.user" type="pcre2">(?i)^NT AUTHORITY\\\\SYSTEM$</field>
+    <description>Tuned 92205: Windows PowerShell execution-policy test file in SystemTemp as SYSTEM (benign PowerShell startup)</description>
+  </rule>
+
+  <!-- Tailscale's service re-adds its own two inbound firewall rules via netsh at every start.
+       Investigated 2026-10-09: 23 of 23 stored 92043 alerts. Kept at level 3: marks a restart. -->
+  <rule id="100103" level="3">
+    <if_sid>92043</if_sid>
+    <field name="win.eventdata.parentImage" type="pcre2">(?i)^C:\\\\Program Files\\\\Tailscale\\\\tailscaled\.exe$</field>
+    <field name="win.eventdata.image" type="pcre2">(?i)^C:\\\\Windows\\\\System32\\\\netsh\.exe$</field>
+    <field name="win.eventdata.user" type="pcre2">(?i)^NT AUTHORITY\\\\SYSTEM$</field>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)^C:\\\\WINDOWS\\\\system32\\\\netsh\.exe advfirewall firewall add rule (?:name=Tailscale-Process dir=in action=allow edge=yes \\"program=C:\\\\Program Files\\\\Tailscale\\\\tailscaled\.exe\\" protocol=udp profile=any enable=yes|name=Tailscale-In dir=in action=allow localip=(?:100\.\d{1,3}\.\d{1,3}\.\d{1,3}/32|fd7a:115c:a1e0:[0-9a-f:]+/128) profile=private,domain enable=yes)$</field>
+    <description>Tuned 92043: Tailscale service re-adding its own inbound firewall rules at start (benign; marks a Tailscale restart)</description>
+  </rule>
+
+  <!-- The OpenAI Codex Store app re-registers its Chrome native-messaging host hourly; the long
+       manifest path reads as Base64. Investigated 2026-10-09: 33 of 37 stored 92041 alerts.
+       Pinned to the package publisher ID, because native messaging is also a persistence trick. -->
+  <rule id="100104" level="3">
+    <if_sid>92041</if_sid>
+    <field name="win.eventdata.parentImage" type="pcre2">(?i)^C:\\\\Program Files\\\\WindowsApps\\\\OpenAI\.Codex_[0-9.]+_x64__2p2nqsd0c76g0\\\\app\\\\ChatGPT\.exe$</field>
+    <field name="win.eventdata.image" type="pcre2">(?i)^C:\\\\Windows\\\\System32\\\\reg\.exe$</field>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)^reg add HKCU\\\\Software\\\\Google\\\\Chrome\\\\NativeMessagingHosts\\\\com\.openai\.codexextension /ve /t REG_SZ /d C:\\\\Users\\\\[^\\]+\\\\AppData\\\\Local\\\\OpenAI\\\\extension\\\\com\.openai\.codexextension\.json /f$</field>
+    <description>Tuned 92041: OpenAI Codex app re-registering its Chrome native-messaging host (benign, pinned to the Store package)</description>
+  </rule>
+
+  <!-- Codex's bundled PowerShell 7 writes PowerShell's own execution-policy probe file to the
+       user's Temp at every start. Investigated 2026-10-11: 475 of 502 level 15 alerts (92213) in
+       24 hours, 3,691 stored. Pinned to the exact runtime path and the probe's name pattern and
+       kept at level 3. Residual risk: the runtime folder is user-writable, so only the probe-file
+       pattern from that one path is quieted, never other files or other programs. -->
+  <rule id="100105" level="3">
+    <if_sid>92213</if_sid>
+    <field name="win.eventdata.image" type="pcre2">(?i)^C:\\\\Users\\\\[^\\]+\\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\native\\\\powershell\\\\pwsh\.exe$</field>
+    <field name="win.eventdata.targetFilename" type="pcre2">(?i)^C:\\\\Users\\\\[^\\]+\\\\AppData\\\\Local\\\\Temp\\\\__PSScriptPolicyTest_[a-z0-9]{8}\.[a-z0-9]{3}\.ps1$</field>
+    <description>Tuned 92213: Codex's bundled PowerShell writing its execution-policy probe file (benign)</description>
+  </rule>
+
+  <!-- Phone Link (Microsoft.YourPhone) background tasks: backgroundTaskHost.exe started through COM
+       with no resolvable parent, so stock 61634 (taskhost.exe without a services/svchost parent)
+       fires at level 12. Investigated 2026-10-11: 95 of 95 stored 61634 alerts, all since
+       Oct 10 19:46 UTC. Pinned to the System32 image and the Microsoft-published package folder
+       (WindowsApps is admin-only). -->
+  <rule id="100106" level="3">
+    <if_sid>61634</if_sid>
+    <field name="win.eventdata.image" type="pcre2">(?i)^C:\\\\Windows\\\\System32\\\\backgroundTaskHost\.exe$</field>
+    <field name="win.eventdata.originalFileName" type="pcre2">(?i)^backgroundTaskHost\.exe$</field>
+    <field name="win.eventdata.currentDirectory" type="pcre2">(?i)^C:\\\\Program Files\\\\WindowsApps\\\\Microsoft\.YourPhone_[0-9.]+_x64__8wekyb3d8bbwe\\\\$</field>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)^\\"C:\\\\WINDOWS\\\\system32\\\\backgroundTaskHost\.exe\\" -ServerName:App\.AppX[a-z0-9]{32}\.mca$</field>
+    <description>Tuned 61634: Phone Link background task host (benign; parent not resolvable)</description>
+  </rule>
+
 </group>

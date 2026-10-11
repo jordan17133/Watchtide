@@ -6,6 +6,105 @@ how each step happened; the [roadmap](ROADMAP.md) lists what comes next.
 
 ## Active Work
 
+October 11, 2026, Codex reconciliation complete; source-file claim released.
+Current navigation, dated evidence and explicit VM-target parameters now agree.
+433 Python tests and 69 focused PowerShell checks pass; 13 optional database
+tests were deliberately skipped. Publication has its own sanitized-copy/secret
+checks. No live rule, task, firewall, VPN, guest, report-refresh or popup change.
+
+## Current Snapshot
+
+Reconciled October 11, 2026. This section is the current pickup map; the dated
+updates below preserve earlier states. Reported deployments are not credited as
+newly engine-verified by this documentation pass. See the
+[reconciliation record and verification limits](docs/current-state-reconciliation.md).
+
+| Area | Latest supported state | Remaining gate |
+|---|---|---|
+| Lab identity | Hyper-V display name `Watchtide`, owner-reported October 10; guest hostname and existing disk/report/database paths retained | Helpers now accept `-VMName`, default `Watchtide`; no VM or disk operation run during cleanup |
+| Collection watchdog | Deployed October 8; October 11 read confirms enabled 15-minute, Interactive/Limited task, 5-minute limit, IgnoreNew and last result 0 | Notification-policy and read-permission review, real heartbeat/loss cause and reboot/logon proof; task success is not complete monitoring proof |
+| Loader route | Tailscale guard deployment/restart control reported October 10; October 11 services Running | Guard task metadata unreadable here; route resilience and off-PC observer remain open; backlog copying is not proof of no upstream event loss |
+| Firewall records | Owner-deployed source/rules 100141-100146; reported 18/18 engine tests and outbound control 100144 | Live inbound control, volume and exact reporting trace; filtered discovery and unsupported ICMP records are visibility limits |
+| Tuning | Rules 100100-100106 in source; owner-deployed new children reported October 10-11 with level-3 live matches | Stored-pattern replay is not installed-engine negative testing; historical reviews cannot classify later events; filename-only draft remains held |
+| Hardening | Owner-reported Windows CIS 63.2%, VM 66.2%, keys-only guest SSH and audit-mode Defender additions | Fresh independent posture/access review, audit-to-block evaluation, disk/boot protection and off-PC recovery; scores are not security guarantees |
+| Network/reporting | Bounded ICMP proofs and saved-live dashboard/Indexer/SQL trace retained; seven TCP controls prepared/decoded | TCP engine syntax/replay, fresh saved-live Power BI rendering and sustained/wider coverage remain open |
+| Publication | Public console remains a sanitized historical snapshot, not live SOC access | No new snapshot or report import in this cleanup; publish reviewed source changes only |
+
+## Pickup And Execution Order
+
+| Order | Work | Finish line |
+|---|---|---|
+| 0 | Reconcile current documentation and VM targets | Source cleanup complete/tested: consistent current map, preserved history and parameterized helpers; publication remains separately checked |
+| 1 | Review the deployed watchdog and notification policy | Verify identity/read scope and state handling; do not let a past rule review silence unrelated future high-priority events; separately test reboot/logon |
+| 2 | Complete offline TCP engine validation | Prepare a bounded keys-authenticated guest job; syntax/replay all saved positive and negative controls in fresh processes; no capture or permanent sensor |
+| 3 | Resume bounded TCP/Nmap learning | After source/resource gates, prove the chosen owned-device capture path and trace a labeled detection; existing four-port baseline is already complete |
+| 4 | Reporting and analyst integrity | Fresh six-page Power BI check when available, exact case-alert links and event-specific dispositions |
+| 5 | Useful routine telemetry, then broader analysis | Measured device/path, loss/resource/retention budgets before sustained DNS/flow, Zeek evaluation and forensic lessons |
+
+Off-LAN access, whole-home privacy routing and off-PC recovery remain deferred
+or separately scoped. Do not redeploy completed work from a historical draft.
+The earlier Claude drafts were reconciled; this source status remains the
+authoritative map. Private pickup details are in `publish/handoffs/`.
+
+## Historical Updates
+
+The entries below are dated evidence, not additional current instructions.
+Earlier "not deployed", "unconfirmed" and collection-gap observations are
+superseded where the current snapshot links a later result. Historical test
+counts, addresses, case totals and posture values must retain their original scope.
+
+October 11, 2026 18:20 Eastern, Claude (claim released; hand-over to Codex): **tunes 100105
+and 100106 are live** (owner deployed at 17:53). 100105 quiets Codex's bundled PowerShell
+writing its execution-policy probe file (child of 92213, level 15 to 3; 475 of 502 level 15
+alerts in the prior 24 hours); 100106 quiets Phone Link's background task host (child of
+61634, level 12 to 3; 95 of 95 stored). Stored-data replay: 3,691/3,691 and 95/95 matched, 0
+others, 10 lookalikes still alert. Live check 21:53-22:12 UTC: 100105 and 100106 each fired at level 3, zero new 61634, and the only 92213 came from another program (EdgeWebView2), still at level 15. Case SG-014 (owner's lockout at a WebView2
+password prompt) closed. Pickup note: `publish/handoffs/codex-2026-10-10.md`.
+
+October 11, 2026 17:50 Eastern, Claude (claim released): **Windows Firewall packet logs now
+reach Wazuh** (owner deployed; `wazuh/rules/sentinelgrid_firewall.xml`, firewall block in
+`wazuh/agent/default-agent.conf`). The engine overturned two drafts: `wazuh-analysisd -t`
+refused `<field>` on static fields, and `wazuh-logtest` showed the stock `windows-firewall`
+decoder and rule 4101 already claim these lines, so the custom decoder was dropped and rules
+100141-100146 became children of 4101 (18 of 18 logtest lines as expected, the scan rule on
+the 12th attempt). Live positive control: a temporary outbound block on TCP 40001 was logged
+by Windows and arrived as rule 100144. Agent: mDNS filtered, zero drops. ICMP lines carry no
+ports, so analysisd discards them before archiving (stock `log_fw` behaviour). Open: a live
+inbound test of 100142/100143 from a LAN device (VM knocks over the Hyper-V switch are dropped
+unlogged; the phone could not reach the PC).
+
+October 10, 2026 17:40 Eastern, Claude (claim released): **tuning rules 100102-100104
+are live** (owner deployed at 17:12; `wazuh/rules/sentinelgrid_tuning.xml`). SYSTEM
+PowerShell's policy-test file (100102, child of 92205), Tailscale re-adding its own inbound
+firewall rules (100103, child of 92043) and the Codex Store app re-registering its Chrome
+native-messaging host (100104, child of 92041) now arrive at level 3. Warehouse check: 3
+matches each for 100102 and 100103 in the first 15 minutes, zero new 92205 or 92043; 100104
+confirmed on its hourly event at 17:43. `wazuh-logtest` could not test them: fed on stdin, the
+eventchannel JSON decodes as plain `json`, so no Windows rule fires. Same day: VM fully patched.
+
+October 9, 2026 23:45 Eastern, Claude (claim released): watchdog no longer flaps
+during an open outage. Two slow reads (HYT00) during the 7:59 PM Tailscale stop
+turned attention into unknown and back, five popups in two hours; a change of
+kind now needs two sightings. 34 runner, 17 security and 67 health tests pass;
+both new tests fail on the old code; live dry run calm. Loader still failing
+until the owner restarts Tailscale (Windows gave up after five crashes).
+Same night: VM CIS batch 1 applied by the owner (36 checks, SSH forwarding unchanged).
+
+October 9, 2026 00:30 Eastern, Claude (claim released): **the automatic watchdog
+is deployed**, superseding the "not deployed" lines in the October 8 handoff
+below. Health and security popups every 15 minutes since October 8, 1:34 PM;
+five delivered and traced on the first day; Lock Pages in Memory stopped SQL
+Server paging; two indexes cut its reads ~1,000x; case SG-011 closed. This pass
+fixed confirmation during a growing outage (kind, not exact failing checks)
+with two regression tests; 32 runner, 17 security and 67 health/notice tests
+pass and a live dry run matches. Open for Codex: post-deployment review
+(identity, read rights), logon/reboot test, and the loader's single Tailscale
+route. Record: [collection watchdog](docs/collection-watchdog.md). No publication.
+Later the same night, read-only: **firewall blocked-traffic logging has been off
+since the October 6 restart** (policy-set file names, no service permission on
+the folder); fix prepared for the owner, not applied. See the
+[hardening record](docs/hardening-validation.md).
+
 October 8, 2026 owner-requested handoff to Claude: Codex's claim is released;
 no active Codex deployment or publication job remains after this wrap-up.
 Private pickup notes are in `publish/handoffs/claude-2026-10-08.md` in the
@@ -99,7 +198,7 @@ interaction map are documented. In that audit, no verdict, SQL
 schema, rule, collection, service or UI behavior changed. Scope the collection
 repair and triage improvements separately before deployment.
 
-## Pickup And Execution Order
+## October 7 Pickup Sequence (Historical)
 
 Claude's handoff commit `b067d36` was located in its separate workspace worktree,
 not the main SOC checkout. Its drafts were reconciled with this repository;
@@ -131,7 +230,7 @@ remain deferred or planned. They do not displace the owner's TCP/Nmap learning
 focus. Resume that track after this reconciliation, rather than redoing the
 completed ICMP trial or Nmap baseline.
 
-## Current milestones
+## October 7 Milestones (Historical)
 
 Updated October 7, 2026. The pipeline and investigations are built; these next milestones have their own validation gates.
 
@@ -144,9 +243,9 @@ Updated October 7, 2026. The pipeline and investigations are built; these next m
 
 The [private-access plan](docs/private-access-plan.md) explains the VPN decision, remaining steps and completion tests. The [network SOC maturity plan](docs/soc-network-maturity-plan.md) adds a stage checklist for measured device coverage, routine telemetry, correlation, analyst workflows and tested recovery.
 
-## Hardening
+## October 6 Hardening Baseline (Historical)
 
-The owner selected hardening before additional capture and deferred recovery. Reviewed private-file, effective firewall-logging and software checks pass. The loader now explicitly binds its tunnel to loopback and requires a verified SSH host identity; actual socket/search/cleanup checks and the subsequent automatic load succeeded. An independent 2,000-record firewall sample was 98.9% UDP 5353 multicast, consistent with local discovery, not thousands of confirmed attacks. Actual agent/audit settings confirm blocked-traffic records are not yet collected into Wazuh. Broad Hyper-V management exceptions were reviewed privately but left unchanged pending the owner's usage details. The Windows system drive remains unencrypted and host Secure Boot off; account/MFA, resource budgets and recovery gates remain open ([host findings](docs/host-exposure-validation.md), [hardening checklist](docs/hardening-validation.md)).
+At the October 6 audit, reviewed agent/audit settings confirmed a blocked-traffic collection gap. That historical finding is superseded by the owner-reported October 11 firewall-file deployment in the current snapshot, not by a claim of complete network coverage. The audit also verified loopback-only loader forwarding and reviewed broad Hyper-V management exceptions. Disk/boot, access, resource and recovery gates remain separate ([host findings](docs/host-exposure-validation.md), [hardening checklist](docs/hardening-validation.md)).
 
 ## Software review (October 5)
 

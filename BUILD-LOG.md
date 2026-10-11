@@ -22,6 +22,25 @@ and entries below retain their dated scope.
 | Detection validation | In progress: controlled SSH password-guessing test detected end to end; historical post-tuning clusters reviewed, later alerts need fresh verdicts |
 | 4c. Tailscale private remote access | Trusted local HTTPS/dashboard login verified; renewal setup reported successful; phone test declined and approved off-LAN access deferred; remaining exposure/recovery/reporting gates open |
 
+## October 11: SOC Publication Content For The Separate Portfolio Chat
+
+- Prepared an [evidence-backed case study](docs/portfolio/watchtide-case-study.md),
+  [publication kit](docs/portfolio/watchtide-publication-kit.md) and structured
+  content with five dated/qualified result cards. Added evidence-index navigation;
+  the concise README and technical execution order remain unchanged.
+- Owner supplied the existing portfolio URL as reference and clarified that its
+  dedicated chat owns website work. No website source, hosting, Search Console
+  or community strategy was changed. Proposed route/integration/indexing remain
+  explicitly prepared or unverified, not credited as deployed.
+- Rechecked the public snapshot export time (October 3, 20:05:21 UTC) and visually
+  reviewed its existing sanitized preview. No new data export, edited screenshot,
+  Power BI import, live SOC operation or notification was performed.
+- Seven content-contract tests pass; the private coordination handoff is excluded
+  from publication. Full regression: 440 Python tests pass, 13 database-changing
+  tests deliberately skipped. Structural review checks 315 files and 508 local
+  links without errors; staged/source-history secret scans pass. Public-copy
+  checks and search-indexing verification remain separate operations.
+
 ## October 11: Reconcile Current State And Active VM Targets
 
 - Separated the current pickup map from historical updates; reconciled the

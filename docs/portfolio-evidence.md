@@ -4,6 +4,13 @@ The [README](../README.md) is the short employer-facing overview. This index kee
 the detailed results, investigations and gallery available without expanding it.
 Dates and scope matter: historical research does not adjudicate later events.
 
+## Publication Content
+
+The [project case study](portfolio/watchtide-case-study.md) and
+[website publication kit](portfolio/watchtide-publication-kit.md) package dated
+SOC evidence for the separate portfolio chat. Website integration and indexing
+are not performed here; the technical roadmap is unchanged.
+
 ## Pipeline And Platform Evidence
 
 | Area | Evidence and boundary |

@@ -6,6 +6,14 @@ how each step happened; the [roadmap](ROADMAP.md) lists what comes next.
 
 ## Active Work
 
+October 11, 2026, Codex SOC publication content prepared; source-file claim
+released. [Case study and website handoff](docs/portfolio/watchtide-publication-kit.md)
+package dated evidence, not new coverage. Seven focused content checks pass;
+private coordination stays excluded from the sanitized copy. The separate
+website chat owns integration, hosting and indexing; none was changed here.
+Watchdog policy/read-scope review remains the first open SOC task. No new capture,
+data export, report refresh, notification or live SOC change.
+
 October 11, 2026, Codex reconciliation complete; source-file claim released.
 Current navigation, dated evidence and explicit VM-target parameters now agree.
 433 Python tests and 69 focused PowerShell checks pass; 13 optional database

@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "content_updated": "2026-10-11",
+  "author": "Jordan Carven-Bellace",
+  "slug": "watchtide",
+  "title": "Watchtide",
+  "subtitle": "An evidence-led home SOC built with Wazuh, SQL Server and Power BI.",
+  "description": "A Windows-to-Wazuh security pipeline with investigated alerts, scoped detection tuning, controlled Suricata tests, SQL reporting and documented recovery checks. Explore sanitized historical data and the evidence behind each result, without connecting to the private lab.",
+  "project_type": "Home lab and analyst-learning portfolio",
+  "implementation_context": "AI-assisted implementation and review; public claims scoped to documented evidence.",
+  "stack": ["Windows 11", "Sysmon", "Wazuh", "Ubuntu", "Hyper-V", "Suricata", "SQL Server", "Power BI", "Python", "PowerShell", "Tailscale"],
+  "links": {
+    "console": "https://jordan17133.github.io/Watchtide/",
+    "repository": "https://github.com/jordan17133/Watchtide",
+    "case_study": "https://github.com/jordan17133/Watchtide/blob/main/docs/portfolio/watchtide-case-study.md",
+    "evidence_index": "https://github.com/jordan17133/Watchtide/blob/main/docs/portfolio-evidence.md",
+    "current_status": "https://github.com/jordan17133/Watchtide/blob/main/STATUS.md"
+  },
+  "image": {
+    "url": "https://jordan17133.github.io/Watchtide/console/og-image.png",
+    "width": 1200,
+    "height": 630,
+    "alt": "Watchtide public console showing a sanitized historical snapshot, not live SOC access.",
+    "snapshot_exported_utc": "2026-10-03T20:05:21Z"
+  },
+  "evidence_cards": [
+    {
+      "title": "Scoped alert tuning",
+      "result": "478 of 506 alerts in the original Critical cluster identified as policy-test writes",
+      "evidence_date": "2026-09-30",
+      "qualification": "Historical cluster, not a false-positive percentage for future alerts; scoped child rule preserves records and unrelated activity.",
+      "source_path": "triage/2026-09-30-rule-92213-powershell-policy-test-noise.md"
+    },
+    {
+      "title": "Exact recovery trace",
+      "result": "Two benign Sysmon records matched Indexer and normal-loader SQL/reporting identities",
+      "evidence_date": "2026-10-07",
+      "qualification": "Proves the repaired path, not recovery of every previously dropped event or a fresh Power BI rendering.",
+      "source_path": "docs/collection-health-validation.md"
+    },
+    {
+      "title": "Controlled network validation",
+      "result": "One marked request alerted; one unmarked control did not",
+      "evidence_date": "2026-10-07",
+      "qualification": "Two bounded ICMP requests, not continuous capture or whole-home browsing visibility.",
+      "source_path": "docs/suricata-live-trial.md"
+    },
+    {
+      "title": "Six-page reporting",
+      "result": "All six existing Power BI pages rendered after the October 5 refresh",
+      "evidence_date": "2026-10-05",
+      "qualification": "Later saved-live-record Desktop verification remains open; imported caches are private.",
+      "source_path": "docs/network-reporting-validation.md"
+    },
+    {
+      "title": "Tested local SQL restoration",
+      "result": "37,605 alert rows restored with clean CHECKDB and 20 readable SQL views",
+      "evidence_date": "2026-10-07",
+      "qualification": "Same-PC, same-instance disposable restore, not full-SOC or off-machine disaster recovery.",
+      "source_path": "docs/sql-recovery-validation.md"
+    }
+  ],
+  "open_gates": ["Watchdog notification-policy and read-scope review", "Actual reboot/logon validation", "Offline TCP installed-engine validation", "Fresh saved-live Power BI rendering", "Measured sustained and wider traffic coverage", "Off-PC recovery and disk/boot protection"],
+  "seo": {
+    "title": "Watchtide Home SOC | Jordan Carven-Bellace",
+    "description": "An evidence-led home SOC with Wazuh, Sysmon, SQL Server, Power BI and controlled Suricata tests. Explore investigations, recovery checks and clear limits."
+  },
+  "destination_handoff": {
+    "website": "https://jordan-portfolio-alpha.vercel.app/",
+    "suggested_route": "/projects/watchtide",
+    "integration_status": "prepared_only",
+    "deployment_status": "not_verified_here",
+    "indexing_status": "not_verified_here",
+    "owner": "Separate portfolio and online-presence chat"
+  }
+}

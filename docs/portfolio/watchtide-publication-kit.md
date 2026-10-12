@@ -24,6 +24,12 @@ SQL Server, Power BI, Python, PowerShell and Tailscale.
 
 ## Feature Article
 
+October 12 attribution update: use the case study's **Development Process**
+section to reflect the owner's hands-on account alongside substantial AI work.
+Keep private contribution questions and interview exercises off the website.
+This is owner-reported participation, not a percentage estimate or independent
+proof of every historical command. Existing technical results retain their dates.
+
 Use the [case study](watchtide-case-study.md) as the evidence-backed article.
 [watchtide-content.json](watchtide-content.json) supplies structured listing,
 result and metadata fields. Do not manufacture current metrics from the older
@@ -45,9 +51,10 @@ employment, certification, complete protection or paid-service capability.
 - Author: Jordan Carven-Bellace. Content update: October 11, 2026. The website
   chat must use the actual web publication date, not invent an earlier launch.
 
-The supplied destination is `https://jordan-portfolio-alpha.vercel.app/`.
-The proposed project URL is not verified as an existing or newly published page.
-No canonical, metadata, route or robots change was applied on that website.
+The existing project page is
+`https://jordan-portfolio-alpha.vercel.app/projects/watchtide`; its returned content
+was checked read-only October 11. This revised copy has not been integrated there
+by the SOC chat. No canonical, metadata, route or robots change was applied.
 
 ## Indexing Acceptance Checklist
 
@@ -85,3 +92,5 @@ update. Never infer a live case verdict or incident from a historical rule revie
 The SOC continuation is unchanged: watchdog policy/read-scope review, bounded
 offline TCP validation, then useful measured telemetry and later analyst lessons.
 Website content is a supporting publication artifact, not a replacement project.
+The [presentation/operator checklist](../presentation-and-operator-checklist.md)
+tracks privacy, project naming, fresh report verification and traffic-reading work.

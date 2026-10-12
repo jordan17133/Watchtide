@@ -17,7 +17,7 @@ are not performed here; the technical roadmap is unchanged.
 |---|---|
 | Current state and naming | [October 11 reconciliation](current-state-reconciliation.md): current instructions separated from history; VM targets updated without moving existing disk/report files |
 | Endpoint collection | [Original trace](event-trace.md), [October 7 recovery and health checks](collection-health-validation.md); outage recovery is not proof that all historical drops were recovered |
-| Monitoring the monitoring | [Automatic watchdog and its first day](collection-watchdog.md): five popups traced to causes, SQL paging and full-table scans fixed; reboot test and identity review open |
+| Monitoring the monitoring | [Automatic watchdog and its first day](collection-watchdog.md); [engineering review](watchdog-engineering-review.md): task/state checks and isolated policy proposal pass; protected-runtime/SQL identity, activation and reboot gates remain open |
 | Analyst understanding | [Plain-English L0 trace](L0-event-to-report-trace.md), [toolkit lessons](analyst-toolkit-runbook.md), [interaction/triage audit](triage-system-audit.md) |
 | Network detection | [Offline validation](suricata-offline-validation.md), [controlled reporting handoff](suricata-wazuh-handoff.md), [bounded live trial](suricata-live-trial.md), [saved-live reporting](suricata-live-reporting-handoff.md); no continuous or phone/browsing coverage claim |
 | Power BI | [Six-page report verification](network-reporting-validation.md), [refresh deadlock fix](report-refresh-reliability.md); imported caches private, fresh October 7 saved-live rendering deferred |

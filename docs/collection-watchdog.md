@@ -10,6 +10,11 @@ October 8, 2026 at the owner's request; Codex's post-deployment review is open.
 Current metadata and documentation reconciled October 11; see the
 [checked state and remaining gates](current-state-reconciliation.md).
 
+The later [engineering review](watchdog-engineering-review.md) verifies task
+identity/action and current state permissions, identifies remaining runtime/SQL
+scope and failure-reporting gaps, and tests an isolated four-hour policy proposal.
+The proposal is not live; behavior below remains the deployed version.
+
 ## What It Does
 
 | Part | Behavior |

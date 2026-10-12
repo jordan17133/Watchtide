@@ -80,6 +80,20 @@ class PortfolioContentTests(unittest.TestCase):
         self.assertGreaterEqual(len(self.content["open_gates"]), 6)
         self.assertLessEqual(len(self.content["seo"]["description"]), 170)
 
+    def test_hands_on_attribution_keeps_owner_report_and_ai_scope_explicit(self):
+        contribution = self.content["contribution_context"]
+        date.fromisoformat(contribution["owner_reported_on"])
+        self.assertGreaterEqual(len(contribution["hands_on_work"]), 6)
+        self.assertIn("Substantial", contribution["ai_work"])
+        self.assertIn("owner-reported", contribution["qualification"])
+        article = (ROOT / "docs/portfolio/watchtide-case-study.md").read_text(encoding="utf-8")
+        process = article.split("## Development Process\n", 1)[1].split("\n\nContribution scope", 1)[0]
+        self.assertTrue(100 <= len(process.split()) <= 150)
+        self.assertIn("hands-on work", process)
+        self.assertIn("substantial", process)
+        self.assertIn("No sole-authorship", contribution["qualification"])
+
+
 
 if __name__ == "__main__":
     unittest.main()

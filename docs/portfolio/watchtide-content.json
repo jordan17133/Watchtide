@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_updated": "2026-10-11",
+  "content_updated": "2026-10-12",
   "author": "Jordan Carven-Bellace",
   "slug": "watchtide",
   "title": "Watchtide",
@@ -8,6 +8,12 @@
   "description": "A Windows-to-Wazuh security pipeline with investigated alerts, scoped detection tuning, controlled Suricata tests, SQL reporting and documented recovery checks. Explore sanitized historical data and the evidence behind each result, without connecting to the private lab.",
   "project_type": "Home lab and analyst-learning portfolio",
   "implementation_context": "AI-assisted implementation and review; public claims scoped to documented evidence.",
+  "contribution_context": {
+    "owner_reported_on": "2026-10-12",
+    "hands_on_work": ["Hyper-V/Ubuntu lab creation", "Sysmon/Wazuh configuration", "Detection-rule and SQL work", "Alert investigation", "Power BI visuals", "Administrator diagnostics and authenticated setup/test jobs"],
+    "ai_work": "Substantial supporting code, analysis, rule proposals, report definitions, documentation and testing.",
+    "qualification": "Hands-on scope is owner-reported; historical steps are not independently attributed command by command. No sole-authorship or independent-mastery claim."
+  },
   "stack": ["Windows 11", "Sysmon", "Wazuh", "Ubuntu", "Hyper-V", "Suricata", "SQL Server", "Power BI", "Python", "PowerShell", "Tailscale"],
   "links": {
     "console": "https://jordan17133.github.io/Watchtide/",

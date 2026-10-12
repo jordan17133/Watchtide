@@ -1,5 +1,5 @@
 <!--
-  Watchtide file integrity monitoring severity rules for jordan-pc.
+  Watchtide file integrity monitoring severity rules for windows-endpoint.
   Deployed to /var/ossec/etc/rules/sentinelgrid_fim.xml on the Wazuh server.
 
   Stock FIM rules fire at level 5-7 for any monitored change. These children raise

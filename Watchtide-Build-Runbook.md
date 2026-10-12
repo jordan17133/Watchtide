@@ -84,7 +84,7 @@ scan/capture exercise are separate gates. No new browsing visibility is inferred
 | Address | Legacy Hyper-V hostname retained for administration; the loader uses its verified private Tailscale destination from protected settings, avoiding changing NAT addresses. Real addresses stay private. |
 | Dashboard | Approved private Tailscale certificate hostname; trusted Windows IPv4 HTTPS and local login verified October 5. Legacy Hyper-V hostname is not the new browser certificate identity. |
 | SSH | `ssh <ubuntu-user>@soc-vm.mshome.net`; owner reports keys-only login October 10. Use the verified administration key; sudo still prompts locally. The restricted loader key cannot administer the guest |
-| Monitored endpoint | `jordan-pc` (Windows 11, Sysmon64 + Wazuh agent) |
+| Monitored endpoint | `windows-endpoint` (Windows 11, Sysmon64 + Wazuh agent) |
 | Rollback points | Owner reports deleting all five checkpoints October 9; current merge/rollback availability not independently checked. Earlier creation is historical proof only. Establish an appropriate current rollback/backup before risky work; separate restore validation remains open ([record](docs/current-state-reconciliation.md)) |
 | Pre-VPN firewall exceptions | 22, 443, 1514-1515 from private ranges (10/8, 172.16/12, 192.168/16); Tailscale path checked separately below |
 | Tailscale path, rechecked 2026-10-05 | Local IPv4 TCP 22/443 reachable and 9200/55000 unreachable; earlier direct 1514/1515 probes failed. Trusted local HTTPS/login verified, renewal setup reported successful. Phone remains denied; IPv6 dashboard has no listener. Approved off-network and remaining denied-path checks pending; see [validation report](docs/private-access-validation.md). |
@@ -379,7 +379,7 @@ sudo systemctl restart wazuh-manager filebeat && sudo filebeat test output
 
 4. **Recycle the searchable copies.** Run [wazuh/retention/ism-policies.http](wazuh/retention/ism-policies.http) in Dev Tools: `wazuh-archives-*` deleted after 30 days, `wazuh-alerts-*` after 365, attached automatically to each new daily index via `ism_template`. Confirm with `GET _plugins/_ism/explain/wazuh-a*`.
 5. **Make it searchable.** Create the index pattern `wazuh-archives-*` with time field `timestamp`.
-6. **Prove it.** Launch Notepad, then search Discover on `wazuh-archives-*` for `agent.name:jordan-pc and data.win.eventdata.image:*otepad.exe`. A Sysmon event ID 1 must appear even though no rule alerts on it.
+6. **Prove it.** Launch Notepad, then search Discover on `wazuh-archives-*` for `agent.name:windows-endpoint and data.win.eventdata.image:*otepad.exe`. A Sysmon event ID 1 must appear even though no rule alerts on it.
 
 The SQL warehouse has its own lifecycle in [warehouse/sql/05_lifecycle.sql](warehouse/sql/05_lifecycle.sql): every alert row is kept, Low-severity raw JSON is trimmed after a year, daily summaries per rule and MITRE technique are permanent, and the data file is capped at 100 GB. That cap does not budget logs, tempdb, capture files or other host storage. Resource and retention gates remain separate.
 

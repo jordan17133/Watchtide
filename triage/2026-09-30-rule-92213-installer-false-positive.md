@@ -4,14 +4,14 @@
 |---|---|
 | Date | 2026-09-30 |
 | Analyst | Jordan Carven-Bellace |
-| Host | jordan-pc (Windows 11, Wazuh agent + Sysmon) |
+| Host | windows-endpoint (Windows 11, Wazuh agent + Sysmon) |
 | SIEM | Wazuh 4.14.8 (all-in-one, Ubuntu 24.04 VM) |
 | Verdict | **False positive: benign administrative activity** |
 | Severity (as fired) | Level 15 (maximum) |
 
 ## Summary
 
-Minutes after the Wazuh agent and Sysmon were installed on `jordan-pc`, Wazuh raised three level 15 alerts from rule **92213**, "Executable file dropped in folder commonly used by malware." Investigation traced every alert to the two legitimate installers run during setup. No malicious activity was found.
+Minutes after the Wazuh agent and Sysmon were installed on `windows-endpoint`, Wazuh raised three level 15 alerts from rule **92213**, "Executable file dropped in folder commonly used by malware." Investigation traced every alert to the two legitimate installers run during setup. No malicious activity was found.
 
 ## Alerts in scope
 

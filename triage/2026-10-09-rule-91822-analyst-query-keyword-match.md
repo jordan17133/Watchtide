@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-10-09 |
 | Analyst | Claude |
-| Host | jordan-pc |
+| Host | windows-endpoint |
 | Rule | 91822, "PowerShell script used Invoke-Command cmdlet to execute sub script" (PowerShell event 4104, level 12) |
 | Volume | 1 alert, 04:59:09 UTC |
 | Notification | Watchdog security popup at 05:21 UTC (tier for level 12+ rules never reviewed before) |

@@ -6,6 +6,26 @@ how each step happened; the [roadmap](ROADMAP.md) lists what comes next.
 
 ## Active Work
 
+October 12, 2026, Codex source privacy/contribution/naming batch complete; claim
+released. The [closeout checklist](docs/presentation-and-operator-checklist.md)
+tracks fresh Power BI checks and remaining operations. Owner reports lab creation,
+configuration, rule/SQL work, investigations and Power BI visuals with AI help;
+this is owner-reported attribution, not independent proof of each historical step.
+Power BI was saved/closed by the owner before project-file renaming. No database
+rename, live collector/rule change or sustained capture is part of this batch.
+470 Python tests pass; 13 database-changing tests skipped. Project/model links,
+six-page identity and private cache/model hashes pass; actual Desktop refresh and
+the later saved-live rendering remain open. GitHub publication is owner-approved
+and has separate generated-copy/remote checks. Website integration remains with
+the portfolio chat.
+
+October 11, 2026, Codex watchdog review/preparation complete; source claim released.
+[Engineering review](docs/watchdog-engineering-review.md) checks task identity,
+current state permissions and owner-connection read scope. Owner selected the
+isolated four-hour candidate for preparation, not activation. Runtime/SQL trust
+boundaries, failure-reporting and reboot gates remain open. No live module, task,
+permission/grant, popup, SSH, capture, firewall/VPN or report change.
+
 October 11, 2026, Codex SOC publication content prepared; source-file claim
 released. [Case study and website handoff](docs/portfolio/watchtide-publication-kit.md)
 package dated evidence, not new coverage. Seven focused content checks pass;
@@ -29,8 +49,8 @@ newly engine-verified by this documentation pass. See the
 
 | Area | Latest supported state | Remaining gate |
 |---|---|---|
-| Lab identity | Hyper-V display name `Watchtide`, owner-reported October 10; guest hostname and existing disk/report/database paths retained | Helpers now accept `-VMName`, default `Watchtide`; no VM or disk operation run during cleanup |
-| Collection watchdog | Deployed October 8; October 11 read confirms enabled 15-minute, Interactive/Limited task, 5-minute limit, IgnoreNew and last result 0 | Notification-policy and read-permission review, real heartbeat/loss cause and reboot/logon proof; task success is not complete monitoring proof |
+| Lab identity | Hyper-V display name `Watchtide`, owner-reported October 10; October 12 Power BI project/report/model and runbook paths renamed to Watchtide with preserved identities | Existing database/disk/helper identifiers need reviewed migration; fresh Desktop verification remains open; no VM/disk/database operation run |
+| Collection watchdog | Deployed October 8; October 11 task identity/action and effective state permissions checked; isolated four-hour eligibility proposal prepared/tested | Protected runtime/restricted SQL identity, candidate activation, failure reporting, real heartbeat/loss cause and reboot/logon proof; task exit alone is not monitoring proof |
 | Loader route | Tailscale guard deployment/restart control reported October 10; October 11 services Running | Guard task metadata unreadable here; route resilience and off-PC observer remain open; backlog copying is not proof of no upstream event loss |
 | Firewall records | Owner-deployed source/rules 100141-100146; reported 18/18 engine tests and outbound control 100144 | Live inbound control, volume and exact reporting trace; filtered discovery and unsupported ICMP records are visibility limits |
 | Tuning | Rules 100100-100106 in source; owner-deployed new children reported October 10-11 with level-3 live matches | Stored-pattern replay is not installed-engine negative testing; historical reviews cannot classify later events; filename-only draft remains held |

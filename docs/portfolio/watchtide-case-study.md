@@ -33,6 +33,24 @@ Critical queue, a successful database load could conceal stale endpoint data,
 and report refreshes could collide with the loader's writes. Each needed a
 specific investigation rather than a broad suppression or another dashboard.
 
+## Development Process
+
+I developed Watchtide as an independent home SOC learning project with substantial
+AI assistance. My hands-on work included creating the Hyper-V/Ubuntu lab,
+configuring Sysmon and Wazuh, working on detection rules and SQL, investigating
+alerts, and building Power BI visuals. I also ran administrator diagnostics and
+authenticated setup/test jobs, supplied operational context, and chose the scope
+of changes. Claude and Codex generated substantial supporting code, rule proposals,
+report definitions and documentation, and performed much of the troubleshooting
+and testing. The project distinguishes prepared work, deployment and verification:
+dated evidence includes event traces, positive and negative network controls,
+historical report checks and a limited local SQL restore drill. These results
+describe the lab's demonstrated behavior, not complete coverage or sole authorship.
+
+Contribution scope above is owner-reported on October 12, 2026. Historical
+technical results keep their individual evidence dates and limits; approval,
+commit authorship and agent-run tests are not proof of personal understanding.
+
 ## Architecture And Boundaries
 
 ```text

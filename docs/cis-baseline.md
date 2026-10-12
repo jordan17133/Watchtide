@@ -1,4 +1,4 @@
-# CIS Benchmark Baseline: jordan-pc
+# CIS Benchmark Baseline: windows-endpoint
 
 | | |
 |---|---|

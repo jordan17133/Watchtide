@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-09-30 |
 | Analyst | Jordan Carven-Bellace |
-| Host | jordan-pc |
+| Host | windows-endpoint |
 | Rule | 92058, "Application Compatibility Database launched" (level 12, High) |
 | Volume | 15 alerts, one per hour at :53, 04:53 to 18:53 |
 | MITRE ATT&CK | T1546.011, Event Triggered Execution: Application Shimming |

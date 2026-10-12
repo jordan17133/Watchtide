@@ -16,7 +16,7 @@ import json
 import shutil
 from pathlib import Path
 
-REPORT = Path(__file__).resolve().parents[1] / "SentinelGrid.Report" / "definition"
+REPORT = Path(__file__).resolve().parents[1] / "Watchtide.Report" / "definition"
 PAGES = REPORT / "pages"
 SCHEMA = "https://developer.microsoft.com/json-schemas/fabric/item/report/definition"
 
@@ -306,7 +306,7 @@ def posture_page():
     p = "posture"
     v = [header(p, "Endpoint Posture",
                 "Vulnerability findings and CIS benchmark results, rebuilt from Wazuh alerts. Gray is the first scan, blue is now."),
-         slicer(p, "agent", W - M - 200, 18, 200, 56, col(AH, "agent_name"), "Endpoint", default="jordan-pc")]
+         slicer(p, "agent", W - M - 200, 18, 200, 56, col(AH, "agent_name"), "Endpoint", default="windows-endpoint")]
     v += kpi_row(p, [
         (mea(VF, "All findings"), "Findings, all time"),
         (mea(VF, "Open now"), "Open now", NOW),
@@ -339,7 +339,7 @@ def posture_page():
                    "Checks fixed since the first scan", sort_by=col(CC, "cis_section"), sort_dir="Ascending",
                    widths=[(col(CC, "cis_ref"), 52), (col(CC, "title"), 330), (col(CC, "section_label"), 150)],
                    filters=[in_filter(p, "fixed", col(CC, "change_status"), ["Fixed"], hidden=True)]))
-    v.append(footer(p, "Source: Wazuh vulnerability-detector and SCA alerts in SentinelGridWarehouse "
+    v.append(footer(p, "Source: Wazuh vulnerability-detector and SCA alerts in the SQL warehouse "
                        "(rpt.vulnerability_findings, rpt.cis_check_results, rpt.cis_score_history). "
                        "Every finding and check traces to a Wazuh document ID."))
     return p, "Endpoint Posture", v
@@ -461,9 +461,9 @@ def soc_page():
                  extra={"labels": [{"properties": {"show": b(False)}}],
                         "totals": [{"properties": {"show": b(False)}}]},
                  filters=[in_filter(p, "tuning", col(AL, "rule_id"), [92213, 100100], hidden=True)]))
-    v.append(footer(p, "Source: rpt.alerts in SentinelGridWarehouse, one row per Wazuh alert keyed by its Indexer "
+    v.append(footer(p, "Source: rpt.alerts in the SQL warehouse, one row per Wazuh alert keyed by its Indexer "
                        "document ID. Severity bands follow the Wazuh dashboard. Tuning: triage/ and "
-                       "wazuh/rules/sentinelgrid_tuning.xml."))
+                       "the scoped Wazuh tuning rules."))
     return p, "SOC Overview", v
 
 

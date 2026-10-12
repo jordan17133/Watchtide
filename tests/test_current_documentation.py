@@ -50,7 +50,7 @@ class CurrentDocumentationTests(unittest.TestCase):
         self.assertLess(order.index("Complete offline TCP"), order.index("Useful routine telemetry"))
 
     def test_active_runbook_has_current_vm_commands(self):
-        runbook = text("SentinelGrid-Build-Runbook.md")
+        runbook = text("Watchtide-Build-Runbook.md")
         for command in ("Checkpoint-VM -Name 'Watchtide'", "Stop-VM -Name 'Watchtide'",
                         "Start-VM -Name 'Watchtide'"):
             self.assertIn(command, runbook)
@@ -60,7 +60,7 @@ class CurrentDocumentationTests(unittest.TestCase):
                         "Current rollback availability must not inherit old checkpoint proof")
 
     def test_manual_preview_is_not_described_as_undeployed_runner(self):
-        runbook = text("SentinelGrid-Build-Runbook.md")
+        runbook = text("Watchtide-Build-Runbook.md")
         self.assertIn("warehouse.collection_watchdog --dry-run", runbook)
         self.assertNotIn("no automatic watchdog/delivery is deployed", runbook)
         self.assertNotIn("visual delivery remains unconfirmed", runbook)
@@ -79,7 +79,7 @@ class CurrentDocumentationTests(unittest.TestCase):
             self.assertTrue(boundary in report, f"Missing evidence boundary: {boundary}")
 
     def test_current_navigation_anchor_targets_exist(self):
-        files = ("README.md", "STATUS.md", "ROADMAP.md", "SentinelGrid-Build-Runbook.md",
+        files = ("README.md", "STATUS.md", "ROADMAP.md", "Watchtide-Build-Runbook.md",
                  "docs/current-state-reconciliation.md")
         for source in files:
             for target, anchor in re.findall(r"\]\(([^)\s]+\.md)#([^)\s]+)\)", text(source)):

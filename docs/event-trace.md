@@ -4,7 +4,7 @@ Runbook Stage 4 asks for proof that a single, deliberately created event can be 
 
 ## The test
 
-On 2026-09-30 at 9:22 PM Eastern (2026-10-01 01:22 UTC), harmless activity was generated on `jordan-pc`:
+On 2026-09-30 at 9:22 PM Eastern (2026-10-01 01:22 UTC), harmless activity was generated on `windows-endpoint`:
 
 ```powershell
 cmd.exe /c "echo SG-TRACE-001 & whoami /user"   # the traced event
@@ -24,7 +24,7 @@ nslookup example.com                            # a DNS lookup
 | 4 | **Wazuh Indexer** | Searched as the read-only `sentinelgrid_loader` user | Index `wazuh-alerts-4.x-2026.10.01`, document `_id` **`MWsO9aABUbyB79YaBASQ`** |
 | 5 | **Wazuh dashboard** | Threat Hunting search (see [Dashboard verification](#dashboard-verification)) | Same alert, shown to the analyst |
 | 6 | **SQL warehouse** | `sg.alerts` row keyed by the Indexer `_id` | `doc_id = MWsO9aABUbyB79YaBASQ`, `win_event_id = 1`, `rule_id = 92032`, loaded at `01:23:13` UTC (about **64 seconds** after the event). Bridge rows: techniques T1087 and T1059.003; tactics Discovery and Execution. |
-| 7 | **Reporting view / Power BI** | `rpt.alerts` | `alert_time_local = 2026-09-30 21:22:10`, `severity_band = Low`, `agent_name = jordan-pc`. Counted in the Power BI **Low** card after a refresh. |
+| 7 | **Reporting view / Power BI** | `rpt.alerts` | `alert_time_local = 2026-09-30 21:22:10`, `severity_band = Low`, `agent_name = windows-endpoint`. Counted in the Power BI **Low** card after a refresh. |
 
 **Correlation keys that tie the layers together:** the Windows `EventRecordID` (44012) and Sysmon `ProcessGuid` link the endpoint to the Wazuh alert, and the Indexer document `_id` links the Wazuh alert to the SQL row and everything built on it.
 
@@ -48,7 +48,7 @@ nslookup example.com                            # a DNS lookup
 
 Completed in the Wazuh dashboard by the analyst:
 
-- [ ] **Threat Hunting:** search `_id:MWsO9aABUbyB79YaBASQ` (time range covering 2026-09-30 9:20 to 9:25 PM) and confirm rule 92032 on `jordan-pc`.
+- [ ] **Threat Hunting:** search `_id:MWsO9aABUbyB79YaBASQ` (time range covering 2026-09-30 9:20 to 9:25 PM) and confirm rule 92032 on `windows-endpoint`.
 - [x] **Indexer management > Dev Tools:** `GET _cat/indices/wazuh-*?v` returned 18 indices, all **green**. Daily alert indices: `wazuh-alerts-4.x-2026.09.30` (3,382 documents, 7 MB) and `wazuh-alerts-4.x-2026.10.01` (356 documents so far). `wazuh-states-vulnerabilities-wazuh` held 39 documents, matching the SQL warehouse's vulnerability snapshot.
 
 A side observation from Threat Hunting: each loader run appears on the Wazuh server itself as `sshd: authentication success` (rule 5715) followed by a PAM session open and close. The SOC records its own data pipeline connecting.

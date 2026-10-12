@@ -18,7 +18,7 @@ from pathlib import Path
 
 import pyodbc
 
-ROOT = Path(__file__).resolve().parents[1] / "SentinelGrid.SemanticModel"
+ROOT = Path(__file__).resolve().parents[1] / "Watchtide.SemanticModel"
 DEF = ROOT / "definition"
 TABLES = DEF / "tables"
 NS = uuid.UUID("5e1e5a1d-0000-4000-8000-53454e54494e")

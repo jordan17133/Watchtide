@@ -3,6 +3,15 @@
 Updated: 2026-10-05. The public console remains a static, historical snapshot
 with no live connection to Wazuh or the SQL warehouse.
 
+October 12 correction: the Windows endpoint nickname was previously retained in
+public text and the snapshot's reviewed identity fields. The shared scrubber now
+maps it case-insensitively to `windows-endpoint`; the catalog approves that alias,
+and final validation rejects the private nickname even if mistakenly allowlisted.
+The retained snapshot's 690 identity fields were corrected without changing its
+October 3 export time, event references or metrics. This is not a new data export.
+Older Git revisions and binary screenshots are not erased by this text correction;
+their separate review remains open. No credential leak is inferred from a hostname.
+
 ## Publication Controls
 
 - Display text is approved separately for each snapshot field. Unfamiliar rule

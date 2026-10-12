@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-10-02 |
 | Analyst | Jordan Carven-Bellace |
-| Host | jordan-pc |
+| Host | windows-endpoint |
 | Rule | 60228, "A scheduled task was created" (Windows Security event 4698, level 4) |
 | Volume | 11 alerts: 2 at 07:02 UTC, 9 at 15:39 UTC |
 | MITRE ATT&CK | T1053, Scheduled Task/Job |

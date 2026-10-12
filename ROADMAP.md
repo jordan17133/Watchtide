@@ -27,6 +27,13 @@ hardening, coverage or recovery gate.
 
 ## Current Execution Order
 
+October 12 supporting closeout: the
+[presentation/operator checklist](docs/presentation-and-operator-checklist.md)
+tracks public privacy, genuine contribution copy, Watchtide Power BI naming and
+fresh report checks. Suricata feed status and an explained operator workflow join
+the existing network lessons; no continuous capture or database rename is implied.
+These corrections do not reorder the engineering gates below.
+
 ### October 11 Reconciliation Fits The Existing Plan
 
 Read [STATUS's current snapshot](STATUS.md#current-snapshot) for supported state

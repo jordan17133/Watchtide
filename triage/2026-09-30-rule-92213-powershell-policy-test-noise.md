@@ -3,14 +3,19 @@
 | Field | Value |
 |---|---|
 | Date | 2026-09-30 |
-| Analyst | Jordan Carven-Bellace |
-| Host | jordan-pc |
+| Investigation | Jordan Carven-Bellace, with substantial AI assistance |
+| Host | Windows endpoint (public alias) |
 | Rule | 92213, "Executable file dropped in folder commonly used by malware" (level 15) |
 | Volume | 506 alerts in about 12 hours; 478 from one pattern |
 | Verdict | **False positive: benign scheduled automation.** Tuning recommended. |
 | Found by | SQL warehouse analysis, not the Wazuh dashboard |
 
 ## Summary
+
+Attribution clarified October 12, 2026: Jordan reports hands-on investigation
+and rule/SQL work with AI guidance, and confirmed the workload context. AI agents
+also performed substantial analysis, implementation and documentation. The report
+does not establish sole authorship or independent execution of every query.
 
 After the first load into the Watchtide SQL warehouse, rule 92213 accounted for every Critical-band alert: 506 in half a day. The [first 92213 triage](2026-09-30-rule-92213-installer-false-positive.md) covered three alerts during setup, so a steady stream of this volume needed its own investigation. 478 of the 506 were PowerShell writing its own execution-policy test file to the user's Temp folder, triggered by three automation watchdog tasks that start PowerShell every 5 minutes. The other 28 were software installs and uninstalls done on purpose that day.
 

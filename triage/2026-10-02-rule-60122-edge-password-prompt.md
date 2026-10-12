@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-10-02 |
 | Analyst | Jordan Carven-Bellace |
-| Host | jordan-pc |
+| Host | windows-endpoint |
 | Rule | 60122, "Logon Failure - Unknown user or bad password" (Windows Security event 4625, level 5) |
 | Volume | 2 alerts, 21:44:54 and 21:45:02 UTC, 8 seconds apart |
 | MITRE ATT&CK | T1531, Account Access Removal (how Wazuh maps this rule) |

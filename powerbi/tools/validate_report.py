@@ -16,7 +16,7 @@ from referencing import Registry, Resource
 from referencing.jsonschema import DRAFT7
 
 
-REPORT = Path(__file__).resolve().parents[1] / "SentinelGrid.Report" / "definition"
+REPORT = Path(__file__).resolve().parents[1] / "Watchtide.Report" / "definition"
 SCHEMA_PREFIX = "/json-schemas/fabric/item/report/definition/"
 
 

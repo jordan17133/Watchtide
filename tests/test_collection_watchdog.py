@@ -215,7 +215,7 @@ class WatchdogTests(unittest.TestCase):
     def test_failed_health_read_logs_type_and_sqlstate_but_not_the_message(self):
         class FakeOperationalError(Exception):
             pass
-        boom = FakeOperationalError("HYT00", "[ODBC] Query timeout expired; Server=jordan-pc;Password=secret")
+        boom = FakeOperationalError("HYT00", "[ODBC] Query timeout expired; Server=windows-endpoint;Password=secret")
         with mock.patch.object(wd.health, "read_snapshot", side_effect=boom):
             failed = wd.read_report()
         self.assertEqual((failed["state"], failed["error"]), ("unknown", "FakeOperationalError:HYT00"))

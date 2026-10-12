@@ -3,7 +3,7 @@
   "artifacts": [
     {
       "report": {
-        "path": "SentinelGrid.Report"
+        "path": "Watchtide.Report"
       }
     }
   ],

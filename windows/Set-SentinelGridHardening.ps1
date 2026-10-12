@@ -1,6 +1,6 @@
 #Requires -RunAsAdministrator
 <#
-  Applies the CIS Windows 11 benchmark items chosen for jordan-pc (see
+  Applies the CIS Windows 11 benchmark items chosen for windows-endpoint (see
   docs/cis-baseline.md for what was applied, what was skipped, and why).
 
   Before changing anything it saves the current state to

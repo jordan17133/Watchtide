@@ -36,7 +36,7 @@ editing the telemetry or replacing the existing dashboards:
   adds `Controlled live validation`, distinct from the earlier fixture. An unmarked event is not assumed
   live or malicious. These are alert-record counts, not incident counts or new
   ATT&CK coverage credit.
-- The [existing Power BI project](../powerbi/SentinelGrid.pbip) gains a Network
+- The [existing Power BI project](../powerbi/Watchtide.pbip) gains a Network
   Detection page: context selector, four record/signature metrics, processing-hour
   volume, signature comparison and an event register with both severity scales
   and both timestamps. The original five pages were not regenerated.

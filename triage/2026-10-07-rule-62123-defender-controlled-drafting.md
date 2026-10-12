@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-10-07 |
 | Analyst | Jordan Carven-Bellace |
-| Host | jordan-pc |
+| Host | windows-endpoint |
 | Rules | 62123, "Windows Defender: Antimalware platform detected potentially unwanted software" (Defender event 1116, level 12); 62124, action taken (Defender event 1117, level 3) |
 | Volume | 4 detections, 23:34:08 to 23:36:46 UTC, each followed by an action event 5 to 38 seconds later |
 | MITRE ATT&CK | None applied by Wazuh to rule 62123. The flagged content described T1490 (Inhibit System Recovery); nothing was executed. |

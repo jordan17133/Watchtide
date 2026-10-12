@@ -4,7 +4,7 @@
 |---|---|
 | Date | 2026-10-10 (Eastern and UTC) |
 | Analyst | Claude (review); confirmed by the owner |
-| Host | jordan-pc |
+| Host | windows-endpoint |
 | Rules | 60115, "User account locked out (multiple login errors)" (event 4740, level 9); 60122, logon failure (event 4625); 60104, credential validation failure (event 4776) |
 | Volume | 5 failures 22:06:00 to 22:21:30 UTC, lockout at 22:21:30, one more refused attempt at 22:35:33 |
 | Case | SG-014 |

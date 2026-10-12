@@ -6,7 +6,8 @@ network tests and documented investigations.
 
 **Author:** Jordan Carven-Bellace
 
-*Formerly SentinelGrid; existing database, report and rule-file names retain that identity. The Hyper-V VM is now named Watchtide.*
+The Hyper-V VM and Power BI project use the Watchtide name. Existing database
+and operational identifiers retain their current names until a reviewed migration.
 
 **[Open the Watchtide console](https://jordan17133.github.io/Watchtide/)**:
 read-only, sanitized historical alerts, cases and ATT&CK coverage.
@@ -74,7 +75,7 @@ not provide whole-home visibility. [System interaction map](docs/triage-system-a
 
 | Area | Start here |
 |---|---|
-| Build and operation | [Runbook](SentinelGrid-Build-Runbook.md), [build log](BUILD-LOG.md), [daily analyst routine](docs/analyst-toolkit-runbook.md#a-daily-routine-you-can-explain) |
+| Build and operation | [Runbook](Watchtide-Build-Runbook.md), [build log](BUILD-LOG.md), [daily analyst routine](docs/analyst-toolkit-runbook.md#a-daily-routine-you-can-explain) |
 | Detection and investigation | [Wazuh rules](wazuh/rules/), [Suricata rule](suricata/rules/watchtide-pilot.rules), [library rollout](docs/detection-library-plan.md), [triage reports](triage/) |
 | Data and reporting | [Loader](loader/), [warehouse](warehouse/), [existing six-page Power BI project](powerbi/) |
 | Detailed evidence and images | [Results, investigations and gallery](docs/portfolio-evidence.md) |

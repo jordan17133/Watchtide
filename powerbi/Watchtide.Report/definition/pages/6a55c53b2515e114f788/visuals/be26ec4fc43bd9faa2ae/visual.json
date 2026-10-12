@@ -1,33 +1,179 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
-  "name": "2c01e6d904732cba747e",
+  "name": "be26ec4fc43bd9faa2ae",
   "position": {
-    "x": 24,
-    "y": 694,
-    "z": 13000,
-    "height": 22,
-    "width": 1232,
-    "tabOrder": 13000
+    "x": 1056,
+    "y": 18,
+    "z": 1000,
+    "height": 56,
+    "width": 200,
+    "tabOrder": 1000
   },
   "visual": {
-    "visualType": "textbox",
+    "visualType": "slicer",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "rpt agent_health"
+                    }
+                  },
+                  "Property": "agent_name"
+                }
+              },
+              "queryRef": "rpt agent_health.agent_name",
+              "nativeQueryRef": "agent_name",
+              "active": true
+            }
+          ]
+        }
+      }
+    },
     "objects": {
+      "data": [
+        {
+          "properties": {
+            "mode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Dropdown'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "selection": [
+        {
+          "properties": {
+            "singleSelect": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "strictSingleSelect": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "header": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Endpoint'"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#52514e'"
+                    }
+                  }
+                }
+              }
+            },
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "items": [
+        {
+          "properties": {
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#0b0b0b'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
       "general": [
         {
           "properties": {
-            "paragraphs": [
-              {
-                "textRuns": [
+            "filter": {
+              "filter": {
+                "Version": 2,
+                "From": [
                   {
-                    "value": "Source: Wazuh vulnerability-detector and SCA alerts in SentinelGridWarehouse (rpt.vulnerability_findings, rpt.cis_check_results, rpt.cis_score_history). Every finding and check traces to a Wazuh document ID.",
-                    "textStyle": {
-                      "fontSize": "8pt",
-                      "color": "#898781"
+                    "Name": "r",
+                    "Entity": "rpt agent_health",
+                    "Type": 0
+                  }
+                ],
+                "Where": [
+                  {
+                    "Condition": {
+                      "In": {
+                        "Expressions": [
+                          {
+                            "Column": {
+                              "Expression": {
+                                "SourceRef": {
+                                  "Source": "r"
+                                }
+                              },
+                              "Property": "agent_name"
+                            }
+                          }
+                        ],
+                        "Values": [
+                          [
+                            {
+                              "Literal": {
+                                "Value": "'windows-endpoint'"
+                              }
+                            }
+                          ]
+                        ]
+                      }
                     }
                   }
                 ]
               }
-            ]
+            }
           }
         }
       ]

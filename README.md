@@ -15,6 +15,9 @@ No live connection to the private SOC. Check the snapshot's date.
 [Evidence and investigations](docs/portfolio-evidence.md) |
 [Current status](STATUS.md) | [Roadmap](ROADMAP.md)
 
+[Watchtide portfolio case study](https://jordan-portfolio-alpha.vercel.app/projects/watchtide) |
+[Security data and Power BI case study](https://jordan-portfolio-alpha.vercel.app/projects/security-data-pipeline)
+
 ## At A Glance
 
 Updated October 11, 2026. Results are dated observations, not a security guarantee.

@@ -2,7 +2,7 @@
 
 **An evidence-led home SOC connecting security telemetry, investigation and reporting.**
 
-Watchtide is Jordan Carven-Bellace's independent cybersecurity lab and analyst-learning
+Watchtide is Jordan Bellace's independent cybersecurity lab and analyst-learning
 portfolio. It brings Windows telemetry into Wazuh, follows selected alerts through
 SQL Server and Power BI, and documents what each investigation or controlled test
 actually proves.
@@ -98,5 +98,5 @@ New results belong beside their evidence and date, not in an undated all-clear.
 
 ## Copyright
 
-Copyright 2026 Jordan Carven-Bellace. All rights reserved. The code and write-ups
+Copyright 2026 Jordan Bellace. All rights reserved. The code and write-ups
 are shared to be read and evaluated; no license to reuse them is granted.

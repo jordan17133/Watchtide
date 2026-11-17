@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Date | 2026-09-30 |
-| Analyst | Jordan Carven-Bellace |
+| Analyst | Jordan Bellace |
 | Host | windows-endpoint (Windows 11, Wazuh agent + Sysmon) |
 | SIEM | Wazuh 4.14.8 (all-in-one, Ubuntu 24.04 VM) |
 | Verdict | **False positive: benign administrative activity** |

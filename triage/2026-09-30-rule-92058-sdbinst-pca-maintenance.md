@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Date | 2026-09-30 |
-| Analyst | Jordan Carven-Bellace |
+| Analyst | Jordan Bellace |
 | Host | windows-endpoint |
 | Rule | 92058, "Application Compatibility Database launched" (level 12, High) |
 | Volume | 15 alerts, one per hour at :53, 04:53 to 18:53 |

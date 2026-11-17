@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Date | 2026-10-02 |
-| Analyst | Jordan Carven-Bellace |
+| Analyst | Jordan Bellace |
 | Host | windows-endpoint |
 | Rule | 100113, "Watchtide FIM: Run key autostart entry changed" (level 10, custom) |
 | Volume | 2 alerts (the 64-bit and 32-bit registry views of the same value), 05:36:33 UTC |

@@ -1,6 +1,6 @@
 # Private Remote Access: Tailscale Plan
 
-**Owner:** Jordan Carven-Bellace
+**Owner:** Jordan Bellace
 
 **Current pickup, reconciled October 11:** use
 [STATUS](../STATUS.md#current-snapshot) and the

@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Date | 2026-09-30 |
-| Analyst | Jordan Carven-Bellace |
+| Analyst | Jordan Bellace |
 | Host | windows-endpoint |
 | Source | Wazuh Vulnerability Detection (first scan of the endpoint) |
 | Software | Mozilla Firefox 146.0, plus the Mozilla Maintenance Service |

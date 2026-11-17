@@ -1,6 +1,6 @@
 # Watchtide: An Evidence-Led Home SOC
 
-By Jordan Carven-Bellace. Publication copy prepared October 11, 2026.
+By Jordan Bellace. Publication copy prepared October 11, 2026.
 Home lab and analyst-learning portfolio; not a managed service or enterprise SOC.
 
 ## Overview

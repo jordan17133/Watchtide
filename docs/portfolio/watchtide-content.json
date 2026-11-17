@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "content_updated": "2026-10-12",
-  "author": "Jordan Carven-Bellace",
+  "author": "Jordan Bellace",
   "slug": "watchtide",
   "title": "Watchtide",
   "subtitle": "An evidence-led home SOC built with Wazuh, SQL Server and Power BI.",
@@ -68,7 +68,7 @@
   ],
   "open_gates": ["Watchdog notification-policy and read-scope review", "Actual reboot/logon validation", "Offline TCP installed-engine validation", "Fresh saved-live Power BI rendering", "Measured sustained and wider traffic coverage", "Off-PC recovery and disk/boot protection"],
   "seo": {
-    "title": "Watchtide Home SOC | Jordan Carven-Bellace",
+    "title": "Watchtide Home SOC | Jordan Bellace",
     "description": "An evidence-led home SOC with Wazuh, Sysmon, SQL Server, Power BI and controlled Suricata tests. Explore investigations, recovery checks and clear limits."
   },
   "destination_handoff": {

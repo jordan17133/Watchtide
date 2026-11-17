@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Date | 2026-10-07 |
-| Analyst | Jordan Carven-Bellace |
+| Analyst | Jordan Bellace |
 | Host | windows-endpoint |
 | Rules | 62123, "Windows Defender: Antimalware platform detected potentially unwanted software" (Defender event 1116, level 12); 62124, action taken (Defender event 1117, level 3) |
 | Volume | 4 detections, 23:34:08 to 23:36:46 UTC, each followed by an action event 5 to 38 seconds later |

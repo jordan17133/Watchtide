@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Date | 2026-10-02 |
-| Analyst | Jordan Carven-Bellace |
+| Analyst | Jordan Bellace |
 | Host | windows-endpoint |
 | Rule | 60122, "Logon Failure - Unknown user or bad password" (Windows Security event 4625, level 5) |
 | Volume | 2 alerts, 21:44:54 and 21:45:02 UTC, 8 seconds apart |

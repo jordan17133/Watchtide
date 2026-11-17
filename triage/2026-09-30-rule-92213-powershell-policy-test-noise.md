@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Date | 2026-09-30 |
-| Investigation | Jordan Carven-Bellace, with substantial AI assistance |
+| Investigation | Jordan Bellace, with substantial AI assistance |
 | Host | Windows endpoint (public alias) |
 | Rule | 92213, "Executable file dropped in folder commonly used by malware" (level 15) |
 | Volume | 506 alerts in about 12 hours; 478 from one pattern |

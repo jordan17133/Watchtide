@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Date | 2026-10-01 |
-| Analyst | Jordan Carven-Bellace |
+| Analyst | Jordan Bellace |
 | Hosts | windows-endpoint (agent 001), wazuh (agent 000) |
 | Scope | 28 rules that were the main rule behind a fired technique on the ATT&CK Coverage page but had no triage verdict |
 | Verdict | **27 benign with a named source; 1 low-risk with the source process not confirmed.** No tuning. |

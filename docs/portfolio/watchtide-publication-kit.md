@@ -44,11 +44,11 @@ employment, certification, complete protection or paid-service capability.
 
 - Suggested route: `/projects/watchtide`. First check the existing site's routes;
   merge with an existing project entry rather than create a duplicate.
-- Page title: `Watchtide Home SOC | Jordan Carven-Bellace`.
+- Page title: `Watchtide Home SOC | Jordan Bellace`.
 - Description: `An evidence-led home SOC with Wazuh, Sysmon, SQL Server, Power BI and controlled Suricata tests. Explore investigations, recovery checks and clear limits.`
 - Social image: `https://jordan17133.github.io/Watchtide/console/og-image.png`
   (1200 x 630). Caption the October 3 snapshot date; do not call it live.
-- Author: Jordan Carven-Bellace. Content update: October 11, 2026. The website
+- Author: Jordan Bellace. Content update: October 11, 2026. The website
   chat must use the actual web publication date, not invent an earlier launch.
 
 The existing project page is

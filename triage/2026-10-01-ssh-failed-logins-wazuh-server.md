@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Date | 2026-10-01 |
-| Analyst | Jordan Carven-Bellace |
+| Analyst | Jordan Bellace |
 | Host | wazuh (the Wazuh server itself, agent 000) |
 | Rules | 5710 (level 5), 5503 (level 5), 5760 (level 5), **2502 (level 10)** |
 | Volume | 6 failure alerts in 26 seconds, 21:31:40 to 21:32:06 UTC |

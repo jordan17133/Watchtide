@@ -18,7 +18,7 @@ class PortfolioContentTests(unittest.TestCase):
     def test_identity_and_scope_are_explicit(self):
         self.assertEqual(self.content["schema_version"], 1)
         self.assertEqual(self.content["slug"], "watchtide")
-        self.assertEqual(self.content["author"], "Jordan Carven-Bellace")
+        self.assertEqual(self.content["author"], "Jordan Bellace")
         self.assertIn("Home lab", self.content["project_type"])
         self.assertIn("AI-assisted", self.content["implementation_context"])
         date.fromisoformat(self.content["content_updated"])
